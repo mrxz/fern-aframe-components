@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Fern A-Frame Components | Highlight</title>
+        <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+        <script src="/js/highlight.umd.min.js"></script>
+    </head>
+    <body>
+        <a-scene>
+            <a-sky color="#000000"></a-sky>
+
+            <a-box position="-5 0.0 -5" width="10" height="10" depth="1" color="#404040"></a-box>
+
+            <a-entity animation="property: object3D.position.x; from: -3; to: 3; dur: 2000; dir: alternate; loop: true; easing: easeInOutQuad">
+                <a-sphere id="sphere3" position="0 5 -6" scale="0.5 0.5 0.5" color="#EF2D5E" highlight></a-sphere>
+                <a-sphere id="sphere2" position="0 3 -6" scale="0.5 0.5 0.5" color="#2DEF5E" highlight="rimColor: #AFEF20; coreColor: #AFEF20"></a-sphere>
+                <a-torus-knot id="knot" position="0 1 -6" scale="0.5 0.5 0.5" color="#AAFFDD" highlight="rimColor: #FF0000; coreColor: #660000; rimOpacity: 1.0; coreOpacity: 1.0"></a-torus-knot>
+                <a-box id="box" position="0 -1 -6" scale="0.5 0.5 0.5" color="#EF2D5E" highlight="rimColor: #00FF00; coreColor: #00FF00; coreOpacity: 0.2"></a-box>
+                <a-sphere id="sphere3" position="0 -3 -6" scale="0.5 0.5 0.5" color="#FFFFFF" highlight="mode: visible" animation="property: highlight.rimColor; from: #FF0000; to: #FFFF00; type: color; dur: 500; dir: alternate; loop: true; easing: easeInOutQuad"></a-sphere>
+            </a-entity>
+
+            <!-- Camera rig -->
+            <a-entity id="rig">
+                <a-camera id="camera"></a-camera>
+
+                <!-- Hands -->
+                <a-entity hand-controls="hand: left" above-highlight></a-entity>
+                <a-entity hand-controls="hand: right" above-highlight></a-entity>
+            </a-entity>
+        </a-scene>
+    </body>
+</html>
