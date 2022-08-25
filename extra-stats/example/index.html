@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Fern A-Frame Components | Extra Stats</title>
+        <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+        <script src="/js/extra-stats.umd.min.js"></script>
+        <script>
+            AFRAME.registerComponent('allocate-three-classes', {
+                tick: function(t, dt) {
+                    // Allocate two Vector3 instances per frame
+                    new THREE.Vector3(1, 2, 3);
+                    new THREE.Vector3(1, 2, 3);
+
+                    // Allocate one Matrix4 per frame
+                    new THREE.Matrix4();
+
+                    // Allocate 20 Color instances per frame
+                    for(let i = 0; i < 20; i++) {
+                        new THREE.Color();
+                    }
+                }
+            })
+        </script>
+    </head>
+    <body>
+        <a-scene extra-stats>
+            <a-sky color="#ECECEC"></a-sky>
+
+            <!-- Object that needlessly allocates THREE objects -->
+            <a-entity allocate-three-classes></a-entity>
+
+            <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
+            <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
+            <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
+            <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
+
+            <!-- Camera rig -->
+            <a-entity id="rig">
+                <a-camera id="camera"></a-camera>
+
+                <!-- Hands -->
+                <a-entity hand-controls="hand: left"></a-entity>
+                <a-entity hand-controls="hand: right"></a-entity>
+            </a-entity>
+        </a-scene>
+    </body>
+</html>
