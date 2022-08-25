@@ -33,6 +33,7 @@ export function threeAllocStats() {
 
     const counters = {};
     const resetCounters = () => keys.forEach(key => counters[key] = 0);
+    resetCounters();
     const increment = (key) => counters[key]++;
 
     function _update() {

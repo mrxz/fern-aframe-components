@@ -5,6 +5,7 @@
         <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
         <script src="/js/extra-stats.umd.min.js"></script>
         <script>
+            // Dummy component that simulates a component allocating some Three.js classes each frame
             AFRAME.registerComponent('allocate-three-classes', {
                 tick: function(t, dt) {
                     // Allocate two Vector3 instances per frame
@@ -14,8 +15,8 @@
                     // Allocate one Matrix4 per frame
                     new THREE.Matrix4();
 
-                    // Allocate 20 Color instances per frame
-                    for(let i = 0; i < 20; i++) {
+                    // Allocate random amount of Color instances per frame
+                    for(let i = 0; i < Math.random() * 20; i++) {
                         new THREE.Color();
                     }
                 }

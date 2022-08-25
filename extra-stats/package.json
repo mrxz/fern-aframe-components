@@ -1,6 +1,6 @@
 {
   "name": "@fern-solutions/aframe-extra-stats",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A-Frame component that adds additional stats to the built-in stats component",
   "module": "dist/extra-stats.esm.min.js",
   "browser": "dist/extra-stats.umd.min.js",
