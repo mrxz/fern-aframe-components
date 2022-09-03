@@ -7,6 +7,7 @@ This is a collection of A-Frame components. Check the individual components for 
 * [Screen Fade `screen-fade`](./screen-fade): Allows fade transitions in both desktop and VR mode
 * [Highlight `highlight`](./highlight): Render a highlight for objects when they are occluded
 * [Extra Stats `extra-stats`](./extra-stats): Replacement for the `stats` component that shows additional stats
+* [Fix Fog](./fix-fog): Changes fog depth from camera space to world space, [fixing fog in VR](https://fern.solutions/dev-logs/aframe-adventures-02/)
 
 ### A-Frame Locomotion
 If you're looking for components for locomotion, be sure to check out [aframe-locomotion](https://github.com/mrxz/aframe-locomotion).
