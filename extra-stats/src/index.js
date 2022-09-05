@@ -1,4 +1,5 @@
 import { threeAllocStats } from './rStats.three-alloc';
+import { updatedThreeStats } from './rStats.three';
 
 AFRAME.registerComponent('extra-stats', {
     schema: {
@@ -13,7 +14,7 @@ AFRAME.registerComponent('extra-stats', {
         }
 
         const plugins = [
-            this.data.three ? window.threeStats(scene.renderer) : null,
+            this.data.three ? updatedThreeStats(scene.renderer) : null,
             this.data.aframe ? window.aframeStats(scene) : null,
             this.data.threeAlloc ? threeAllocStats() : null,
         ].filter(x => x !== null);
