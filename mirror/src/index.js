@@ -218,7 +218,6 @@ AFRAME.registerComponent('mirror', {
 		renderer.state.buffers.stencil.setOp(THREE.KeepStencilOp, THREE.KeepStencilOp, THREE.KeepStencilOp);
 		renderer.state.buffers.stencil.setLocked(true);
 
-		renderer.clearDepth();
 		const oldLayersMask = sceneCamera.layers.mask;
 		sceneCamera.layers.mask = this.layers.mask;
 		renderer.render(scene, sceneCamera);

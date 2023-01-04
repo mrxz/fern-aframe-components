@@ -33,3 +33,4 @@ Additionally layers can be specified to show or hide objects in the mirror view.
 
 ## Limitations
 * Mirrors are not rendered recursively, so any mirror seen from another mirror will just render as an opaque plane
+* Avoid mixing transparency with mirrors (e.g. looking at a mirror through transparent objects). Depending on the render-order this either results in the overlap being an opaque mirror or the transparent object not being visible.
