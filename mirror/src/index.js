@@ -31,12 +31,17 @@ AFRAME.registerSystem('mirror', {
 			sentinel.visible = true;
 		}
 	},
+	tick: function() {
+		// Note: by default A-frame doesn't sort objects for rendering
+		// so manually ensure the sentinel is at the tail end
+		const sceneObject = this.sceneEl.object3D;
+		if(sceneObject.children[sceneObject.children.length - 1] !== this.sentinel) {
+			sceneObject.add(this.sentinel);
+		}
+	},
 	registerMirror: function(mirror) {
 		this.mirrors.push(mirror);
 		mirror.setMirrorId(this.mirrors.length);
-		// Note: by default A-frame doesn't sort objects for rendering
-		// so manually ensure the sentinel is after any mirror
-		this.sceneEl.object3D.add(this.sentinel);
 	},
 	unregisterMirror: function(mirror) {
 		const index = this.mirrors.indexOf(mirror);
@@ -218,6 +223,7 @@ AFRAME.registerComponent('mirror', {
 		renderer.state.buffers.stencil.setOp(THREE.KeepStencilOp, THREE.KeepStencilOp, THREE.KeepStencilOp);
 		renderer.state.buffers.stencil.setLocked(true);
 
+		renderer.clearDepth();
 		const oldLayersMask = sceneCamera.layers.mask;
 		sceneCamera.layers.mask = this.layers.mask;
 		renderer.render(scene, sceneCamera);
