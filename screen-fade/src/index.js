@@ -16,7 +16,7 @@ AFRAME.registerComponent('screen-fade', {
         'intensity': { type: "number", default: 0.0, max: 1.0, min: 0.0 }
     },
     init: function() {
-        const geometry = new THREE.PlaneBufferGeometry(1, 1);
+        const geometry = new THREE.PlaneGeometry(1, 1);
         this.material = new THREE.ShaderMaterial({
             vertexShader: VERTEX_SHADER,
             fragmentShader: FRAGMENT_SHADER,

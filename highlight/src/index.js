@@ -74,7 +74,6 @@ AFRAME.registerComponent('highlight', {
     init: function() {
         this.renderCalls = [];
 
-        const geometry = new THREE.PlaneBufferGeometry(1, 1);
         this.outlineMaterial = new THREE.ShaderMaterial({
             vertexShader: VERTEX_SHADER,
             fragmentShader: FRAGMENT_SHADER,
