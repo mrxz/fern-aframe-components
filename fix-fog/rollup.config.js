@@ -8,7 +8,6 @@ export default {
     ],
     output: [
         {
-            name: 'better-fog',
             file: pkg.browser,
             format: 'umd',
         },

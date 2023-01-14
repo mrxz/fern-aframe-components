@@ -8,7 +8,6 @@ export default {
     ],
     output: [
         {
-            name: 'screen-fade',
             file: pkg.browser,
             format: 'umd',
         },

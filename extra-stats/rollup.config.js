@@ -8,7 +8,6 @@ export default {
     ],
     output: [
         {
-            name: 'extra-stats',
             file: pkg.browser,
             format: 'umd',
         },

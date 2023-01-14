@@ -8,7 +8,6 @@ export default {
     ],
     output: [
         {
-            name: 'highlight',
             file: pkg.browser,
             format: 'umd',
         },
