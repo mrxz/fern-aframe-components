@@ -1,6 +1,6 @@
 {
   "name": "@fern-solutions/aframe-screen-fade",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A-Frame component for fading the screen, for both desktop and VR",
   "module": "dist/screen-fade.esm.min.js",
   "browser": "dist/screen-fade.umd.min.js",
