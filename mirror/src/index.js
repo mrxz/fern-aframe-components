@@ -217,6 +217,7 @@ AFRAME.registerComponent('mirror', {
 
 		// Render 'mirror' world
 		renderer.xr.cameraAutoUpdate = false;
+		renderer.info.autoReset = false;
 		this.patchWebGLState(renderer.state);
 		renderer.state.buffers.stencil.setTest(true);
 		renderer.state.buffers.stencil.setFunc(THREE.EqualStencilFunc, this.mirrorId, 0xFF);
@@ -231,6 +232,7 @@ AFRAME.registerComponent('mirror', {
 
 		renderer.state.buffers.stencil.setLocked(false);
 		this.unpatchWebGLState(renderer.state);
+		renderer.info.autoReset = true;
 		renderer.xr.cameraAutoUpdate = true;
 
 		// Restore mirror
