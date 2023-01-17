@@ -61,6 +61,7 @@ AFRAME.registerComponent('mirror', {
 		this.mirrorMaterial = this.el.getObject3D('mesh').material;
 		const material = this.mirrorMaterial;
 		material.transparent = true;
+		material.colorWrite = false;
 		material.depthWrite = true;
 		material.stencilWrite = true;
 		material.depthFunc = THREE.LessEqualDepth;
