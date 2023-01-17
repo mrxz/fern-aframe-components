@@ -29,7 +29,7 @@ Additionally layers can be specified to show or hide objects in the mirror view.
 ## Properties
 | Name | Type | Default |Description |
 | ---- | ---- | ------- |----------- |
-| `layers` | array | [1] | List of layers that should be enabled when rendering the mirror view |
+| `layers` | array | [0] | List of layers that should be enabled when rendering the mirror view |
 
 ## Limitations
 * Mirrors are not rendered recursively, so any mirror seen from another mirror will just render as an opaque plane

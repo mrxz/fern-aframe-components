@@ -54,7 +54,7 @@ AFRAME.registerSystem('mirror', {
 
 AFRAME.registerComponent('mirror', {
 	schema: {
-		layers: { type: 'array', default: [1] }
+		layers: { type: 'array', default: [0] }
 	},
 	init: function() {
 		// Setup the material of the portal (write to stencil, adhere to depth)
