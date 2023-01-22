@@ -4,6 +4,10 @@ AFRAME.registerSystem('mirror', {
 	init: function() {
 		// Prevent auto clearing for each render
 		this.sceneEl.renderer.autoClear = false;
+		this.sceneEl.renderer.info.autoReset = false;
+
+		// No-op onAfterRender
+		const nopAfterRender = function() {};
 
 		// Create a sentinel
 		const sentinel = new THREE.Mesh();
@@ -24,11 +28,16 @@ AFRAME.registerSystem('mirror', {
 			sentinel.visible = false;
 			this.mirrors.forEach(mirror => mirror.setInactive());
 
+			// Supress A-Frame's scene.onAfterRender callback during mirror rendering
+			const oldOnAfterRender = scene.onAfterRender;
+			scene.onAfterRender = nopAfterRender;
+
 			// Let mirrors render themselves
 			this.mirrors.forEach(mirror => mirror.render(renderer, scene, camera));
 
 			this.mirrors.forEach(mirror => mirror.setActive());
 			sentinel.visible = true;
+			scene.onAfterRender = oldOnAfterRender;
 		}
 	},
 	tick: function() {
@@ -38,6 +47,8 @@ AFRAME.registerSystem('mirror', {
 		if(sceneObject.children[sceneObject.children.length - 1] !== this.sentinel) {
 			sceneObject.add(this.sentinel);
 		}
+
+		this.sceneEl.renderer.info.reset();
 	},
 	registerMirror: function(mirror) {
 		this.mirrors.push(mirror);
@@ -77,8 +88,11 @@ AFRAME.registerComponent('mirror', {
 		this.layers = new THREE.Layers();
 		this.layers.disableAll();
 
-		// Setup clipping plane
+		// Temporary camera objects to hold the state before reflecting
+		this.tempCamera = new THREE.PerspectiveCamera();
 		this.tempCameras = [new THREE.PerspectiveCamera(), new THREE.PerspectiveCamera()];
+
+		// Setup clipping plane
 		this.clippingPlane = new THREE.Plane();
 
 		// Logic for adjusting projection matrix to clip the mirror plane
@@ -103,6 +117,14 @@ AFRAME.registerComponent('mirror', {
 			projectionMatrix.elements[10] = clipPlane.z + 1.0 - 0.00;
 			projectionMatrix.elements[14] = clipPlane.w;
 		};
+
+		// Utility for copying camera properties
+		this.copyCamera = function(source, target) {
+			target.matrixWorld.copy(source.matrixWorld);
+			target.matrixWorldInverse.copy(source.matrixWorldInverse);
+			target.projectionMatrix.copy(source.projectionMatrix);
+			target.layers.mask = source.layers.mask;
+		}
 
 		// Monkey patch setMaterial on WebGLState
 		const oldWebGLStateSetMaterialFn = this.el.sceneEl.renderer.state.setMaterial;
@@ -141,7 +163,7 @@ AFRAME.registerComponent('mirror', {
 	},
 	render: function(renderer, scene, camera) {
 		// Temporarily move the camera
-		const sceneCamera = renderer.xr.isPresenting ? renderer.xr.getCamera() : this.tempCameras[0];
+		const sceneCamera = renderer.xr.isPresenting ? renderer.xr.getCamera() : this.tempCamera;
 
 		// Mirror plane definition
 		const mirrorPos = this.el.object3D.getWorldPosition(this._mirrorPos);
@@ -180,11 +202,9 @@ AFRAME.registerComponent('mirror', {
 		if(renderer.xr.isPresenting) {
 			// Use temp-cameras to store camera matrices
 			const cameras = sceneCamera.cameras;
+			this.copyCamera(sceneCamera, this.tempCamera);
 			for(let i = 0; i < cameras.length; i++) {
-				this.tempCameras[i].matrixWorld.copy(cameras[i].matrixWorld);
-				this.tempCameras[i].matrixWorldInverse.copy(cameras[i].matrixWorldInverse);
-				this.tempCameras[i].projectionMatrix.copy(cameras[i].projectionMatrix);
-				this.tempCameras[i].layers.mask = cameras[i].layers.mask;
+				this.copyCamera(cameras[i], this.tempCameras[i]);
 
 				cameras[i].matrixWorld.premultiply(reflectionMatrix);
 				cameras[i].matrixWorldInverse.copy(cameras[i].matrixWorld).invert();
@@ -218,7 +238,6 @@ AFRAME.registerComponent('mirror', {
 
 		// Render 'mirror' world
 		renderer.xr.cameraAutoUpdate = false;
-		renderer.info.autoReset = false;
 		this.patchWebGLState(renderer.state);
 		renderer.state.buffers.stencil.setTest(true);
 		renderer.state.buffers.stencil.setFunc(THREE.EqualStencilFunc, this.mirrorId, 0xFF);
@@ -228,26 +247,25 @@ AFRAME.registerComponent('mirror', {
 		renderer.clearDepth();
 		const oldLayersMask = sceneCamera.layers.mask;
 		sceneCamera.layers.mask = this.layers.mask;
-		renderer.render(scene, sceneCamera);
+		const oldMatrixWorldAutoUpdate = scene.matrixWorldAutoUpdate;
+		scene.matrixWorldAutoUpdate = false;
+		renderer.render(scene, this.tempCamera);
+		scene.matrixWorldAutoUpdate = oldMatrixWorldAutoUpdate;
 		sceneCamera.layers.mask = oldLayersMask;
 
 		renderer.state.buffers.stencil.setLocked(false);
 		this.unpatchWebGLState(renderer.state);
-		renderer.info.autoReset = true;
 		renderer.xr.cameraAutoUpdate = true;
 
 		// Restore mirror
 		mesh.visible = true;
 
 		// Restore cameras (in case of XR)
-		// Note: this is only really needed if you have multiple mirrors in a scene
 		if(renderer.xr.isPresenting) {
 			const cameras = sceneCamera.cameras;
+			this.copyCamera(this.tempCamera, sceneCamera);
 			for(let i = 0; i < cameras.length; i++) {
-				cameras[i].matrixWorld.copy(this.tempCameras[i].matrixWorld);
-				cameras[i].matrixWorldInverse.copy(this.tempCameras[i].matrixWorldInverse);
-				cameras[i].projectionMatrix.copy(this.tempCameras[i].projectionMatrix);
-				cameras[i].layers.mask = this.tempCameras[i].layers.mask;
+				this.copyCamera(this.tempCameras[i], cameras[i]);
 			}
 		}
 	},
