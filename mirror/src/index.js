@@ -190,6 +190,11 @@ AFRAME.registerComponent('mirror', {
 			return;
 		}
 
+		// Callback to allow adjustments before rendering the mirror contents
+		if(this.onBeforeRender) {
+			this.onBeforeRender(renderer, scene, camera, mirror);
+		}
+
 		// Construct reflection matrix for the mirror plane
 		const reflectionMatrix = this._reflectionMatrix.set(
 		  1 -2*n.x*n.x,  -2*n.x*n.y,  -2*n.x*n.z, -2*n.x*d,
@@ -267,6 +272,11 @@ AFRAME.registerComponent('mirror', {
 			for(let i = 0; i < cameras.length; i++) {
 				this.copyCamera(this.tempCameras[i], cameras[i]);
 			}
+		}
+
+		// Callback to allow adjustments after rendering the mirror contents
+		if(this.onAfterRender) {
+			this.onAfterRender(renderer, scene, camera, this);
 		}
 	},
 	// Note: this method is straight from THREE.js WebXRManager.js
