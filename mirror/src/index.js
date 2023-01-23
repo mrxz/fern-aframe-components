@@ -68,8 +68,10 @@ AFRAME.registerComponent('mirror', {
 		layers: { type: 'array', default: [0] }
 	},
 	init: function() {
+		const mesh = this.el.getObject3D('mesh');
+
 		// Setup the material of the portal (write to stencil, adhere to depth)
-		this.mirrorMaterial = this.el.getObject3D('mesh').material;
+		this.mirrorMaterial = mesh.material;
 		const material = this.mirrorMaterial;
 		material.transparent = true;
 		material.colorWrite = false;
@@ -83,6 +85,12 @@ AFRAME.registerComponent('mirror', {
 		// Register mirror (which gives it its id)
 		this.system.registerMirror(this);
 		material.stencilRef = this.mirrorId;
+
+		// Use onBeforeRender to determine if the mirror is inside the frustum
+		this.insideFrustum = false;
+		mesh.onBeforeRender = () => {
+			this.insideFrustum = true;
+		};
 
 		// Layers for visibility
 		this.layers = new THREE.Layers();
@@ -162,6 +170,12 @@ AFRAME.registerComponent('mirror', {
 		this.data.layers.map(x => this.layers.enable(+x));
 	},
 	render: function(renderer, scene, camera) {
+		// Only render if the mirror is inside the frustum
+		if(!this.insideFrustum) {
+			return;
+		}
+		this.insideFrustum = false;
+
 		// Temporarily move the camera
 		const sceneCamera = renderer.xr.isPresenting ? renderer.xr.getCamera() : this.tempCamera;
 
