@@ -1,6 +1,6 @@
 # Fern A-Frame Components Collection
 [![github](https://flat.badgen.net/badge/icon/github?icon=github&label)](https://github.com/mrxz/fern-aframe-components/)
-[![twitter](https://flat.badgen.net/twitter/follow/noerihuisman)](https://twitter.com/noerihuisman)
+[![twitter](https://flat.badgen.net/badge/twitter/@noerihuisman/blue?icon=twitter&label)](https://twitter.com/noerihuisman)
 
 This is a collection of A-Frame components. Check the individual components for their usages and corresponding examples.
 

@@ -2,7 +2,7 @@
 [![npm version](https://img.shields.io/npm/v/@fern-solutions/aframe-screen-fade.svg?style=flat-square)](https://www.npmjs.com/package/@fern-solutions/aframe-screen-fade)
 [![npm version](https://img.shields.io/npm/l/@fern-solutions/aframe-screen-fade.svg?style=flat-square)](https://www.npmjs.com/package/@fern-solutions/aframe-screen-fade)
 [![github](https://flat.badgen.net/badge/icon/github?icon=github&label)](https://github.com/mrxz/fern-aframe-components/)
-[![twitter](https://flat.badgen.net/twitter/follow/noerihuisman)](https://twitter.com/noerihuisman)
+[![twitter](https://flat.badgen.net/badge/twitter/@noerihuisman/blue?icon=twitter&label)](https://twitter.com/noerihuisman)
 [![ko-fi](https://img.shields.io/badge/ko--fi-buy%20me%20a%20coffee-ff5f5f?style=flat-square)](https://ko-fi.com/fernsolutions)
 
 This component allows the screen to be faded to and from a solid color. The effect works in both desktop and VR mode. This can be used for situations like loading a scene, handling transitions or snap turning.
