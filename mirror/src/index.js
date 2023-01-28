@@ -344,6 +344,9 @@ AFRAME.registerComponent('mirror', {
 		const bottom2 = bottomFov * far / far2 * near2;
 
 		camera.projectionMatrix.makePerspective( left2, right2, top2, bottom2, near2, far2 );
+	},
+	remove: function() {
+		this.system.unregisterMirror(this);
 	}
 });
 
