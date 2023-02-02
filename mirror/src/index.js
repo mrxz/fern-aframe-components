@@ -1,6 +1,11 @@
-AFRAME.registerSystem('mirror', {
+/**
+ * System for keeping track of any portal (incl. mirrors).
+ * Keeps track of the (active) portals and render them at the
+ * end of normal rendering.
+ */
+AFRAME.registerSystem('portal', {
 	schema: {},
-	mirrors: [],
+	portals: [],
 	init: function() {
 		// Prevent auto clearing for each render
 		this.sceneEl.renderer.autoClear = false;
@@ -26,16 +31,16 @@ AFRAME.registerSystem('mirror', {
 				}
 			}
 			sentinel.visible = false;
-			this.mirrors.forEach(mirror => mirror.setInactive());
+			this.portals.forEach(portal => portal.setInactive());
 
-			// Supress A-Frame's scene.onAfterRender callback during mirror rendering
+			// Supress A-Frame's scene.onAfterRender callback during portal/mirror rendering
 			const oldOnAfterRender = scene.onAfterRender;
 			scene.onAfterRender = nopAfterRender;
 
-			// Let mirrors render themselves
-			this.mirrors.forEach(mirror => mirror.render(renderer, scene, camera));
+			// Let portals and mirrors render themselves
+			this.portals.forEach(portal => portal.render(renderer, scene, camera));
 
-			this.mirrors.forEach(mirror => mirror.setActive());
+			this.portals.forEach(portal => portal.setActive());
 			sentinel.visible = true;
 			scene.onAfterRender = oldOnAfterRender;
 		}
@@ -50,20 +55,23 @@ AFRAME.registerSystem('mirror', {
 
 		this.sceneEl.renderer.info.reset();
 	},
-	registerMirror: function(mirror) {
-		this.mirrors.push(mirror);
-		mirror.setMirrorId(this.mirrors.length);
+	registerPortal: function(portal) {
+		this.portals.push(portal);
+		portal.setPortalId(this.portals.length);
 	},
-	unregisterMirror: function(mirror) {
-		const index = this.mirrors.indexOf(mirror);
+	unregisterPortal: function(portal) {
+		const index = this.portals.indexOf(portal);
 		if(index !== -1) {
-			this.mirrors.splice(index, 1);
-			this.mirrors.forEach((mirror, index) => mirror.setMirrorId(index + 1));
+			this.portals.splice(index, 1);
+			this.portals.forEach((portal, index) => portal.setPortalId(index + 1));
 		}
 	}
 });
 
-AFRAME.registerComponent('mirror', {
+/**
+ * Base logic for portals
+ */
+const baseComponent = {
 	schema: {
 		layers: { type: 'array', default: [0] }
 	},
@@ -71,8 +79,8 @@ AFRAME.registerComponent('mirror', {
 		const mesh = this.el.getObject3D('mesh');
 
 		// Setup the material of the portal (write to stencil, adhere to depth)
-		this.mirrorMaterial = mesh.material;
-		const material = this.mirrorMaterial;
+		this.surfaceMaterial = mesh.material;
+		const material = this.surfaceMaterial;
 		material.transparent = true;
 		material.colorWrite = false;
 		material.depthWrite = true;
@@ -83,8 +91,8 @@ AFRAME.registerComponent('mirror', {
 		material.stencilZFail = THREE.KeepStencilOp;
 
 		// Register mirror (which gives it its id)
-		this.system.registerMirror(this);
-		material.stencilRef = this.mirrorId;
+		this.el.sceneEl.systems['portal'].registerPortal(this);
+		material.stencilRef = this.portalId;
 
 		// Use onBeforeRender to determine if the mirror is inside the frustum
 		this.insideFrustum = false;
@@ -102,29 +110,6 @@ AFRAME.registerComponent('mirror', {
 
 		// Setup clipping plane
 		this.clippingPlane = new THREE.Plane();
-
-		// Logic for adjusting projection matrix to clip the mirror plane
-		const _tempV4 = new THREE.Vector4();
-		const _tempPlane = new THREE.Plane();
-		const _q = new THREE.Vector4();
-		this.adjustProjectionMatrix = function(sceneCamera) {
-			_tempPlane.copy(this.clippingPlane).applyMatrix4(sceneCamera.matrixWorldInverse);
-			const clipPlane = _tempV4.set(_tempPlane.normal.x, _tempPlane.normal.y, _tempPlane.normal.z, _tempPlane.constant);
-			const projectionMatrix = sceneCamera.projectionMatrix;
-
-			_q.x = (Math.sign(clipPlane.x) + projectionMatrix.elements[8]) / projectionMatrix.elements[0];
-			_q.y = (Math.sign(clipPlane.y) + projectionMatrix.elements[9]) / projectionMatrix.elements[5];
-			_q.z = -1.0;
-			_q.w = (1.0 + projectionMatrix.elements[10]) / projectionMatrix.elements[14];
-
-			// Calculate the scaled plane vector
-			clipPlane.multiplyScalar(2.0 / clipPlane.dot(_q));
-
-			projectionMatrix.elements[2] = clipPlane.x;
-			projectionMatrix.elements[6] = clipPlane.y;
-			projectionMatrix.elements[10] = clipPlane.z + 1.0 - 0.00;
-			projectionMatrix.elements[14] = clipPlane.w;
-		};
 
 		// Utility for copying camera properties
 		this.copyCamera = function(source, target) {
@@ -153,24 +138,26 @@ AFRAME.registerComponent('mirror', {
 		this._cameraLPos = new THREE.Vector3();
 		this._cameraRPos = new THREE.Vector3();
 		this._normal = new THREE.Vector3();
-		this._reflectionMatrix = new THREE.Matrix4();
+		this._adjustMatrix = new THREE.Matrix4();
 	},
-	setMirrorId: function(id) {
-		this.mirrorId = id;
-		this.mirrorMaterial.stencilRef = id;
+	setPortalId: function(id) {
+		this.portalId = id;
+		this.surfaceMaterial.stencilRef = id;
 	},
 	setInactive: function() {
-		this.mirrorMaterial.stencilWrite = false;
+		this.surfaceMaterial.stencilWrite = false;
 	},
 	setActive: function() {
-		this.mirrorMaterial.stencilWrite = true;
+		this.surfaceMaterial.stencilWrite = true;
 	},
 	update: function() {
 		this.layers.disableAll();
 		this.data.layers.map(x => this.layers.enable(+x));
 	},
+	preRender: function() {},
+	postRender: function() {},
 	render: function(renderer, scene, camera) {
-		// Only render if the mirror is inside the frustum
+		// Only render if the portal surface is inside the frustum
 		if(!this.insideFrustum) {
 			return;
 		}
@@ -179,15 +166,11 @@ AFRAME.registerComponent('mirror', {
 		// Temporarily move the camera
 		const sceneCamera = renderer.xr.isPresenting ? renderer.xr.getCamera() : this.tempCamera;
 
-		// Mirror plane definition
+		// Make sure the portal surface can be seen
+		let visible;
 		const mirrorPos = this.el.object3D.getWorldPosition(this._mirrorPos);
 		const n = this._normal.set(0, 0, 1);
 		n.applyQuaternion(this.el.object3D.getWorldQuaternion(this._mirrorQuat));
-		const d = -mirrorPos.dot(n);
-		this.clippingPlane.set(n, d);
-
-		// Make sure the mirror can be seen
-		let visible;
 		if(renderer.xr.isPresenting) {
 			const cameras = sceneCamera.cameras;
 			this._cameraLPos.setFromMatrixPosition(cameras[0].matrixWorld);
@@ -204,20 +187,18 @@ AFRAME.registerComponent('mirror', {
 			return;
 		}
 
-		// Callback to allow adjustments before rendering the mirror contents
+		// The portal surface is visible, so compute the clipping plane
+		this.createClippingPlane(this.clippingPlane);
+
+		// Callback to allow adjustments before rendering the portal contents
 		if(this.onBeforeRender) {
-			this.onBeforeRender(renderer, scene, camera, mirror);
+			this.onBeforeRender(renderer, scene, camera, this);
 		}
 
-		// Construct reflection matrix for the mirror plane
-		const reflectionMatrix = this._reflectionMatrix.set(
-		  1 -2*n.x*n.x,  -2*n.x*n.y,  -2*n.x*n.z, -2*n.x*d,
-			-2*n.x*n.y, 1-2*n.y*n.y,  -2*n.y*n.z, -2*n.y*d,
-			-2*n.x*n.z,  -2*n.y*n.z, 1-2*n.z*n.z, -2*n.z*d,
-		     0,           0,           0,          1
-		);
+		// Construct a matrix for rendering the other side of the portal
+		const adjustMatrix = this.createAdjustMatrix(this._adjustMatrix);
 
-		// Update camera(s) for rendering the 'mirror' world
+		// Update camera(s) for rendering the portal contents
 		if(renderer.xr.isPresenting) {
 			// Use temp-cameras to store camera matrices
 			const cameras = sceneCamera.cameras;
@@ -225,41 +206,41 @@ AFRAME.registerComponent('mirror', {
 			for(let i = 0; i < cameras.length; i++) {
 				this.copyCamera(cameras[i], this.tempCameras[i]);
 
-				cameras[i].matrixWorld.premultiply(reflectionMatrix);
+				cameras[i].matrixWorld.premultiply(adjustMatrix);
 				cameras[i].matrixWorldInverse.copy(cameras[i].matrixWorld).invert();
 				cameras[i].layers.mask = this.layers.mask;
 			}
 
 			// Set projection matrix for frustum culling
-			this.setProjectionFromUnion(sceneCamera, cameras[0], cameras[1]);
+			setProjectionFromUnion(sceneCamera, cameras[0], cameras[1]);
 
 			// Apply clipping plane in projection matrix
-			this.adjustProjectionMatrix(cameras[0]);
-			this.adjustProjectionMatrix(cameras[1]);
+			adjustProjectionMatrix(cameras[0], this.clippingPlane);
+			adjustProjectionMatrix(cameras[1], this.clippingPlane);
 		} else {
 			sceneCamera.near = camera.near;
 			sceneCamera.far = camera.far;
 			sceneCamera.projectionMatrix.copy(camera.projectionMatrix);
 
-			sceneCamera.matrix.copy(camera.matrixWorld).premultiply(reflectionMatrix);
+			sceneCamera.matrix.copy(camera.matrixWorld).premultiply(adjustMatrix);
 			sceneCamera.matrix.decompose(
 				sceneCamera.position,
 				sceneCamera.quaternion,
 				sceneCamera.scale);
 			sceneCamera.matrixWorld.copy(sceneCamera.matrix);
 			sceneCamera.matrixWorldInverse.copy(sceneCamera.matrix).invert();
-			this.adjustProjectionMatrix(sceneCamera);
+			adjustProjectionMatrix(sceneCamera, this.clippingPlane);
 		}
 
-		// Hide mirror
+		// Hide portal surface
 		const mesh = this.el.getObject3D('mesh');
 		mesh.visible = false;
 
-		// Render 'mirror' world
+		// Render portal contents
 		renderer.xr.cameraAutoUpdate = false;
-		this.patchWebGLState(renderer.state);
+		this.preRender(renderer);
 		renderer.state.buffers.stencil.setTest(true);
-		renderer.state.buffers.stencil.setFunc(THREE.EqualStencilFunc, this.mirrorId, 0xFF);
+		renderer.state.buffers.stencil.setFunc(THREE.EqualStencilFunc, this.portalId, 0xFF);
 		renderer.state.buffers.stencil.setOp(THREE.KeepStencilOp, THREE.KeepStencilOp, THREE.KeepStencilOp);
 		renderer.state.buffers.stencil.setLocked(true);
 
@@ -273,10 +254,10 @@ AFRAME.registerComponent('mirror', {
 		sceneCamera.layers.mask = oldLayersMask;
 
 		renderer.state.buffers.stencil.setLocked(false);
-		this.unpatchWebGLState(renderer.state);
+		this.postRender(renderer);
 		renderer.xr.cameraAutoUpdate = true;
 
-		// Restore mirror
+		// Restore portal surface
 		mesh.visible = true;
 
 		// Restore cameras (in case of XR)
@@ -288,22 +269,128 @@ AFRAME.registerComponent('mirror', {
 			}
 		}
 
-		// Callback to allow adjustments after rendering the mirror contents
+		// Callback to allow adjustments after rendering the portal contents
 		if(this.onAfterRender) {
 			this.onAfterRender(renderer, scene, camera, this);
 		}
 	},
+	remove: function() {
+		this.el.sceneEl.systems['portal'].unregisterPortal(this);
+	}
+};
+
+AFRAME.registerComponent('mirror', {
+	...baseComponent,
+	createClippingPlane: function(plane) {
+		const mirrorPos = this.el.object3D.getWorldPosition(this._mirrorPos);
+		const n = this._normal.set(0, 0, 1);
+		n.applyQuaternion(this.el.object3D.getWorldQuaternion(this._mirrorQuat));
+		const d = -mirrorPos.dot(n);
+		return plane.set(n, d);
+	},
+	createAdjustMatrix: function(matrix) {
+		const n = this.clippingPlane.normal;
+		const d = this.clippingPlane.constant;
+		return matrix.set(
+			1 -2*n.x*n.x,  -2*n.x*n.y,  -2*n.x*n.z, -2*n.x*d,
+			  -2*n.x*n.y, 1-2*n.y*n.y,  -2*n.y*n.z, -2*n.y*d,
+			  -2*n.x*n.z,  -2*n.y*n.z, 1-2*n.z*n.z, -2*n.z*d,
+			   0,           0,           0,          1
+		  );
+	},
+	preRender: function(renderer) {
+		this.patchWebGLState(renderer.state);
+	},
+	postRender: function(renderer) {
+		this.unpatchWebGLState(renderer.state);
+	}
+});
+
+AFRAME.registerComponent('portal', {
+	...baseComponent,
+	schema: {
+		...baseComponent.schema,
+		destination: { type: 'selector' }
+	},
+	createClippingPlane: function(plane) {
+		// Clipping plane depends on the destination
+		const destinationPos = this.data.destination.object3D.getWorldPosition(this._mirrorPos);
+		const n = this._normal.set(0, 0, 1);
+		n.applyQuaternion(this.data.destination.object3D.getWorldQuaternion(this._mirrorQuat));
+		const d = -destinationPos.dot(n);
+		return plane.set(n, d);
+	},
+	rotate180Matrix: new THREE.Matrix4().makeRotationY(Math.PI),
+	createAdjustMatrix: function(matrix) {
+		matrix.copy(this.el.object3D.matrixWorld);
+		return matrix.invert()
+			.premultiply(this.rotate180Matrix)
+			.premultiply(this.data.destination.object3D.matrixWorld);
+	}
+});
+
+/* Primitives */
+AFRAME.registerPrimitive('a-mirror', {
+	defaultComponents: {
+		geometry: { primitive: 'plane' },
+		mirror: {}
+	},
+	mappings: {
+		layers: 'mirror.layers',
+	}
+});
+
+AFRAME.registerPrimitive('a-portal', {
+	defaultComponents: {
+		geometry: { primitive: 'plane' },
+		portal: {}
+	},
+	mappings: {
+		layers: 'portal.layers',
+		destination: 'portal.destination',
+	}
+});
+
+/* Utils */
+const adjustProjectionMatrix = (function() {
+	const _tempV4 = new THREE.Vector4();
+	const _tempPlane = new THREE.Plane();
+	const _q = new THREE.Vector4();
+	return function(sceneCamera, clippingPlane) {
+		_tempPlane.copy(clippingPlane).applyMatrix4(sceneCamera.matrixWorldInverse);
+		const clipPlane = _tempV4.set(_tempPlane.normal.x, _tempPlane.normal.y, _tempPlane.normal.z, _tempPlane.constant);
+		const projectionMatrix = sceneCamera.projectionMatrix;
+
+		_q.x = (Math.sign(clipPlane.x) + projectionMatrix.elements[8]) / projectionMatrix.elements[0];
+		_q.y = (Math.sign(clipPlane.y) + projectionMatrix.elements[9]) / projectionMatrix.elements[5];
+		_q.z = -1.0;
+		_q.w = (1.0 + projectionMatrix.elements[10]) / projectionMatrix.elements[14];
+
+		// Calculate the scaled plane vector
+		clipPlane.multiplyScalar(2.0 / clipPlane.dot(_q));
+
+		projectionMatrix.elements[2] = clipPlane.x;
+		projectionMatrix.elements[6] = clipPlane.y;
+		projectionMatrix.elements[10] = clipPlane.z + 1.0 + 0.0;
+		projectionMatrix.elements[14] = clipPlane.w;
+	};
+})();
+
+const setProjectionFromUnion = (function() {
+	const _cameraLPos = new THREE.Vector3();
+	const _cameraRPos = new THREE.Vector3();
+
 	// Note: this method is straight from THREE.js WebXRManager.js
 	// See: https://github.com/mrdoob/three.js/blob/8fd3b2acbd08952deee1e40c18b00907c5cd4c4d/src/renderers/webxr/WebXRManager.js#L429
 	// Its replicated here since we do need its behaviour, but can't use the rest
 	// of the XR camera auto updating logic.
 	// Falls under The MIT License:
 	// Copyright © 2010-2023 three.js authors
-	setProjectionFromUnion: function(camera, cameraL, cameraR) {
-		this._cameraLPos.setFromMatrixPosition(cameraL.matrixWorld);
-		this._cameraRPos.setFromMatrixPosition(cameraR.matrixWorld);
+	return function(camera, cameraL, cameraR) {
+		_cameraLPos.setFromMatrixPosition(cameraL.matrixWorld);
+		_cameraRPos.setFromMatrixPosition(cameraR.matrixWorld);
 
-		const ipd = this._cameraLPos.distanceTo(this._cameraRPos);
+		const ipd = _cameraLPos.distanceTo(_cameraRPos);
 
 		const projL = cameraL.projectionMatrix.elements;
 		const projR = cameraR.projectionMatrix.elements;
@@ -344,18 +431,5 @@ AFRAME.registerComponent('mirror', {
 		const bottom2 = bottomFov * far / far2 * near2;
 
 		camera.projectionMatrix.makePerspective( left2, right2, top2, bottom2, near2, far2 );
-	},
-	remove: function() {
-		this.system.unregisterMirror(this);
 	}
-});
-
-AFRAME.registerPrimitive('a-mirror', {
-	defaultComponents: {
-		geometry: { primitive: 'plane' },
-		mirror: {}
-	},
-	mappings: {
-		layers: 'mirror.layers',
-	}
-});
+})();
