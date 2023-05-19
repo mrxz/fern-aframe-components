@@ -1,26 +1,103 @@
+AFRAME.registerPrimitive('a-hud', {
+    defaultComponents: {
+        hud: { },
+    },
+    mappings: {
+        radius: 'hud.radius',
+        'horizontal-fov': 'hud.horizontalFov',
+        'vertical-fov': 'hud.verticalFov',
+	}
+});
+
+AFRAME.registerPrimitive('a-hud-element', {
+    defaultComponents: {
+		'hud-element': { },
+	},
+	mappings: {
+        align: 'hud-element.align',
+        anchor: 'hud-element.anchor',
+        'content-size': 'hud-element.contentSize',
+        'hud-size': 'hud-element.hudSize',
+	}
+});
+
 AFRAME.registerComponent('hud', {
     schema: {
+        radius: { type: 'number', default: 1 },
+        horizontalFov: { type: 'number', default: 100 },
+        verticalFov: { type: 'number', default: 80 }
     },
     init: function() {
-        this.el.object3D.position.set(0, 0, -1);
+        this.flat = true;
+        this.el.sceneEl.addEventListener('rendererresize', () => {
+            // Relayout is only needed on resize if the layout is flat (= screen space)
+            if(this.flat) {
+                this.relayout()
+            }
+        });
+        this.el.sceneEl.addEventListener('enter-vr', () => {
+            this.flat = false;
+            this.relayout();
+        });
+        this.el.sceneEl.addEventListener('exit-vr', () => {
+            this.flat = true;
+            this.relayout();
+        });
     },
-    update: function() {
+    relayout: function() {
+        for(const child of this.el.children) {
+            if(child.components['hud-element']) {
+                child.components['hud-element'].layout(this)
+            }
+        };
     },
     convertCoordinates: function(coordinates, outV3) {
-        const camera = this.el.sceneEl.camera;
-        const yScale = Math.tan(THREE.MathUtils.DEG2RAD * 0.5 * camera.fov) / camera.zoom;
-        const xScale = yScale * camera.aspect;
+        if(this.flat) {
+            const camera = this.el.sceneEl.camera;
+            const yScale = Math.tan(THREE.MathUtils.DEG2RAD * 0.5 * camera.fov) / camera.zoom;
+            const xScale = yScale * camera.aspect;
 
-        outV3.set(coordinates.x * xScale, coordinates.y * yScale, 0);
+            outV3.set(coordinates.x * xScale, coordinates.y * yScale, -1);
+        } else {
+            // Compute spherical coordinates
+            const theta = this.data.horizontalFov/2.0 * coordinates.x;
+            const phi = -90 + this.data.verticalFov/2.0 * coordinates.y;
+
+            outV3.set(
+                Math.sin(THREE.MathUtils.DEG2RAD*phi) * Math.sin(THREE.MathUtils.DEG2RAD*theta),
+                Math.cos(THREE.MathUtils.DEG2RAD*phi),
+                Math.sin(THREE.MathUtils.DEG2RAD*phi) * Math.cos(THREE.MathUtils.DEG2RAD*theta));
+            outV3.multiplyScalar(this.data.radius);
+        }
     },
     aspectRatio: function() {
-        return this.el.sceneEl.camera.aspect;
+        if(this.flat) {
+            return this.el.sceneEl.camera.aspect;
+        }
+        return this.data.horizontalFov / this.data.verticalFov;
     },
     scale: function() {
-        const camera = this.el.sceneEl.camera;
-        const yScale = Math.tan(THREE.MathUtils.DEG2RAD * 0.5 * camera.fov) / camera.zoom;
-        return 2.0 * yScale * camera.aspect;
-    }
+        if(this.flat) {
+            const camera = this.el.sceneEl.camera;
+            const yScale = Math.tan(THREE.MathUtils.DEG2RAD * 0.5 * camera.fov) / camera.zoom;
+            return 2.0 * yScale * camera.aspect;
+        }
+        return this.data.horizontalFov/360 * this.data.radius*Math.PI*2.0;
+    },
+    orientate: (function() {
+        const tempMat4 = new THREE.Matrix4();
+        const up = new THREE.Vector3(0, 1, 0);
+        const origin = new THREE.Vector3(0, 0, 0);
+        return function(position, outQuaternion) {
+            if(this.flat) {
+                outQuaternion.identity();
+                return;
+            }
+
+            tempMat4.lookAt(origin, position, up);
+            outQuaternion.setFromRotationMatrix(tempMat4);
+        };
+    })()
 });
 
 /* Normalized coordinates lookup for anchor/align points */
@@ -44,38 +121,26 @@ AFRAME.registerComponent('hud-element', {
         hudSize: { type: 'number', default: 1.0 },
     },
     init: function() {
-        this.el.sceneEl.addEventListener('rendererresize', () => this.layout());
         this.coordinates = new THREE.Vector2();
     },
     update: function() {
-        this.layout();
-    },
-    play: function() {
-        // Use play handler as this is the first event after the element is added
-        // to its parent element, which should contain the hud component.
-        this.hud = this.el.parentElement.components['hud'];
-        if(!this.hud) {
-            console.error('Hud element must be a direct child of a hud');
+        const hud = this.el.parentElement.components['hud'];
+        if(hud) {
+            this.layout(hud);
         }
-        this.layout();
     },
-    layout: function() {
-        if(!this.hud) {
-            return;
-        }
+    layout: function(hud) {
         const aspect = this.data.contentSize.y / this.data.contentSize.x;
 
         const coordinates = this.coordinates.copy(COORDINATES[this.data.align]);
         const anchor = COORDINATES[this.data.anchor];
         coordinates.x -= anchor.x * this.data.hudSize;
-        coordinates.y -= anchor.y * this.data.hudSize * aspect * this.hud.aspectRatio();
-        this.hud.convertCoordinates(coordinates, this.el.object3D.position);
+        coordinates.y -= anchor.y * this.data.hudSize * aspect * hud.aspectRatio();
+        hud.convertCoordinates(coordinates, this.el.object3D.position);
 
-        const scale = this.hud.scale() * this.data.hudSize / this.data.contentSize.x;
+        const scale = hud.scale() * this.data.hudSize / this.data.contentSize.x;
         this.el.object3D.scale.set(scale, scale, scale);
 
-        const matrix = new THREE.Matrix4();
-        //matrix.lookAt(new THREE.Vector3(0, 0, 1), this.el.object3D.position, new THREE.Vector3( 0, 1, 0 ));
-        this.el.object3D.quaternion.setFromRotationMatrix( matrix );
+        hud.orientate(this.el.object3D.position, this.el.object3D.quaternion);
     }
-})
+});
