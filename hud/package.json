@@ -1,6 +1,6 @@
 {
   "name": "@fern-solutions/aframe-hud",
-  "version": "0.10.0",
+  "version": "0.1.0",
   "description": "A-Frame component for adding HUD elements on top of the rest in both desktop and VR",
   "module": "dist/hud.esm.min.js",
   "browser": "dist/hud.umd.min.js",
