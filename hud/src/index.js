@@ -6,6 +6,7 @@ AFRAME.registerPrimitive('a-hud', {
         radius: 'hud.radius',
         'horizontal-fov': 'hud.horizontalFov',
         'vertical-fov': 'hud.verticalFov',
+        'scale-factor': 'hud.scaleFactor',
 	}
 });
 
@@ -24,8 +25,9 @@ AFRAME.registerPrimitive('a-hud-element', {
 AFRAME.registerComponent('hud', {
     schema: {
         radius: { type: 'number', default: 1 },
-        horizontalFov: { type: 'number', default: 100 },
-        verticalFov: { type: 'number', default: 80 }
+        horizontalFov: { type: 'number', default: 80 },
+        verticalFov: { type: 'number', default: 60 },
+        scaleFactor: { type: 'number', default: 1.0 },
     },
     init: function() {
         this.flat = true;
@@ -60,7 +62,7 @@ AFRAME.registerComponent('hud', {
             outV3.set(coordinates.x * xScale, coordinates.y * yScale, -1);
         } else {
             // Compute spherical coordinates
-            const theta = this.data.horizontalFov/2.0 * coordinates.x;
+            const theta = - this.data.horizontalFov/2.0 * coordinates.x;
             const phi = -90 + this.data.verticalFov/2.0 * coordinates.y;
 
             outV3.set(
@@ -69,6 +71,14 @@ AFRAME.registerComponent('hud', {
                 Math.sin(THREE.MathUtils.DEG2RAD*phi) * Math.cos(THREE.MathUtils.DEG2RAD*theta));
             outV3.multiplyScalar(this.data.radius);
         }
+    },
+    convertWidth: function(width) {
+        return this.flat ? width * this.data.scaleFactor : width;
+    },
+    convertHeight: function(height) {
+        // Height is given in "width percentage", so needs to be adjusted based on aspect ratio.
+        const adjustedHeight = height * this.aspectRatio();
+        return this.flat ? adjustedHeight * this.data.scaleFactor : adjustedHeight;
     },
     aspectRatio: function() {
         if(this.flat) {
@@ -80,7 +90,7 @@ AFRAME.registerComponent('hud', {
         if(this.flat) {
             const camera = this.el.sceneEl.camera;
             const yScale = Math.tan(THREE.MathUtils.DEG2RAD * 0.5 * camera.fov) / camera.zoom;
-            return 2.0 * yScale * camera.aspect;
+            return 2.0 * yScale * camera.aspect * this.data.scaleFactor;
         }
         return this.data.horizontalFov/360 * this.data.radius*Math.PI*2.0;
     },
@@ -134,8 +144,8 @@ AFRAME.registerComponent('hud-element', {
 
         const coordinates = this.coordinates.copy(COORDINATES[this.data.align]);
         const anchor = COORDINATES[this.data.anchor];
-        coordinates.x -= anchor.x * this.data.hudSize;
-        coordinates.y -= anchor.y * this.data.hudSize * aspect * hud.aspectRatio();
+        coordinates.x -= anchor.x * hud.convertWidth(this.data.hudSize);
+        coordinates.y -= anchor.y * hud.convertHeight(this.data.hudSize * aspect);
         hud.convertCoordinates(coordinates, this.el.object3D.position);
 
         const scale = hud.scale() * this.data.hudSize / this.data.contentSize.x;
