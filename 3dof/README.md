@@ -6,9 +6,7 @@
 [![mastodon](https://flat.badgen.net/badge/mastodon/@noerihuisman@arvr.social/blue?icon=mastodon&label)](https://arvr.social/@noerihuisman)
 [![ko-fi](https://img.shields.io/badge/ko--fi-buy%20me%20a%20coffee-ff5f5f?style=flat-square)](https://ko-fi.com/fernsolutions)
 
-This component allows hud elements to be rendered. The elements render in both desktop and VR mode. On desktop the elements appear on the screen (flat), whereas in VR they are projected on a sphere around the user's head.
-
-The intended usage is mostly for debugging, but can be used for simple overlays as well.
+This component can be used to render a scene in either monoscopic or stereoscopic 3DoF. Only the orientation of the head is used. The position of the camera can be controlled with the position property.
 
 Checkout the example: [Online Demo](https://aframe-components.fern.solutions/3dof) | [Source](https://github.com/mrxz/fern-aframe-components/blob/main/3dof/example/index.html)
 
@@ -18,8 +16,7 @@ Load the script from [npm](https://www.npmjs.com/package/@fern-solutions/aframe-
 <script src="https://unpkg.com/@fern-solutions/aframe-3dof/dist/3dof.umd.min.js"></script>
 ```
 
-The `3dof` component can be added to any `a-camera` element as follows:
+The `3dof` component can be added to any `a-scene` element as follows:
 ```HTML
-<a-camera 3dof>
-</a-camera>
+<a-scene 3dof="position: 0 1.6 0">
 ```
