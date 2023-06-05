@@ -11,6 +11,7 @@ This is a collection of A-Frame components. Check the individual components for 
 * [Fix Fog](./fix-fog): Changes fog depth from camera space to world space, [fixing fog in VR](https://fern.solutions/dev-logs/aframe-adventures-02/)
 * [Mirror `<a-mirror>`](./mirror): Mirror component and primitive for high-quality mirrors
 * [HUD `<a-hud>` and `<a-hud-element>`](./hud): HUD components for debugging purposes
+* [3DoF `3dof`](./3dof): Monoscopic or stereoscopic 3DoF rendering
 
 ### A-Frame Locomotion
 If you're looking for components for locomotion, be sure to check out [aframe-locomotion](https://github.com/mrxz/aframe-locomotion).

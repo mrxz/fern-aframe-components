@@ -1,0 +1,6 @@
+{
+    "name": "fern-aframe-components",
+    "workspaces": [
+        "*"
+    ]
+}
