@@ -1,0 +1,44 @@
+{
+  "name": "@fern-solutions/aframe-sky-background",
+  "version": "1.0.0",
+  "description": "A-Frame primitive for efficiently rendering a sky in the background",
+  "module": "dist/sky-background.esm.min.js",
+  "browser": "dist/sky-background.umd.min.js",
+  "main": "dist/sky-background.esm.min.js",
+  "types": "types/sky-background.d.ts",
+  "author": "Noeri Huisman",
+  "license": "MIT",
+  "scripts": {
+    "dev": "concurrently \"rollup -c -w\" \"live-server --port=4000 --no-browser ./example --mount=/js:./dist\"",
+    "build": "rollup -c",
+    "watch": "rollup -c -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrxz/fern-aframe-components"
+  },
+  "bugs": {
+    "url": "https://github.com/mrxz/fern-aframe-components/issues"
+  },
+  "homepage": "https://github.com/mrxz/fern-aframe-components/tree/main/sky-background#readme",
+  "keywords": [
+    "aframe",
+    "vr",
+    "xr",
+    "webxr"
+  ],
+  "files": [
+    "dist",
+    "types"
+  ],
+  "devDependencies": {
+    "@compodoc/live-server": "1.2.3",
+    "@types/animejs": "3.1.0",
+    "@types/three": "0.147.1",
+    "aframe-types": "0.8.7",
+    "concurrently": "^7.1.0",
+    "rollup": "^2.71.1",
+    "rollup-plugin-terser": "^7.0.2",
+    "typescript": "^5.0.4"
+  }
+}

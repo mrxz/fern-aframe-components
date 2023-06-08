@@ -5,11 +5,12 @@
 
 This is a collection of A-Frame components. Check the individual components for their usages and corresponding examples.
 
-* [Screen Fade `screen-fade`](./screen-fade): Allows fade transitions in both desktop and VR mode
+* [Mirror `<a-mirror>`](./mirror): Mirror component and primitive for high-quality mirrors
 * [Highlight `highlight`](./highlight): Render a highlight for objects when they are occluded
+* [Screen Fade `screen-fade`](./screen-fade): Allows fade transitions in both desktop and VR mode
+* [Sky Background `<a-sky-background>`](./sky-background): Primitive for efficiently rendering a sky in the background
 * [Extra Stats `extra-stats`](./extra-stats): Replacement for the `stats` component that shows additional stats
 * [Fix Fog](./fix-fog): Changes fog depth from camera space to world space, [fixing fog in VR](https://fern.solutions/dev-logs/aframe-adventures-02/)
-* [Mirror `<a-mirror>`](./mirror): Mirror component and primitive for high-quality mirrors
 * [HUD `<a-hud>` and `<a-hud-element>`](./hud): HUD components for debugging purposes
 * [3DoF `3dof`](./3dof): Monoscopic or stereoscopic 3DoF rendering
 
