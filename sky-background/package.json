@@ -1,6 +1,6 @@
 {
   "name": "@fern-solutions/aframe-sky-background",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A-Frame primitive for efficiently rendering a sky in the background",
   "module": "dist/sky-background.esm.min.js",
   "browser": "dist/sky-background.umd.min.js",
