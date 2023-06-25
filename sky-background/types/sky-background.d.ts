@@ -17,7 +17,7 @@ declare module "aframe" {
         }>;
     }
 
-    export interface Primitive {
+    export interface Primitives {
         "a-sky-background": PrimitiveConstructor<'geometry' | 'material' | 'sky-background', {
             'top-color': 'material.topColor',
             'bottom-color': 'material.bottomColor',
