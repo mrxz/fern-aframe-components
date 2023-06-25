@@ -18,6 +18,11 @@ declare module "aframe" {
     }
 
     export interface Primitives {
+        /**
+         * This primitives allows a sky to be added that's either a gradient or an equirectangular skybox.
+         * In contrast to the built-in `<a-sky>` this doesn't use a sphere geometry. It renders a fullscreen
+         * triangle covering the far plane, ensuring it's always in the background and more performant.
+         */
         "a-sky-background": PrimitiveConstructor<'geometry' | 'material' | 'sky-background', {
             'top-color': 'material.topColor',
             'bottom-color': 'material.bottomColor',
