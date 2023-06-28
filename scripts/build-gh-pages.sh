@@ -16,3 +16,14 @@ do
         cp -R "./$dir/example/"* "./dist/$dir/"
     fi
 done
+
+# Insert GitHub corner into example files
+find "./dist/" -name "*.html" -exec sed -i '
+/<!-- GITHUB_CORNER_LEFT -->/{
+    r ./scripts/chunks/github-corner-left.html
+    D
+}
+/<!-- GITHUB_CORNER_RIGHT -->/{
+    r ./scripts/chunks/github-corner-right.html
+    D
+}' {} \;
