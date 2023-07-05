@@ -1,18 +1,21 @@
 import "aframe";
 
 declare module "aframe" {
-    import { Component, Shader, PrimitiveConstructor } from "aframe";
-
     export interface Components {
         "sky-background": Component<{}>;
     }
 
     export interface Shaders {
         "sky-background": Shader<{
+            /** The solid color of the sky at the top */
             topColor: { type: 'color', is: 'uniform', default: '#0077ff' },
+            /** The solid color of the sky at the bottom */
             bottomColor: { type: 'color', is: 'uniform', default: '#ffffff' },
+            /** Offset in meters to 'angle' the gradient a bit */
             offset: { type: 'float', is: 'uniform', default: 120.0 },
+            /** Exponent used to blend between the top and bottom color as a function of height */
             exponent: { type: 'float', is: 'uniform', default: 0.9 },
+            /** The equirectangular texture to use, disables the gradient sky */
             src: {type: 'map'},
         }>;
     }
