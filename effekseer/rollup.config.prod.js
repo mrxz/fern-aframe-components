@@ -9,7 +9,7 @@ export default [
         input: 'src/main.ts',
         plugins: [
             nodeResolve({ resolveOnly: ['aframe-typescript'] }),
-            typescript({ compilerOptions: { declaration: true, declarationDir: 'typings' }}),
+            typescript({ compilerOptions: { declaration: true, declarationDir: 'typings' }, types: ['vendor/effekseer.d.ts'] }),
             terser(),
         ],
         external: ['aframe', 'effekseer'],
