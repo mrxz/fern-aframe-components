@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>effekseer | Example</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/mrxz/effekseer-sample-effects/effekseer-build/effekseer.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@zip.js/zip.js/dist/zip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dat.gui/build/dat.gui.min.js"></script>
+    <script src="./js/aframe-effekseer.umd.min.js"></script>
+    <script>
+      AFRAME.registerComponent('effect-switcher', {
+        schema: {
+          effectEl: { type: 'selector', default: '#effect-container' },
+          effectList: { type: 'asset', default: '#effect-list' }
+        },
+        init: function() {
+          const effectList = THREE.Cache.get(this.data.effectList);
+          const gui = new dat.GUI({name: "A-Frame Effekseer", });
+          let effekseerComponent = this.data.effectEl.children[0].components.effekseer;
+          const state = {
+            effect: 'tktk02/Sword1.efkpkg',
+            scale: 0.5,
+            target: new THREE.Vector3(3, 1.5, -10),
+            paused: false,
+            reset: () => {
+              effekseerComponent.stopEffect();
+              effekseerComponent.playEffect();
+            }
+          }
+          gui.add(state, "effect", effectList.effects)
+            .listen().onChange((effectFile) => {
+              const effectEntity = document.createElement('a-entity');
+              effectEntity.setAttribute('effekseer', {
+                src: `https://cdn.jsdelivr.net/gh/mrxz/effekseer-sample-effects/effects/${effectFile}`,
+                loop: true
+              });
+              this.data.effectEl.append(effectEntity);
+              effectEntity.addEventListener('loaded', e => {
+                effekseerComponent = effectEntity.components.effekseer;
+                effekseerComponent.setTargetLocation(state.target);
+                state.paused = false;
+                this.data.effectEl.children[0].remove();
+              });
+            });
+          const transformGui = gui.addFolder("Transform");
+          transformGui.open();
+          transformGui.add(state, "scale", 0, 1).name("Scale")
+            .listen().onChange((scale) => {
+              this.data.effectEl.object3D.scale.set(scale, scale, scale);
+            });
+          transformGui.add(state.target, "x").name("Target X")
+            .listen().onChange(_ => effekseerComponent.setTargetLocation(state.target));
+          transformGui.add(state.target, "y").name("Target Y")
+            .listen().onChange(_ => effekseerComponent.setTargetLocation(state.target));
+          transformGui.add(state.target, "z").name("Target Z")
+            .listen().onChange(_ => effekseerComponent.setTargetLocation(state.target));
+          const actionGui = gui.addFolder("Actions");
+          actionGui.open();
+          actionGui.add(state, "paused").name("Paused").listen().onChange(pause => {
+            if(pause) {
+              effekseerComponent.pauseEffect();
+            } else {
+              effekseerComponent.resumeEffect();
+            }
+          });
+          actionGui.add(state, "reset").name("Reset");
+        }
+      })
+    </script>
+  </head>
+  <body>
+    <a-scene effekseer="wasmPath: https://cdn.jsdelivr.net/gh/mrxz/effekseer-sample-effects/effekseer-build/effekseer.wasm" background="color: black" effect-switcher>
+      <a-assets>
+        <a-asset-item id="start-effect" src="https://cdn.jsdelivr.net/gh/mrxz/effekseer-sample-effects/effects/tktk02/Sword1.efkpkg" response-type="arraybuffer"></a-asset-item>
+        <a-asset-item id="effect-list" src="https://cdn.jsdelivr.net/gh/mrxz/effekseer-sample-effects/effects/index.json" response-type="json"></a-asset-item>
+      </a-assets>
+
+      <a-entity id="effect-container" position="0 1.5 -10" scale="0.5 0.5 0.5">
+        <a-entity effekseer="src: #start-effect; dynamic: true"></a-entity>
+      </a-entity>
+    </a-scene>
+
+    <!-- GITHUB_CORNER_LEFT -->
+  </body>
+</html>

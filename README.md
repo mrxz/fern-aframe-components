@@ -9,6 +9,7 @@ This is a collection of A-Frame components. Check the individual components for 
 * [Highlight `highlight`](./highlight): Render a highlight for objects when they are occluded
 * [Screen Fade `screen-fade`](./screen-fade): Allows fade transitions in both desktop and VR mode
 * [Sky Background `<a-sky-background>`](./sky-background): Primitive for efficiently rendering a sky in the background
+* [Effekseer `effekseer`](./effekseer/): Component for integrating [Effekseer](https://effekseer.github.io/en/) effects into A-Frame projects
 * [Extra Stats `extra-stats`](./extra-stats): Replacement for the `stats` component that shows additional stats
 * [Fix Fog](./fix-fog): Changes fog depth from camera space to world space, [fixing fog in VR](https://fern.solutions/dev-logs/aframe-adventures-02/)
 * [HUD `<a-hud>` and `<a-hud-element>`](./hud): HUD components for debugging purposes
