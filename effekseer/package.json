@@ -9,7 +9,7 @@
   "author": "Noeri Huisman",
   "license": "MIT",
   "scripts": {
-    "dev": "concurrently \"rollup -c rollup.config.dev.js -w\" \"live-server --port=4000 --no-browser ./examples --mount=/js:./dist\"",
+    "dev": "concurrently \"rollup -c rollup.config.dev.js -w\" \"live-server --port=4000 --no-browser ./example --mount=/js:./dist --mount=/src:./src\"",
     "build": "rollup -c rollup.config.prod.js"
   },
   "keywords": [
@@ -30,7 +30,6 @@
     "@types/three": "0.147.1",
     "aframe-types": "aframe-1.4.2",
     "aframe-typescript": "aframe-1.4.2",
-    "aframe-typescript-docs-generator": "0.8.1",
     "concurrently": "^7.1.0",
     "rimraf": "^5.0.1",
     "rollup": "^2.71.1",

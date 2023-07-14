@@ -1,5 +1,6 @@
 import * as AFRAME from 'aframe';
 import * as THREE from 'three';
+import 'effekseer';
 import { strict } from 'aframe-typescript';
 
 /**

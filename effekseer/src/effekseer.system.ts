@@ -1,6 +1,7 @@
 import * as AFRAME from 'aframe';
 import { strict } from 'aframe-typescript';
 import * as THREE from 'three';
+import 'effekseer';
 import * as zip from '@zip.js/zip.js';
 
 const createUnzip = async function(buffer: Uint8Array) {
