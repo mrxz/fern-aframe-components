@@ -20,5 +20,5 @@
         "aframe": ["./node_modules/aframe-types"]
       }
     },
-    "include": ["types"],
+    "include": ["types"]
 }
