@@ -1,0 +1,27 @@
+{
+    "compilerOptions": {
+      "target": "esnext",
+      "useDefineForClassFields": true,
+      "module": "esnext",
+      "baseUrl": "./",
+      "lib": ["esnext", "dom"],
+      "moduleResolution": "node",
+      "strict": true,
+      "resolveJsonModule": true,
+      "isolatedModules": true,
+      "esModuleInterop": true,
+      "noEmit": true,
+      "noUnusedLocals": true,
+      "noUnusedParameters": true,
+      "noImplicitReturns": true,
+      "noImplicitAny": true,
+      "skipLibCheck": true,
+      "declaration": false,
+      "rootDir": "src",
+      "paths": {
+        "aframe": ["./node_modules/aframe-types"]
+      }
+    },
+    "include": ["src"],
+    "exclude": ["node_modules", "**/dist/*"]
+}
