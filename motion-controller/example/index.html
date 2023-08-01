@@ -14,9 +14,15 @@
       <a-assets>
       </a-assets>
 
-      <a-entity motion-controller-model="hand: left" position="0 1.7 -0.3" rotation="0 -90 0"></a-entity>
-      <a-camera>
-      </a-camera>
+      <a-entity motion-controller-space="hand: left; space: gripSpace" motion-controller-model="hand: left"></a-entity>
+      <a-entity motion-controller-space="hand: left; space: targetRaySpace">
+        <a-box width="0.002" height="0.002" depth="2" color="red" position="0 0 -1"></a-box>
+      </a-entity>
+      <a-entity motion-controller-space="hand: right; space: gripSpace" motion-controller-model="hand: right"></a-entity>
+      <a-entity motion-controller-space="hand: right; space: targetRaySpace">
+        <a-box width="0.002" height="0.002" depth="2" color="red" position="0 0 -1"></a-box>
+      </a-entity>
+      <a-camera></a-camera>
 
       <a-plane color="gray" width="10" height="10" rotation="-90 0 0"></a-plane>
 
