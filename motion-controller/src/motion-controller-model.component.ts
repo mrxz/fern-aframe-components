@@ -1,6 +1,5 @@
 import * as AFRAME from 'aframe';
 import * as THREE from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { strict } from 'aframe-typescript';
 import { MotionController, VisualResponse } from '@webxr-input-profiles/motion-controllers';
 import { phongMaterialFromStandardMaterial } from './utils';
@@ -19,19 +18,22 @@ type EnhancedVisualResponse = VisualResponse & {
 export const MotionControllerModelComponent = AFRAME.registerComponent('motion-controller-model', strict<{
     motionControllerSystem: AFRAME.Systems['motion-controller'],
     motionController: MotionController|null,
-    gltfLoader: GLTFLoader
+    componentMeshes: Map<string, Array<{mesh: THREE.Mesh, originalColor: THREE.Color}>>,
 }>().component({
     schema: {
         hand: { type: 'string', oneOf: ['left', 'right'], default: 'left' },
-        overrideMaterial: { type: 'string', oneOf: ['none', 'phong'], default: 'phong'}
+        overrideMaterial: { type: 'string', oneOf: ['none', 'phong'], default: 'phong'},
+        buttonTouchColor: { type: 'color', default: '#8AB' },
+        buttonPressColor: { type: 'color', default: '#2DF' }
     },
     init: function() {
         this.motionControllerSystem = this.el.sceneEl.systems['motion-controller'];
-        this.gltfLoader = new AFRAME.THREE.GLTFLoader();
+        this.componentMeshes = new Map();
+        const gltfLoader = new AFRAME.THREE.GLTFLoader();
         this.el.sceneEl.addEventListener('motion-controller-change', _event => {
             const inputSourceRecord = this.motionControllerSystem[this.data.hand];
             if(inputSourceRecord && inputSourceRecord.motionController) {
-                this.gltfLoader.load(inputSourceRecord.motionController.assetUrl, (gltf) => {
+                gltfLoader.load(inputSourceRecord.motionController.assetUrl, (gltf) => {
                     // Make sure the motionController is still the one the model was loaded for
                     if(this.motionController !== inputSourceRecord.motionController) {
                         return;
@@ -42,7 +44,7 @@ export const MotionControllerModelComponent = AFRAME.registerComponent('motion-c
                     // for proper rendering. Since this isn't always desirable, convert to phong material instead.
                     if(this.data.overrideMaterial === 'phong') {
                         gltf.scene.traverse(child => {
-                            if(child.type !== 'mesh') {
+                            if(child.type !== 'Mesh') {
                                 return;
                             }
 
@@ -51,7 +53,14 @@ export const MotionControllerModelComponent = AFRAME.registerComponent('motion-c
                         });
                     }
 
+                    this.componentMeshes.clear();
                     Object.values(this.motionController.components).forEach((component) => {
+                        // Can't traverse the rootNodes of the components, as these are hardly ever correct.
+                        // See: https://github.com/immersive-web/webxr-input-profiles/issues/249
+                        const componentMeshes: Array<{mesh: THREE.Mesh, originalColor: THREE.Color}> = [];
+                        this.componentMeshes.set(component.id, componentMeshes);
+
+                        // Enhance the visual responses with references to the actual Three.js objects from the loaded glTF
                         Object.values(component.visualResponses).forEach((visualResponse) => {
                             const valueNode = gltf.scene.getObjectByName(visualResponse.valueNodeName);
                             const minNode = visualResponse.minNodeName ? gltf.scene.getObjectByName(visualResponse.minNodeName) : undefined;
@@ -62,6 +71,16 @@ export const MotionControllerModelComponent = AFRAME.registerComponent('motion-c
                                 return;
                             }
 
+                            // Extract meshes from valueNodes
+                            valueNode.traverse(c => {
+                                if(c.type === 'Mesh') {
+                                    const mesh = c as THREE.Mesh;
+                                    const originalColor = (mesh.material as THREE.MeshPhongMaterial).color.clone();
+                                    componentMeshes.push({mesh, originalColor});
+                                }
+                            });
+
+                            // Enhance VisualResponse with references to the actual nodes
                             (visualResponse as EnhancedVisualResponse).valueNode = valueNode;
                             if(visualResponse.valueNodeProperty === 'transform') {
                                 if(!minNode || !maxNode) {
@@ -86,14 +105,18 @@ export const MotionControllerModelComponent = AFRAME.registerComponent('motion-c
         });
     },
     remove: function() {
-        // TODO: Clean-up pending
+        // TODO: Clean-up any event handlers
+        // TODO: Remove controller mesh from scene
+        // TODO: Remove enhanced properties from motion controller instances(?)
     },
     tick: function() {
         if(!this.motionController || !this.el.getObject3D('mesh')) { // FIXME: Improve check for mesh
             return;
         }
 
-        Object.values(this.motionController.components).forEach((component) => {
+        for(const componentId in this.motionController.components) {
+            const component = this.motionController.components[componentId];
+
 			// Update node data based on the visual responses' current states
 			Object.values(component.visualResponses).forEach((visualResponse) => {
 				const { valueNode, minNode, maxNode, value, valueNodeProperty } = visualResponse as EnhancedVisualResponse;
@@ -118,7 +141,21 @@ export const MotionControllerModelComponent = AFRAME.registerComponent('motion-c
 					);
 				}
 			});
-		});
+
+            // Update color based on state
+            // FIXME: Parse colors once instead of using the string representations
+            let color: string|null = null;
+            if(component.values.state === 'touched') {
+                color = this.data.buttonTouchColor;
+            } else if(component.values.state === 'pressed') {
+                color = this.data.buttonPressColor;
+            }
+            this.componentMeshes.get(componentId)?.forEach(mesh => {
+                // FIXME: This depends on the color of the controller model whether
+                //        Find a better way to colorize it, while maintaining texture
+                (mesh.mesh.material as THREE.MeshPhongMaterial).color.set(color || mesh.originalColor);
+            });
+		}
     }
 }));
 

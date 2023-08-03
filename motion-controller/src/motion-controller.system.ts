@@ -1,13 +1,14 @@
 import * as AFRAME from 'aframe';
 import { SceneEvent } from 'aframe';
 import { strict } from 'aframe-typescript';
-import { fetchProfile, MotionController } from '@webxr-input-profiles/motion-controllers';
+import { Component, fetchProfile, MotionController } from '@webxr-input-profiles/motion-controllers';
 
 const DEFAULT_INPUT_PROFILE_ASSETS_URI = 'https://cdn.jsdelivr.net/npm/@webxr-input-profiles/assets/dist/profiles';
 
 interface InputSourceRecord {
     xrInputSource: XRInputSource,
     motionController?: MotionController,
+    componentState: {[key: string]: Component['values'] },
 };
 
 export const MotionControllerSystem = AFRAME.registerSystem('motion-controller', strict<{
@@ -43,7 +44,7 @@ export const MotionControllerSystem = AFRAME.registerSystem('motion-controller',
                 }
             });
             event.added.forEach(async xrInputSource => {
-                const record: InputSourceRecord = { xrInputSource };
+                const record: InputSourceRecord = { xrInputSource, componentState: {} };
                 this.inputSources.push(record);
                 // FIXME: Detect and report when there are multiple input sources with the same handedness
                 if(xrInputSource.handedness === 'left') {
@@ -53,6 +54,10 @@ export const MotionControllerSystem = AFRAME.registerSystem('motion-controller',
                 }
                 const { profile, assetPath } = await fetchProfile(xrInputSource, this.data.profilesUri);
                 record.motionController = new MotionController(xrInputSource, profile, assetPath!);
+                for(const componentKey in record.motionController!.components) {
+                    const component = record.motionController.components[componentKey];
+                    record.componentState[componentKey] = {...component.values};
+                }
 
                 // Notify anyone interested in this change
                 this.sceneEl.emit('motion-controller-change' as keyof AFRAME.EntityEvents);
@@ -79,9 +84,70 @@ export const MotionControllerSystem = AFRAME.registerSystem('motion-controller',
         // Update all motion controllers. This ensures that any code
         // polling the state gets up to date information, even when not visualized
         // FIXME: System tick happens after component ticks, meaning update is always 1 frame late :-/
-        this.inputSources.forEach(inputSourceRecord => inputSourceRecord.motionController?.updateFromGamepad());
+        this.inputSources.forEach(inputSourceRecord => {
+            if(!inputSourceRecord.motionController) {
+                return;
+            }
+
+            // Let the motion controller library update the state
+            inputSourceRecord.motionController.updateFromGamepad()
+            const hand = this.left === inputSourceRecord ? 'left' : this.right === inputSourceRecord ? 'right' : undefined;
+
+            // Compare the state with the last recorded state, and emit events for any changes
+            for(const componentKey in inputSourceRecord.motionController.components) {
+                const newState = inputSourceRecord.motionController?.components[componentKey]!;
+                const oldState = inputSourceRecord.componentState[componentKey];
+                const eventDetails: ButtonEventDetails = {
+                    inputSource: inputSourceRecord.xrInputSource,
+                    motionController: inputSourceRecord.motionController,
+                    hand,
+                    button: componentKey,
+                    buttonState: newState.values,
+                };
+                // Update state already so event handlers will see the new state when polling
+                const oldButtonState = oldState.state;
+                oldState.state = newState.values.state;
+                const oldXAxis = oldState.xAxis;
+                oldState.xAxis = newState.values.xAxis;
+                const oldYAxis = oldState.yAxis;
+                oldState.yAxis = newState.values.yAxis;
+
+                if(newState.values.state !== oldButtonState) {
+                    if(oldButtonState === 'touched') {
+                        // No longer touched -> touchend
+                        this.el.emit('touchend' as keyof AFRAME.EntityEvents, eventDetails);
+                    } else if(oldButtonState === 'pressed') {
+                        // No longer pressed -> buttonup
+                        this.el.emit('buttonup' as keyof AFRAME.EntityEvents, eventDetails);
+                    }
+
+                    if(newState.values.state === 'touched') {
+                        // Now touched -> touchstart
+                        this.el.emit('touchstart' as keyof AFRAME.EntityEvents, eventDetails);
+                    } else if(newState.values.state === 'pressed') {
+                        // Now pressed -> buttondown
+                        this.el.emit('buttondown' as keyof AFRAME.EntityEvents, eventDetails);
+                    }
+                }
+
+                if(newState.type === 'thumbstick' || newState.type === 'touchpad') {
+                    if(oldXAxis !== newState.values.xAxis || oldYAxis !== newState.values.yAxis) {
+                        // Value along axis changed
+                        this.el.emit('axismove' as keyof AFRAME.EntityEvents, eventDetails);
+                    }
+                }
+            }
+        });
     },
 }));
+
+export interface ButtonEventDetails {
+    inputSource: XRInputSource;
+    motionController: MotionController
+    hand?: 'left'|'right';
+    button: string;
+    buttonState: Component['values']
+}
 
 declare module "aframe" {
     export interface Systems {
@@ -89,5 +155,11 @@ declare module "aframe" {
     }
     export interface SceneEvents {
         "motion-controller-change": SceneEvent<{}>
+        "touchstart": SceneEvent<ButtonEventDetails>
+        "touchend": SceneEvent<ButtonEventDetails>
+        "buttondown": SceneEvent<ButtonEventDetails>
+        "buttonup": SceneEvent<ButtonEventDetails>
+        "buttonchange": SceneEvent<ButtonEventDetails>
+        "axismove": SceneEvent<ButtonEventDetails>
     }
 }

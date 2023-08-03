@@ -4,5 +4,6 @@ export function phongMaterialFromStandardMaterial(sourceMaterial: THREE.MeshStan
     return new THREE.MeshPhongMaterial({
         color: sourceMaterial.color.clone(),
         map: sourceMaterial.map,
+        side: sourceMaterial.side,
     });
 }
