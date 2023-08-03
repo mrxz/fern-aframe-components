@@ -1,7 +1,9 @@
 import * as AFRAME from 'aframe';
+import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { strict } from 'aframe-typescript';
 import { MotionController, VisualResponse } from '@webxr-input-profiles/motion-controllers';
+import { phongMaterialFromStandardMaterial } from './utils';
 
 /* The below code is based on Three.js: https://github.com/mrdoob/three.js/blob/dev/examples/jsm/webxr/XRControllerModelFactory.js
  * MIT LICENSE
@@ -20,7 +22,8 @@ export const MotionControllerModelComponent = AFRAME.registerComponent('motion-c
     gltfLoader: GLTFLoader
 }>().component({
     schema: {
-        hand: { type: 'string', oneOf: ['left', 'right'], default: 'left' }
+        hand: { type: 'string', oneOf: ['left', 'right'], default: 'left' },
+        overrideMaterial: { type: 'string', oneOf: ['none', 'phong'], default: 'phong'}
     },
     init: function() {
         this.motionControllerSystem = this.el.sceneEl.systems['motion-controller'];
@@ -34,6 +37,19 @@ export const MotionControllerModelComponent = AFRAME.registerComponent('motion-c
                         return;
                     }
                     this.el.setObject3D('mesh', gltf.scene);
+
+                    // The default materials might be physical based ones requiring an environment map
+                    // for proper rendering. Since this isn't always desirable, convert to phong material instead.
+                    if(this.data.overrideMaterial === 'phong') {
+                        gltf.scene.traverse(child => {
+                            if(child.type !== 'mesh') {
+                                return;
+                            }
+
+                            const mesh = child as THREE.Mesh;
+                            mesh.material = phongMaterialFromStandardMaterial(mesh.material as THREE.MeshStandardMaterial);
+                        });
+                    }
 
                     Object.values(this.motionController.components).forEach((component) => {
                         Object.values(component.visualResponses).forEach((visualResponse) => {
@@ -70,7 +86,7 @@ export const MotionControllerModelComponent = AFRAME.registerComponent('motion-c
         });
     },
     remove: function() {
-        // TODO: Clean-up pending 
+        // TODO: Clean-up pending
     },
     tick: function() {
         if(!this.motionController || !this.el.getObject3D('mesh')) { // FIXME: Improve check for mesh

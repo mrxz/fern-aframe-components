@@ -18,7 +18,7 @@ export const MotionControllerSpaceComponent = AFRAME.registerComponent('motion-c
     },
     tick: function() {
         const xrFrame = this.el.sceneEl.frame;
-        const xrReferenceSpace = this.el.sceneEl.renderer.xr.getReferenceSpace();
+        const xrReferenceSpace = this.el.sceneEl.renderer.xr.getReferenceSpace?.();
         if(!this.inputSource || !xrFrame || !xrReferenceSpace) {
             return;
         }
