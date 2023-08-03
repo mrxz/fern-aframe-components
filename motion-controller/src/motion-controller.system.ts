@@ -77,6 +77,11 @@ export const MotionControllerSystem = AFRAME.registerSystem('motion-controller',
             if(this.xrSession) {
                 this.xrSession.removeEventListener('inputsourceschange', onInputSourcesChange);
                 this.xrSession = null;
+                // Remove any input sources, as the session has ended
+                this.inputSources.splice(0, this.inputSources.length);
+                this.left = null;
+                this.right = null;
+                this.sceneEl.emit('motion-controller-change' as keyof AFRAME.EntityEvents);
             }
         });
     },
