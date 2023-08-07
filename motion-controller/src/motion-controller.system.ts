@@ -4,11 +4,13 @@ import { strict } from 'aframe-typescript';
 import { Component, fetchProfile, MotionController } from '@webxr-input-profiles/motion-controllers';
 
 const DEFAULT_INPUT_PROFILE_ASSETS_URI = 'https://cdn.jsdelivr.net/npm/@webxr-input-profiles/assets/dist/profiles';
+const HANDS_PROFILE_ID = 'generic-hand';
 
-interface InputSourceRecord {
+export interface InputSourceRecord {
     xrInputSource: XRInputSource,
     motionController?: MotionController,
     componentState: {[key: string]: Component['values'] },
+    jointState?: {poses: Float32Array, radii: Float32Array},
 };
 
 export const MotionControllerSystem = AFRAME.registerSystem('motion-controller', strict<{
@@ -28,6 +30,11 @@ export const MotionControllerSystem = AFRAME.registerSystem('motion-controller',
         this.inputSources = [];
         this.left = null;
         this.right = null;
+
+        // DEBUG
+        //webXROptionalAttributes.push('hand-tracking');
+        (this.sceneEl as any).setAttribute('webxr', {optionalFeatures: ['hand-tracking']});
+        //sceneEl.setAttribute('webxr', {optionalFeatures: webXROptionalAttributes});
 
         const onInputSourcesChange = (event: XRInputSourceChangeEvent) => {
             event.removed.forEach(xrInputSource => {
@@ -57,6 +64,14 @@ export const MotionControllerSystem = AFRAME.registerSystem('motion-controller',
                 for(const componentKey in record.motionController!.components) {
                     const component = record.motionController.components[componentKey];
                     record.componentState[componentKey] = {...component.values};
+                }
+
+                // Special treatment for hand-tracking
+                if(record.motionController!.id === HANDS_PROFILE_ID) {
+                    record.jointState = {
+                        poses: new Float32Array(16 * 25),
+                        radii: new Float32Array(25),
+                    };
                 }
 
                 // Notify anyone interested in this change
@@ -96,6 +111,9 @@ export const MotionControllerSystem = AFRAME.registerSystem('motion-controller',
 
             // Let the motion controller library update the state
             inputSourceRecord.motionController.updateFromGamepad()
+            if(inputSourceRecord.motionController.id === HANDS_PROFILE_ID) {
+                this.updateHandJoints(inputSourceRecord);
+            }
             const hand = this.left === inputSourceRecord ? 'left' : this.right === inputSourceRecord ? 'right' : undefined;
 
             // Compare the state with the last recorded state, and emit events for any changes
@@ -144,6 +162,23 @@ export const MotionControllerSystem = AFRAME.registerSystem('motion-controller',
             }
         });
     },
+    updateHandJoints: function(inputSourceRecord: InputSourceRecord) {
+        const xrFrame = this.el.sceneEl.frame;
+        if(!xrFrame) {
+            return;
+        }
+
+        // Make sure the hand is present
+        const hand = inputSourceRecord.xrInputSource.hand;
+        if(!hand) {
+            return;
+        }
+
+        // Note: @types/webxr misses quite a few of the hand tracking types
+        (xrFrame as any).fillPoses(hand.values(), inputSourceRecord.xrInputSource.gripSpace, inputSourceRecord.jointState!.poses);
+        // FIXME: Perhaps only fetch radii once or upon request(?)
+        (xrFrame as any).fillJointRadii(hand.values(), inputSourceRecord.jointState!.radii);
+    }
 }));
 
 export interface ButtonEventDetails {
