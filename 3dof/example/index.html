@@ -3,10 +3,40 @@
     <head>
         <title>Fern A-Frame Components | 3DoF</title>
         <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+        <script type='text/javascript' src='https://unpkg.com/aframe-event-set-component@5.x.x/dist/aframe-event-set-component.min.js?ver=6.3.1' id='aframe-event-js'></script>
         <script src="/js/3dof.umd.min.js"></script>
+        <script>
+            // System to ensure any tracked controls uses the viewer references space
+            AFRAME.registerSystem('relative-to-head', {
+                init: function() {
+                    this.referenceSpace = null;
+                    this.sceneEl.addEventListener('enter-vr', async e => {
+                        this.referenceSpace = await this.el.sceneEl.xrSession.requestReferenceSpace('viewer');
+                        if(!this.sceneEl.is('vr-mode')) {
+                            this.referenceSpace = null;
+                        }
+                    });
+                    this.sceneEl.addEventListener('exit-vr', e => {
+                        this.referenceSpace = null;
+                    });
+
+                    AFRAME.components['tracked-controls-webxr'].Component.prototype.tick = function() {
+                        const sceneEl = this.el.sceneEl;
+                        const controller = this.controller;
+                        const frame = sceneEl.frame;
+                        if(!controller || !sceneEl.frame || !sceneEl.systems['relative-to-head'].referenceSpace) { return; }
+                        if(!controller.hand) {
+                            this.pose = frame.getPose(controller[this.data.space], sceneEl.systems['relative-to-head'].referenceSpace);
+                            this.updatePose();
+                            this.updateButtons();
+                        }
+                    };
+                }
+            })
+        </script>
     </head>
     <body>
-        <a-scene 3dof="position: 0 1.6 0">
+        <a-scene 3dof="position: 0 1.6 0; stereo: true">
             <a-sky color="#ECECEC"></a-sky>
 
             <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
@@ -14,13 +44,18 @@
             <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
             <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
 
+            <a-box position="-1 0.5 3" rotation="0 45 0" color="#4CC3D9"></a-box>
+
             <!-- Camera rig -->
             <a-entity id="rig">
-                <a-camera id="camera"></a-camera>
+                <a-camera id="camera">
+                    <a-cursor event-set__mouseenter="_event: mouseenter; color: red" event-set__mouseleave="_event: mouseleave; color: black" raycaster="objects: a-box"></a-cursor>
 
-                <!-- Hands -->
-                <a-entity hand-controls="hand: left"></a-entity>
-                <a-entity hand-controls="hand: right"></a-entity>
+                    <!-- Hands -->
+                    <a-entity hand-controls="hand: left"></a-entity>
+                    <a-entity hand-controls="hand: right"></a-entity>
+                </a-camera>
+
             </a-entity>
         </a-scene>
         <!-- GITHUB_CORNER_LEFT -->

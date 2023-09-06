@@ -20,21 +20,33 @@ AFRAME.registerComponent('3dof', {
             targetPosition.copy(this.data.position);
 
             const xrCamera = renderer.xr.getCamera();
-            if(this.data.stereo) {
-                // Update camera to let THREE compute the center position between the eyes
-                renderer.xr.updateCamera(this.el.sceneEl.camera);
-                eyeCenterPosition.setFromMatrixPosition(xrCamera.matrixWorld);
+            // Update camera to let THREE compute the center position between the eyes
+            renderer.xr.updateCamera(xrCamera);
+            eyeCenterPosition.setFromMatrixPosition(xrCamera.matrixWorld);
 
+            // Place xrCamera at the designated position
+            xrCamera.matrix.setPosition(targetPosition);
+            xrCamera.matrixWorld.copy(xrCamera.matrix);
+            xrCamera.matrixWorldInverse.copy(xrCamera.matrixWorld).invert();
+
+            // Update camera object (e.g. a-camera) to match new position
+            // This ensures child object inherit the proper parent transform
+            const cameraObject = this.el.sceneEl.camera.el.object3D;
+            cameraObject.matrix.copy(xrCamera.matrix);
+            cameraObject.matrix.decompose(cameraObject.position, cameraObject.quaternion, cameraObject.scale);
+
+            // Update individual eye cameras
+            if(this.data.stereo) {
                 for(const camera of xrCamera.cameras) {
-                    camera.matrixWorld.copy(camera.matrix);
                     eyePosition.setFromMatrixPosition(camera.matrix).sub(eyeCenterPosition).add(targetPosition);
-                    camera.matrixWorld.setPosition(eyePosition);
+                    camera.matrix.setPosition(eyePosition);
+                    camera.matrixWorld.copy(camera.matrix);
                     camera.matrixWorldInverse.copy(camera.matrixWorld).invert();
                 }
             } else {
                 for(const camera of xrCamera.cameras) {
+                    camera.matrix.setPosition(targetPosition);
                     camera.matrixWorld.copy(camera.matrix);
-                    camera.matrixWorld.setPosition(targetPosition);
                     camera.matrixWorldInverse.copy(camera.matrixWorld).invert();
                 }
             }
