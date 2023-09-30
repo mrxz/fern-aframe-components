@@ -24,17 +24,24 @@ export const MotionControllerSystem = AFRAME.registerSystem('motion-controller',
     right: InputSourceRecord|null,
 }>().system({
     schema: {
-        profilesUri: { type: 'string', default: DEFAULT_INPUT_PROFILE_ASSETS_URI}
+        /** Base URI for fetching profiles and controller models */
+        profilesUri: { type: 'string', default: DEFAULT_INPUT_PROFILE_ASSETS_URI },
+        /** Enable or disable hand tracking (= pose for hand controllers) */
+        enableHandTracking: { type: 'boolean', default: true },
+        /** Whether or not input sources representing hands should be reported or not */
+        enableHands: { type: 'boolean', default: true },
     },
     init: function() {
         this.inputSources = [];
         this.left = null;
         this.right = null;
 
-        // DEBUG
-        //webXROptionalAttributes.push('hand-tracking');
-        (this.sceneEl as any).setAttribute('webxr', {optionalFeatures: ['hand-tracking']});
-        //sceneEl.setAttribute('webxr', {optionalFeatures: webXROptionalAttributes});
+        if(this.data.enableHands && this.data.enableHandTracking) {
+            // DEBUG
+            //webXROptionalAttributes.push('hand-tracking');
+            (this.sceneEl as any).setAttribute('webxr', {optionalFeatures: ['hand-tracking']});
+            //sceneEl.setAttribute('webxr', {optionalFeatures: webXROptionalAttributes});
+        }
 
         const onInputSourcesChange = (event: XRInputSourceChangeEvent) => {
             event.removed.forEach(xrInputSource => {
@@ -51,6 +58,11 @@ export const MotionControllerSystem = AFRAME.registerSystem('motion-controller',
                 }
             });
             event.added.forEach(async xrInputSource => {
+                // Ensure the xrInputSource is relevant (only allow hands if hands are enabled)
+                if(!this.data.enableHands && xrInputSource.profiles.includes(HANDS_PROFILE_ID)) {
+                    return;
+                }
+
                 const record: InputSourceRecord = { xrInputSource, componentState: {} };
                 this.inputSources.push(record);
                 // FIXME: Detect and report when there are multiple input sources with the same handedness
