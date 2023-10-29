@@ -1,3 +1,3 @@
 import 'aframe';
-export * from './effekseer.component';
-export * from './effekseer.system';
+import './effekseer.component';
+import './effekseer.system';

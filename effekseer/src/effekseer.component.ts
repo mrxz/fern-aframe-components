@@ -12,7 +12,7 @@ export const EffekseerComponent = AFRAME.registerComponent('effekseer', strict<{
 
     tempMatrixArray: Float32Array,
     targetLocation: THREE.Vector3,
-}, AFRAME.Systems['effekseer']>().component({
+}, 'effekseer'>().component({
     schema: {
         /** The .efk or .efkpkg file to use */
         src: { type: 'asset' },
@@ -123,7 +123,7 @@ export const EffekseerComponent = AFRAME.registerComponent('effekseer', strict<{
 }));
 
 declare module "aframe" {
-    export interface Components {
+    interface Components {
         "effekseer": InstanceType<typeof EffekseerComponent>
     }
 }

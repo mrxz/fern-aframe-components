@@ -135,7 +135,7 @@ export const EffekseerSystem = AFRAME.registerSystem('effekseer', strict<{
 }));
 
 declare module "aframe" {
-    export interface Systems {
+    interface Systems {
         "effekseer": InstanceType<typeof EffekseerSystem>,
     }
 }
