@@ -7,3 +7,10 @@ export function phongMaterialFromStandardMaterial(sourceMaterial: THREE.MeshStan
         side: sourceMaterial.side,
     });
 }
+
+export function occluderMaterialFromStandardMaterial(sourceMaterial: THREE.MeshStandardMaterial) {
+    return new THREE.MeshBasicMaterial({
+        colorWrite: false,
+        side: sourceMaterial.side,
+    });
+}

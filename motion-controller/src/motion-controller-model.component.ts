@@ -2,7 +2,7 @@ import * as AFRAME from 'aframe';
 import * as THREE from 'three';
 import { strict } from 'aframe-typescript';
 import { MotionController, VisualResponse } from '@webxr-input-profiles/motion-controllers';
-import { phongMaterialFromStandardMaterial } from './utils';
+import { occluderMaterialFromStandardMaterial, phongMaterialFromStandardMaterial } from './utils';
 import { HAND_JOINT_NAMES } from './hand-joint-names';
 import { InputSourceRecord } from './motion-controller.system';
 
@@ -27,7 +27,7 @@ export const MotionControllerModelComponent = AFRAME.registerComponent('motion-c
 }>().component({
     schema: {
         hand: { type: 'string', oneOf: ['left', 'right'], default: 'left' },
-        overrideMaterial: { type: 'string', oneOf: ['none', 'phong'], default: 'phong'},
+        overrideMaterial: { type: 'string', oneOf: ['none', 'phong', 'occluder'], default: 'phong'},
         buttonTouchColor: { type: 'color', default: '#8AB' },
         buttonPressColor: { type: 'color', default: '#2DF' }
     },
@@ -71,9 +71,14 @@ export const MotionControllerModelComponent = AFRAME.registerComponent('motion-c
 
                         // The default materials might be physical based ones requiring an environment map
                         // for proper rendering. Since this isn't always desirable, convert to phong material instead.
-                        if(this.data.overrideMaterial === 'phong') {
-                            const mesh = child as THREE.Mesh;
-                            mesh.material = phongMaterialFromStandardMaterial(mesh.material as THREE.MeshStandardMaterial);
+                        const mesh = child as THREE.Mesh;
+                        switch(this.data.overrideMaterial) {
+                            case 'phong':
+                                mesh.material = phongMaterialFromStandardMaterial(mesh.material as THREE.MeshStandardMaterial);
+                                break;
+                            case 'occluder':
+                                mesh.material = occluderMaterialFromStandardMaterial(mesh.material as THREE.MeshStandardMaterial);
+                                break;
                         }
                     });
 
