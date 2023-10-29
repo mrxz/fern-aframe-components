@@ -1,8 +1,8 @@
 #!/bin/bash
 set -xe
 
-yarn workspaces foreach install --immutable
-yarn workspaces foreach run build
+yarn workspaces foreach -A install --immutable
+yarn workspaces foreach -A run build
 
 rm -rf ./dist
 mkdir -p ./dist/js/
