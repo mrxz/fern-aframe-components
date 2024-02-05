@@ -17,7 +17,7 @@ type EnhancedVisualResponse = VisualResponse & {
     maxNode?: THREE.Object3D
 };
 
-export const MotionControllerModelComponent = AFRAME.registerComponent('motion-controller-model', strict<{
+const MotionControllerModelComponent = AFRAME.registerComponent('motion-controller-model', strict<{
     motionControllerSystem: AFRAME.Systems['motion-controller'],
     inputSourceRecord: InputSourceRecord|null,
     motionController: MotionController|null,

@@ -1,4 +1,4 @@
 import 'aframe';
-export * from './motion-controller-model.component';
-export * from './motion-controller-space.component';
-export { MotionControllerSystem } from './motion-controller.system';
+import './motion-controller-model.component';
+import './motion-controller-space.component';
+import './motion-controller.system';

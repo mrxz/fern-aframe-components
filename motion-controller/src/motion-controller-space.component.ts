@@ -1,7 +1,7 @@
 import * as AFRAME from 'aframe';
 import { strict } from 'aframe-typescript';
 
-export const MotionControllerSpaceComponent = AFRAME.registerComponent('motion-controller-space', strict<{
+const MotionControllerSpaceComponent = AFRAME.registerComponent('motion-controller-space', strict<{
     motionControllerSystem: AFRAME.Systems['motion-controller'],
     inputSource: XRInputSource|undefined,
 }>().component({

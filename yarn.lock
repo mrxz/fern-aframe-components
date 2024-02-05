@@ -345,8 +345,8 @@ __metadata:
     "@types/animejs": "npm:3.1.0"
     "@types/three": "npm:0.147.1"
     "@webxr-input-profiles/motion-controllers": "npm:^1.0.0"
-    aframe-types: "npm:0.8.16"
-    aframe-typescript: "npm:0.8.1"
+    aframe-types: "npm:0.8.22"
+    aframe-typescript: "npm:0.8.2"
     concurrently: "npm:^7.1.0"
     esbuild: "npm:^0.18.17"
     rimraf: "npm:^5.0.1"
@@ -666,16 +666,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aframe-types@npm:0.8.16":
-  version: 0.8.16
-  resolution: "aframe-types@npm:0.8.16"
-  peerDependencies:
-    "@types/animejs": 3.1.0
-    "@types/three": 0.147.1
-  checksum: e96d8c9899fd5321a6026b75e0a46896588b737769f3c443f75c98900b82977749170df56425affdfdb94f52f9ba42b98756a93126e3dcb28d8d4b596687145f
-  languageName: node
-  linkType: hard
-
 "aframe-types@npm:0.8.20":
   version: 0.8.20
   resolution: "aframe-types@npm:0.8.20"
@@ -686,14 +676,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aframe-typescript@npm:0.8.1":
-  version: 0.8.1
-  resolution: "aframe-typescript@npm:0.8.1"
+"aframe-types@npm:0.8.22":
+  version: 0.8.22
+  resolution: "aframe-types@npm:0.8.22"
   peerDependencies:
-    "@types/animejs": "*"
-    "@types/three": "*"
-    aframe-types: "*"
-  checksum: 0ce636c425d53b6256a9bc0c62d11619bdb36e49982f22508f37858b8490db34de38767c9ff00c0b846c8baa6c7925d0033328d766cb0c68b5328b4edb2736ea
+    "@types/animejs": 3.1.0
+    "@types/three": 0.147.1
+  checksum: ecf7cd1f14af89dc84450281e1544a9fbf75222cf810c407fbdf3b0cfd3ada82b65a9c13040f5f9f91d0767c2d309eb4c535b7853257c0158a238d27f14b857e
   languageName: node
   linkType: hard
 

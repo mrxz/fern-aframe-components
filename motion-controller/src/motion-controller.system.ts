@@ -13,7 +13,7 @@ export interface InputSourceRecord {
     jointState?: {poses: Float32Array, radii: Float32Array},
 };
 
-export const MotionControllerSystem = AFRAME.registerSystem('motion-controller', strict<{
+const MotionControllerSystem = AFRAME.registerSystem('motion-controller', strict<{
     /* Currently active XR session */
     xrSession: XRSession|null;
     /* List of active input sources */
@@ -37,10 +37,7 @@ export const MotionControllerSystem = AFRAME.registerSystem('motion-controller',
         this.right = null;
 
         if(this.data.enableHands && this.data.enableHandTracking) {
-            // DEBUG
-            //webXROptionalAttributes.push('hand-tracking');
-            (this.sceneEl as any).setAttribute('webxr', {optionalFeatures: ['hand-tracking']});
-            //sceneEl.setAttribute('webxr', {optionalFeatures: webXROptionalAttributes});
+            this.sceneEl.setAttribute('webxr', {optionalFeatures: ['hand-tracking']});
         }
 
         const onInputSourcesChange = (event: XRInputSourceChangeEvent) => {
@@ -95,7 +92,7 @@ export const MotionControllerSystem = AFRAME.registerSystem('motion-controller',
         }
 
         this.el.sceneEl.addEventListener('enter-vr', _ => {
-            this.xrSession = (<any>this.el.sceneEl).xrSession as XRSession;
+            this.xrSession = this.el.sceneEl.xrSession!;
             if(this.xrSession) {
                 this.xrSession.addEventListener('inputsourceschange', onInputSourcesChange);
             }
@@ -150,25 +147,25 @@ export const MotionControllerSystem = AFRAME.registerSystem('motion-controller',
                 if(newState.values.state !== oldButtonState) {
                     if(oldButtonState === 'touched') {
                         // No longer touched -> touchend
-                        this.el.emit('touchend' as keyof AFRAME.EntityEvents, eventDetails);
+                        this.el.emit('touchend', eventDetails);
                     } else if(oldButtonState === 'pressed') {
                         // No longer pressed -> buttonup
-                        this.el.emit('buttonup' as keyof AFRAME.EntityEvents, eventDetails);
+                        this.el.emit('buttonup', eventDetails);
                     }
 
                     if(newState.values.state === 'touched') {
                         // Now touched -> touchstart
-                        this.el.emit('touchstart' as keyof AFRAME.EntityEvents, eventDetails);
+                        this.el.emit('touchstart', eventDetails);
                     } else if(newState.values.state === 'pressed') {
                         // Now pressed -> buttondown
-                        this.el.emit('buttondown' as keyof AFRAME.EntityEvents, eventDetails);
+                        this.el.emit('buttondown', eventDetails);
                     }
                 }
 
                 if(newState.type === 'thumbstick' || newState.type === 'touchpad') {
                     if(oldXAxis !== newState.values.xAxis || oldYAxis !== newState.values.yAxis) {
                         // Value along axis changed
-                        this.el.emit('axismove' as keyof AFRAME.EntityEvents, eventDetails);
+                        this.el.emit('axismove', eventDetails);
                     }
                 }
             }
