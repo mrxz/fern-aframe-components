@@ -27,7 +27,8 @@ const MotionControllerModelComponent = AFRAME.registerComponent('motion-controll
 }>().component({
     schema: {
         hand: { type: 'string', oneOf: ['left', 'right'], default: 'left' },
-        overrideMaterial: { type: 'string', oneOf: ['none', 'phong', 'occluder', 'hologram'], default: 'phong'},
+        overrideMaterial: { type: 'string', oneOf: ['none', 'phong', 'occluder'], default: 'phong'},
+        overrideHandMaterial: { type: 'string', oneOf: ['none', 'phong', 'occluder', 'hologram'], default: 'hologram'},
         buttonTouchColor: { type: 'color', default: '#8AB' },
         buttonPressColor: { type: 'color', default: '#2DF' }
     },
@@ -46,6 +47,7 @@ const MotionControllerModelComponent = AFRAME.registerComponent('motion-controll
                         return;
                     }
                     this.el.setObject3D('mesh', gltf.scene);
+                    const isHandModel = this.motionController.id === 'generic-hand';
 
                     // Traverse the mesh to change materials and extract references to hand joints
                     gltf.scene.traverse(child => {
@@ -54,8 +56,7 @@ const MotionControllerModelComponent = AFRAME.registerComponent('motion-controll
                         }
 
                         // Extract bones from skinned mesh (as these are likely hand joints)
-                        // FIXME: Perhaps explicitly check that hand joints are expected in case a controller mesh is skinned?
-                        if(child.type === 'SkinnedMesh') {
+                        if(isHandModel && child.type === 'SkinnedMesh') {
                             const skinnedMesh = child as THREE.SkinnedMesh;
                             const bones = skinnedMesh.skeleton.bones;
                             for(const bone of bones) {
@@ -72,7 +73,7 @@ const MotionControllerModelComponent = AFRAME.registerComponent('motion-controll
                         // The default materials might be physical based ones requiring an environment map
                         // for proper rendering. Since this isn't always desirable, convert to phong material instead.
                         const mesh = child as THREE.Mesh;
-                        switch(this.data.overrideMaterial) {
+                        switch(isHandModel ? this.data.overrideHandMaterial : this.data.overrideMaterial) {
                             case 'phong':
                                 mesh.material = phongMaterialFromStandardMaterial(mesh.material as THREE.MeshStandardMaterial);
                                 break;
