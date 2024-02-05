@@ -2,7 +2,7 @@ import * as AFRAME from 'aframe';
 import * as THREE from 'three';
 import { strict } from 'aframe-typescript';
 import { MotionController, VisualResponse } from '@webxr-input-profiles/motion-controllers';
-import { occluderMaterialFromStandardMaterial, phongMaterialFromStandardMaterial } from './utils';
+import { hologramMaterialFromStandardMaterial, occluderMaterialFromStandardMaterial, phongMaterialFromStandardMaterial } from './utils';
 import { HAND_JOINT_NAMES } from './hand-joint-names';
 import { InputSourceRecord } from './motion-controller.system';
 
@@ -27,7 +27,7 @@ const MotionControllerModelComponent = AFRAME.registerComponent('motion-controll
 }>().component({
     schema: {
         hand: { type: 'string', oneOf: ['left', 'right'], default: 'left' },
-        overrideMaterial: { type: 'string', oneOf: ['none', 'phong', 'occluder'], default: 'phong'},
+        overrideMaterial: { type: 'string', oneOf: ['none', 'phong', 'occluder', 'hologram'], default: 'phong'},
         buttonTouchColor: { type: 'color', default: '#8AB' },
         buttonPressColor: { type: 'color', default: '#2DF' }
     },
@@ -78,6 +78,9 @@ const MotionControllerModelComponent = AFRAME.registerComponent('motion-controll
                                 break;
                             case 'occluder':
                                 mesh.material = occluderMaterialFromStandardMaterial(mesh.material as THREE.MeshStandardMaterial);
+                                break;
+                            case 'hologram':
+                                mesh.material = hologramMaterialFromStandardMaterial(mesh.material as THREE.MeshStandardMaterial);
                                 break;
                         }
                     });

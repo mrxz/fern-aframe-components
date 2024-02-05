@@ -10,25 +10,25 @@
     <script></script>
   </head>
   <body>
-    <a-scene>
+    <a-scene xr-mode-ui="XRMode: xr">
       <a-assets>
       </a-assets>
 
       <a-entity id="rig" position="0 0 2">
-        <a-entity motion-controller-space="hand: left; space: gripSpace" motion-controller-model="hand: left"></a-entity>
+        <a-entity motion-controller-space="hand: left; space: gripSpace" motion-controller-model="hand: left; overrideMaterial: hologram"></a-entity>
         <a-entity motion-controller-space="hand: left; space: targetRaySpace">
           <a-box width="0.002" height="0.002" depth="2" color="red" position="0 0 -1"></a-box>
         </a-entity>
-        <a-entity motion-controller-space="hand: right; space: gripSpace" motion-controller-model="hand: right"></a-entity>
+        <a-entity motion-controller-space="hand: right; space: gripSpace" motion-controller-model="hand: right; overrideMaterial: hologram"></a-entity>
         <a-entity motion-controller-space="hand: right; space: targetRaySpace">
           <a-box width="0.002" height="0.002" depth="2" color="red" position="0 0 -1"></a-box>
         </a-entity>
         <a-camera></a-camera>
       </a-entity>
 
-      <a-plane color="gray" width="10" height="10" rotation="-90 0 0"></a-plane>
+      <a-plane color="gray" width="10" height="10" rotation="-90 0 0" hide-on-enter-ar></a-plane>
 
-      <a-sky color="aquamarine"></a-sky>
+      <a-sky color="aquamarine" hide-on-enter-ar></a-sky>
     </a-scene>
 
     <!-- GITHUB_CORNER_LEFT -->
