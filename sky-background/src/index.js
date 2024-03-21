@@ -44,10 +44,16 @@ void main() {
         gl_FragColor = vec4(mix(bottomColor, topColor, max(pow(max(h, 0.0 ), exponent), 0.0)), 1.0);
     #endif
 
-    #include <encodings_fragment>
+    #include <tonemapping_fragment>
+    #include <colorspace_fragment>
     #include <dithering_fragment>
 }`,
     init: function(data) {
+        // Handle compatibility with older Three.js versions (A-Frame <1.5.0)
+        if(+AFRAME.THREE.REVISION < 158) {
+            this.fragmentShader = this.fragmentShader.replace(/colorspace_fragment/, 'encodings_fragment');
+        }
+
         this.__proto__.__proto__.init.call(this, data);
         this.material.uniforms.map = { value: null };
         this.el.addEventListener('materialtextureloaded', e => {
@@ -73,8 +79,6 @@ AFRAME.registerComponent('sky-background', {
 		mesh.onBeforeRender = (renderer, scene, camera, geometry, material, group) => {
 			material.uniforms.cameraWorldMatrix.value.copy(camera.matrixWorld);
 			material.uniforms.cameraWorldMatrix.needsUpdate = true;
-			// Note: have to invert projectionMatrix, as projectionMatrixInverse isn't automatically set up correctly for XR cameras
-            //       This is fixed in Three.js r151 (meaning it's on A-Frame > 1.4.2)
 			material.uniforms.invProjectionMatrix.value.copy(camera.projectionMatrix).invert();
 			material.uniforms.invProjectionMatrix.needsUpdate = true;
 		}
