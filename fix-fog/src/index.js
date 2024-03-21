@@ -1,14 +1,14 @@
-THREE.ShaderChunk.fog_pars_vertex = `
+THREE.ShaderChunk.fog_pars_vertex = /*glsl*/`
 #ifdef USE_FOG
 	varying vec3 vFogPosition;
 #endif`;
 
-THREE.ShaderChunk.fog_vertex = `
+THREE.ShaderChunk.fog_vertex = /*glsl*/`
 #ifdef USE_FOG
 	vFogPosition =  worldPosition.xyz;
 #endif`;
 
-THREE.ShaderChunk.fog_pars_fragment = `
+THREE.ShaderChunk.fog_pars_fragment = /*glsl*/`
 #ifdef USE_FOG
 	uniform vec3 fogColor;
 	varying vec3 vFogPosition;
@@ -20,7 +20,7 @@ THREE.ShaderChunk.fog_pars_fragment = `
 	#endif
 #endif`;
 
-THREE.ShaderChunk.fog_fragment = `
+THREE.ShaderChunk.fog_fragment = /*glsl*/`
 #ifdef USE_FOG
 	float fogDepth = distance( cameraPosition, vFogPosition );
 	#ifdef FOG_EXP2
