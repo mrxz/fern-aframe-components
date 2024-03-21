@@ -1,6 +1,6 @@
 {
   "name": "@fern-solutions/aframe-3dof",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A-Frame component for rendering in 3DoF when in VR",
   "module": "dist/3dof.esm.min.js",
   "browser": "dist/3dof.umd.min.js",
