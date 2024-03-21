@@ -1,6 +1,6 @@
 {
   "name": "@fern-solutions/aframe-mirror",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "A-Frame component for high-quality mirrors",
   "module": "dist/mirror.esm.min.js",
   "browser": "dist/mirror.umd.min.js",
