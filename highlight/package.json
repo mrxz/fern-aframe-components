@@ -1,6 +1,6 @@
 {
   "name": "@fern-solutions/aframe-highlight",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "A-Frame component for giving objects a highlight when occluded",
   "module": "dist/highlight.esm.min.js",
   "browser": "dist/highlight.umd.min.js",
