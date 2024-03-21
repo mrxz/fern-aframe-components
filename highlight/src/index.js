@@ -1,13 +1,24 @@
-const VERTEX_SHADER = `
+const VERTEX_SHADER = /*glsl*/`
+#include <common>
+#include <fog_pars_vertex>
+#include <logdepthbuf_pars_vertex>
+
 out vec3 vNormal;
 
 void main() {
-    vec4 transformedPosition = modelViewMatrix * vec4( position, 1.0 );
     vNormal = normalMatrix * normal;
-    gl_Position = projectionMatrix * transformedPosition;
+
+    #include <begin_vertex>
+    #include <project_vertex>
+    #include <logdepthbuf_vertex>
+    #include <fog_vertex>
 }`;
 
-const FRAGMENT_SHADER = `
+let FRAGMENT_SHADER = /*glsl*/`
+#include <common>
+#include <fog_pars_fragment>
+#include <logdepthbuf_pars_fragment>
+
 uniform vec3 coreColor;
 uniform float coreOpacity;
 uniform vec3 rimColor;
@@ -19,7 +30,17 @@ void main() {
     float factor = 1.0 - max(0.0, dot(normalize(vNormal), vec3(0.0, 0.0, 1.0)));
     vec3 color = mix(coreColor, rimColor, factor);
     gl_FragColor = vec4(color, (factor * rimOpacity) + ((1.0 - factor) * coreOpacity));
+
+    #include <logdepthbuf_fragment>
+    #include <tonemapping_fragment>
+    #include <colorspace_fragment>
+    #include <fog_fragment>
 }`;
+
+// Handle compatibility with older Three.js versions (A-Frame 1.4.2)
+if(+AFRAME.THREE.REVISION < 158) {
+    FRAGMENT_SHADER = FRAGMENT_SHADER.replace(/colorspace_fragment/, 'encodings_fragment');
+}
 
 AFRAME.registerSystem('highlight', {
     callbacks: [],
@@ -61,11 +82,11 @@ AFRAME.registerSystem('highlight', {
 const HIGHLIGHT_ON_BEFORE_RENDER_HOOK = "_HIGHLIGHT_ON_BEFORE_RENDER_HOOK_";
 AFRAME.registerComponent('highlight', {
     schema: {
-        'coreColor': { type: "color", default: "#000000" },
-        'coreOpacity': { type: "number", default: 0.0, min: 0.0, max: 1.0 },
-        'rimColor': { type: "color", default: "#FF0000" },
-        'rimOpacity': { type: "number", default: 1.0, min: 0.0, max: 1.0 },
-        'mode': { type: "string", default: "occlusion" }, // occlusion, visible
+        coreColor: { type: "color", default: "#000000" },
+        coreOpacity: { type: "number", default: 0.0, min: 0.0, max: 1.0 },
+        rimColor: { type: "color", default: "#FF0000" },
+        rimOpacity: { type: "number", default: 1.0, min: 0.0, max: 1.0 },
+        mode: { type: "string", default: "occlusion" }, // occlusion, visible
     },
     modes: {
         "occlusion": { depthFunc: THREE.GreaterDepth, secondRender: true },
