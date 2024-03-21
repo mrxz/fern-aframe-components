@@ -268,7 +268,7 @@ __metadata:
     "@types/animejs": "npm:3.1.0"
     "@types/three": "npm:0.147.1"
     "@zip.js/zip.js": "npm:^2.7.20"
-    aframe-types: "npm:0.8.20"
+    aframe-types: "npm:0.8.22"
     aframe-typescript: "npm:0.8.2"
     concurrently: "npm:^7.1.0"
     rimraf: "npm:^5.0.1"
@@ -663,16 +663,6 @@ __metadata:
     "@types/animejs": 3.1.0
     "@types/three": 0.147.1
   checksum: 10/a43d5fd9cee436fe5e50b89994bf6fcef32ad41a091cdbc5fdc842825c5421d790108a568f07c32234bef236c6f43f149bffcc07e7ba6833700b3c1cce98559d
-  languageName: node
-  linkType: hard
-
-"aframe-types@npm:0.8.20":
-  version: 0.8.20
-  resolution: "aframe-types@npm:0.8.20"
-  peerDependencies:
-    "@types/animejs": 3.1.0
-    "@types/three": 0.147.1
-  checksum: 10/f1f7a547e80aaf752550f638bce255580e614f5527fe3d803580ca15aca5ecb97e488bfe244bf1391305317f15cabd68ac112feea8050e9e878f2d2d47f9ba28
   languageName: node
   linkType: hard
 

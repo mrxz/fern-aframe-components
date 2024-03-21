@@ -106,9 +106,7 @@ export const EffekseerSystem = AFRAME.registerSystem('effekseer', strict<{
                         this.effects.set(src, effect);
                     })
                 } else {
-                    // FIXME: typings are incorrect (states that it must be string, but can be ArrayBuffer)
-                    //        see: https://github.com/effekseer/EffekseerForWebGL/pull/107
-                    effect = this.context.loadEffect(buffer as string, 1.0,
+                    effect = this.context.loadEffect(buffer, 1.0,
                         onload,
                         reject,
                         (path) => {
