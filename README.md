@@ -1,7 +1,8 @@
-# Fern A-Frame Components Collection
+[![fern-aframe-components-banner](https://github.com/mrxz/fern-aframe-components/assets/8823461/a8306bff-071c-4fe0-8606-7820bbbf4bd0)](https://github.com/mrxz/fern-aframe-components/)
 [![github](https://flat.badgen.net/badge/icon/github?icon=github&label)](https://github.com/mrxz/fern-aframe-components/)
 [![twitter](https://flat.badgen.net/badge/twitter/@noerihuisman/blue?icon=twitter&label)](https://twitter.com/noerihuisman)
 [![mastodon](https://flat.badgen.net/badge/mastodon/@noerihuisman@arvr.social/blue?icon=mastodon&label)](https://arvr.social/@noerihuisman)
+[![ko-fi](https://img.shields.io/badge/ko--fi-buy%20me%20a%20coffee-ff5f5f?style=flat-square)](https://ko-fi.com/fernsolutions)
 
 This is a collection of A-Frame components. Check the individual components for their usages and corresponding examples.
 
