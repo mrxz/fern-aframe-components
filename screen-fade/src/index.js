@@ -1,19 +1,20 @@
-const VERTEX_SHADER =
-    'void main() {' +
-        'vec3 newPosition = position * 2.0;' +
-        'gl_Position = vec4(newPosition, 1.0);' +
-    '}';
-const FRAGMENT_SHADER =
-    'uniform vec3 color;' +
-    'uniform float intensity;' +
-    'void main() {' +
-        'gl_FragColor = vec4(color, intensity);' +
-    '}';
+const VERTEX_SHADER = /*glsl*/`
+void main() {
+    vec3 newPosition = position * 2.0;
+    gl_Position = vec4(newPosition, 1.0);
+}`;
+
+const FRAGMENT_SHADER = /*glsl*/`
+uniform vec3 color;
+uniform float intensity;
+void main() {
+    gl_FragColor = vec4(color, intensity);
+}`;
 
 AFRAME.registerComponent('screen-fade', {
     schema: {
-        'color': { type: "color", default: "#000000" },
-        'intensity': { type: "number", default: 0.0, max: 1.0, min: 0.0 }
+        color: { type: "color", default: "#000000" },
+        intensity: { type: "number", default: 0.0, max: 1.0, min: 0.0 }
     },
     init: function() {
         const geometry = new THREE.PlaneGeometry(1, 1);
