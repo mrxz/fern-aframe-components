@@ -65,7 +65,7 @@ void main() {
         });
     },
     update: function(data) {
-        this.updateVariables(data, 'uniform');
+        this.__proto__.__proto__.update.call(this, data);
         AFRAME.utils.material.updateMap(this, data);
     }
 });
