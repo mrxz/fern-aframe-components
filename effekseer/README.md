@@ -18,7 +18,7 @@ The setup requires a couple of libraries to be loaded before the component is lo
 <!-- (Optional) Zip.js for loading .efkpkg files, without this you will only be able to load .efk files -->
 <script src="https://cdn.jsdelivr.net/npm/@zip.js/zip.js/dist/zip.min.js"></script>
 <!-- This effekseer component -->
-<script src="https://unpkg.com/@fern-solutions/aframe-effekseer/dist/effekseer.umd.min.js"></script>
+<script src="https://unpkg.com/@fern-solutions/aframe-effekseer/dist/aframe-effekseer.umd.min.js"></script>
 ```
 
 The `effekseer` system needs to be configured on the `<a-scene>` to load the effekseer wasm:
