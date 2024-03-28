@@ -13,7 +13,7 @@ Checkout the example: [Online Demo](https://aframe-components.fern.solutions/fix
 ## Usage
 Load the script from [npm](https://www.npmjs.com/package/@fern-solutions/aframe-fix-fog) or add the following script tag:
 ```HTML
-<script src="https://unpkg.com/@fern-solutions/aframe-fix-fog/dist/fix-fog.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fern-solutions/aframe-fix-fog/dist/fix-fog.umd.min.js"></script>
 ```
 
 That's all, it will automatically update the shader chunks :-)

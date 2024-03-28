@@ -13,7 +13,7 @@ Checkout the example: [Online Demo](https://aframe-components.fern.solutions/3do
 ## Usage
 Load the script from [npm](https://www.npmjs.com/package/@fern-solutions/aframe-3dof) or add the following script tag:
 ```HTML
-<script src="https://unpkg.com/@fern-solutions/aframe-3dof/dist/3dof.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fern-solutions/aframe-3dof/dist/3dof.umd.min.js"></script>
 ```
 
 The `3dof` component can be added to any `a-scene` element as follows:

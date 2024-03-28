@@ -13,7 +13,7 @@ Checkout the example: [Online Demo](https://aframe-components.fern.solutions/scr
 ## Usage
 Load the script from [npm](https://www.npmjs.com/package/@fern-solutions/aframe-screen-fade) or add the following script tag:
 ```HTML
-<script src="https://unpkg.com/@fern-solutions/aframe-screen-fade/dist/screen-fade.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fern-solutions/aframe-screen-fade/dist/screen-fade.umd.min.js"></script>
 ```
 
 The `screen-fade` component can be attached to the `<a-camera>` as follows:

@@ -13,7 +13,7 @@ Checkout the example: [Online Demo](https://aframe-components.fern.solutions/ext
 ## Usage
 Load the script from [npm](https://www.npmjs.com/package/@fern-solutions/aframe-extra-stats) or add the following script tag:
 ```HTML
-<script src="https://unpkg.com/@fern-solutions/aframe-extra-stats/dist/extra-stats.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fern-solutions/aframe-extra-stats/dist/extra-stats.umd.min.js"></script>
 ```
 
 The `extra-stats` component should be added to an `<a-scene>` and is intended to **_replace_** the `stats` component. Make sure to only add one or the other to the `<a-scene>`. Example:

@@ -17,7 +17,7 @@ Checkout the example: [Online Demo](https://aframe-components.fern.solutions/mir
 ## Usage
 Load the script from [npm](https://www.npmjs.com/package/@fern-solutions/aframe-mirror) or add the following script tag:
 ```HTML
-<script src="https://unpkg.com/@fern-solutions/aframe-mirror/dist/mirror.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fern-solutions/aframe-mirror/dist/mirror.umd.min.js"></script>
 ```
 
 The `a-mirror` primitive can be added to your scene as follows:

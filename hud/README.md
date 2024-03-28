@@ -15,7 +15,7 @@ Checkout the example: [Online Demo](https://aframe-components.fern.solutions/hud
 ## Usage
 Load the script from [npm](https://www.npmjs.com/package/@fern-solutions/aframe-hud) or add the following script tag:
 ```HTML
-<script src="https://unpkg.com/@fern-solutions/aframe-hud/dist/hud.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fern-solutions/aframe-hud/dist/hud.umd.min.js"></script>
 ```
 
 The `a-hud` and `a-hud-element` primitives can be used as children of `<a-camera>` as follows:

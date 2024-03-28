@@ -13,7 +13,7 @@ Checkout the example: [Online Demo](https://aframe-components.fern.solutions/hig
 ## Usage
 Load the script from [npm](https://www.npmjs.com/package/@fern-solutions/aframe-highlight) or add the following script tag:
 ```HTML
-<script src="https://unpkg.com/@fern-solutions/aframe-highlight/dist/highlight.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fern-solutions/aframe-highlight/dist/highlight.umd.min.js"></script>
 ```
 
 The `highlight` component can be attached to any object:

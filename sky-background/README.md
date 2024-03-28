@@ -13,7 +13,7 @@ Checkout the example: [Online Demo](https://aframe-components.fern.solutions/sky
 ## Usage
 Load the script from [npm](https://www.npmjs.com/package/@fern-solutions/aframe-sky-background) or add the following script tag:
 ```HTML
-<script src="https://unpkg.com/@fern-solutions/aframe-sky-background/dist/sky-background.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fern-solutions/aframe-sky-background/dist/sky-background.umd.min.js"></script>
 ```
 
 The `<a-sky-background>` primitive can be used as follows:
