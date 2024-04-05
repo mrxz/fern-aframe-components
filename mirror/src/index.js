@@ -8,8 +8,9 @@ AFRAME.registerSystem('portal', {
 	portals: [],
 	init: function() {
 		// Prevent auto clearing for each render
-		this.sceneEl.renderer.autoClear = false;
-		this.sceneEl.renderer.info.autoReset = false;
+		const renderer = this.sceneEl.renderer;
+		renderer.autoClear = false;
+		renderer.info.autoReset = false;
 
 		// No-op onAfterRender
 		const nopAfterRender = function() {};
@@ -433,3 +434,15 @@ const setProjectionFromUnion = (function() {
 		camera.projectionMatrix.makePerspective( left2, right2, top2, bottom2, near2, far2 );
 	}
 })();
+
+// Stencil buffer isn't enabled by default since Three.js r163
+if(parseInt(AFRAME.THREE.REVISION) >= 163) {
+	document.addEventListener('render-target-loaded', e => {
+		let rendererAttrString = e.target.getAttribute('renderer') ?? '';
+		if(!/stencil\s*:\s*true/g.test(rendererAttrString)) {
+			console.warn('[aframe-mirror] Mirror component requires a stencil buffer, enabling it. Add `renderer="stencil: true"` to your <a-scene> to get rid of this warning.')
+			rendererAttrString += ';stencil:true';
+		}
+		e.target.setAttribute('renderer', rendererAttrString);
+	})
+}
