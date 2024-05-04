@@ -6,7 +6,7 @@ export default [
     {
         input: 'src/main.ts',
         plugins: [
-            nodeResolve({ resolveOnly: ['aframe-typescript', '@webxr-input-profiles/motion-controllers'] }),
+            nodeResolve({ resolveOnly: ['@webxr-input-profiles/motion-controllers'] }),
             esbuild(),
         ],
         external: ['aframe'],

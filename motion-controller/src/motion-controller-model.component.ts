@@ -1,6 +1,5 @@
 import * as AFRAME from 'aframe';
 import * as THREE from 'three';
-import { strict } from 'aframe-typescript';
 import { MotionController, VisualResponse } from '@webxr-input-profiles/motion-controllers';
 import { hologramMaterialFromStandardMaterial, occluderMaterialFromStandardMaterial, phongMaterialFromStandardMaterial } from './utils';
 import { HAND_JOINT_NAMES } from './hand-joint-names';
@@ -17,20 +16,21 @@ type EnhancedVisualResponse = VisualResponse & {
     maxNode?: THREE.Object3D
 };
 
-const MotionControllerModelComponent = AFRAME.registerComponent('motion-controller-model', strict<{
-    motionControllerSystem: AFRAME.Systems['motion-controller'],
-    inputSourceRecord: InputSourceRecord|null,
-    motionController: MotionController|null,
-    componentMeshes: Map<string, Array<{mesh: THREE.Mesh, originalColor: THREE.Color}>>,
-    // Only relevant for hand tracking models
-    handJoints: Array<THREE.Object3D|undefined>
-}>().component({
+const MotionControllerModelComponent = AFRAME.registerComponent('motion-controller-model', {
     schema: {
         hand: { type: 'string', oneOf: ['left', 'right'], default: 'left' },
         overrideMaterial: { type: 'string', oneOf: ['none', 'phong', 'occluder'], default: 'phong'},
         overrideHandMaterial: { type: 'string', oneOf: ['none', 'phong', 'occluder', 'hologram'], default: 'hologram'},
         buttonTouchColor: { type: 'color', default: '#8AB' },
         buttonPressColor: { type: 'color', default: '#2DF' }
+    },
+    __fields: {} as {
+        motionControllerSystem: AFRAME.Systems['motion-controller'],
+        inputSourceRecord: InputSourceRecord|null,
+        motionController: MotionController|null,
+        componentMeshes: Map<string, Array<{mesh: THREE.Mesh, originalColor: THREE.Color}>>,
+        // Only relevant for hand tracking models
+        handJoints: Array<THREE.Object3D|undefined>
     },
     init: function() {
         this.motionControllerSystem = this.el.sceneEl.systems['motion-controller'];
@@ -47,7 +47,7 @@ const MotionControllerModelComponent = AFRAME.registerComponent('motion-controll
                         return;
                     }
                     this.el.setObject3D('mesh', gltf.scene);
-                    const isHandModel = this.motionController.id === 'generic-hand';
+                    const isHandModel = this.motionController?.id === 'generic-hand';
 
                     // Traverse the mesh to change materials and extract references to hand joints
                     gltf.scene.traverse(child => {
@@ -87,7 +87,7 @@ const MotionControllerModelComponent = AFRAME.registerComponent('motion-controll
                     });
 
                     this.componentMeshes.clear();
-                    Object.values(this.motionController.components).forEach((component) => {
+                    Object.values(this.motionController!.components).forEach((component) => {
                         // Can't traverse the rootNodes of the components, as these are hardly ever correct.
                         // See: https://github.com/immersive-web/webxr-input-profiles/issues/249
                         const componentMeshes: Array<{mesh: THREE.Mesh, originalColor: THREE.Color}> = [];
@@ -203,7 +203,7 @@ const MotionControllerModelComponent = AFRAME.registerComponent('motion-controll
             });
 		}
     }
-}));
+});
 
 declare module "aframe" {
     export interface Components {

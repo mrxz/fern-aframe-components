@@ -1,18 +1,11 @@
 import * as AFRAME from 'aframe';
 import * as THREE from 'three';
 import 'effekseer';
-import { strict } from 'aframe-typescript';
 
 /**
  * Component for rendering an Effekseer effect.
  */
-export const EffekseerComponent = AFRAME.registerComponent('effekseer', strict<{
-    effect: effekseer.EffekseerEffect|null,
-    handle: effekseer.EffekseerHandle|null,
-
-    tempMatrixArray: Float32Array,
-    targetLocation: THREE.Vector3,
-}, 'effekseer'>().component({
+export const EffekseerComponent = AFRAME.registerComponent('effekseer', {
     schema: {
         /** The .efk or .efkpkg file to use */
         src: { type: 'asset' },
@@ -23,6 +16,13 @@ export const EffekseerComponent = AFRAME.registerComponent('effekseer', strict<{
         loop: { type: 'boolean', default: false },
         /** Whether or not to update the effects scale, position and rotation each tick */
         dynamic: { type: 'boolean', default: false },
+    },
+    __fields: {} as {
+        effect: effekseer.EffekseerEffect|null,
+        handle: effekseer.EffekseerHandle|null,
+    
+        tempMatrixArray: Float32Array,
+        targetLocation: THREE.Vector3,
     },
     init: function() {
         this.tempMatrixArray = new Float32Array(16);
@@ -120,7 +120,7 @@ export const EffekseerComponent = AFRAME.registerComponent('effekseer', strict<{
     remove: function() {
         this.handle?.stop();
     }
-}));
+});
 
 declare module "aframe" {
     interface Components {

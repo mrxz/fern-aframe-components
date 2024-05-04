@@ -1,13 +1,13 @@
 import * as AFRAME from 'aframe';
-import { strict } from 'aframe-typescript';
 
-const MotionControllerSpaceComponent = AFRAME.registerComponent('motion-controller-space', strict<{
-    motionControllerSystem: AFRAME.Systems['motion-controller'],
-    inputSource: XRInputSource|undefined,
-}>().component({
+const MotionControllerSpaceComponent = AFRAME.registerComponent('motion-controller-space', {
     schema: {
         hand: { type: 'string', oneOf: ['left', 'right'], default: 'left' },
         space: { type: 'string', oneOf: ['gripSpace', 'targetRaySpace'], default: 'targetRaySpace' },
+    },
+    __fields: {} as {
+        motionControllerSystem: AFRAME.Systems['motion-controller'],
+        inputSource: XRInputSource|undefined,
     },
     init: function() {
         this.motionControllerSystem = this.el.sceneEl.systems['motion-controller'];
@@ -35,7 +35,7 @@ const MotionControllerSpaceComponent = AFRAME.registerComponent('motion-controll
             this.el.object3D.matrix.decompose(this.el.object3D.position, this.el.object3D.quaternion, this.el.object3D.scale);
         }
     }
-}));
+});
 
 declare module "aframe" {
     export interface Components {

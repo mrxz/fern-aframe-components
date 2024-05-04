@@ -63,7 +63,7 @@ __metadata:
     "@compodoc/live-server": "npm:1.2.3"
     "@types/animejs": "npm:3.1.0"
     "@types/three": "npm:0.147.1"
-    aframe-types: "npm:0.8.22"
+    aframe-types: "npm:0.9.1"
     concurrently: "npm:^7.1.0"
     rollup: "npm:^2.71.1"
     rollup-plugin-terser: "npm:^7.0.2"
@@ -213,13 +213,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aframe-types@npm:0.8.22":
-  version: 0.8.22
-  resolution: "aframe-types@npm:0.8.22"
+"aframe-types@npm:0.9.1":
+  version: 0.9.1
+  resolution: "aframe-types@npm:0.9.1"
   peerDependencies:
     "@types/animejs": 3.1.0
-    "@types/three": 0.147.1
-  checksum: 10/ecf7cd1f14af89dc84450281e1544a9fbf75222cf810c407fbdf3b0cfd3ada82b65a9c13040f5f9f91d0767c2d309eb4c535b7853257c0158a238d27f14b857e
+    "@types/three": 0.164.0
+  checksum: 10/c671f56599c34e0f4daa8123a90429d3df3812acfbd6df0350adde1cf7c0901432a49bae718043193df4db3718865cea3b8da287bfd2a19f9375af83d056d4cd
   languageName: node
   linkType: hard
 

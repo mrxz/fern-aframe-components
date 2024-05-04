@@ -6,7 +6,7 @@ export default [
     {
         input: 'src/main.ts',
         plugins: [
-            nodeResolve({ resolveOnly: ['aframe-typescript'] }),
+            nodeResolve(),
             typescript({ sourceMap: true }),
         ],
         external: ['aframe', 'effekseer'],

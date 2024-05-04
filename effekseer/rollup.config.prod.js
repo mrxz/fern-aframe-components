@@ -8,7 +8,7 @@ export default [
     {
         input: 'src/main.ts',
         plugins: [
-            nodeResolve({ resolveOnly: ['aframe-typescript'] }),
+            nodeResolve(),
             typescript({ compilerOptions: { declaration: true, declarationDir: 'typings' } }),
             terser(),
         ],

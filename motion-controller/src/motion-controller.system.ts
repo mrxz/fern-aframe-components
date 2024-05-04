@@ -1,6 +1,5 @@
 import * as AFRAME from 'aframe';
 import { SceneEvent } from 'aframe';
-import { strict } from 'aframe-typescript';
 import { Component, fetchProfile, MotionController } from '@webxr-input-profiles/motion-controllers';
 
 const DEFAULT_INPUT_PROFILE_ASSETS_URI = 'https://cdn.jsdelivr.net/npm/@webxr-input-profiles/assets/dist/profiles';
@@ -13,16 +12,7 @@ export interface InputSourceRecord {
     jointState?: {poses: Float32Array, radii: Float32Array},
 };
 
-const MotionControllerSystem = AFRAME.registerSystem('motion-controller', strict<{
-    /* Currently active XR session */
-    xrSession: XRSession|null;
-    /* List of active input sources */
-    inputSources: Array<InputSourceRecord>
-
-    /* Dedicated slots for left/right hand for convenience */
-    left: InputSourceRecord|null,
-    right: InputSourceRecord|null,
-}>().system({
+const MotionControllerSystem = AFRAME.registerSystem('motion-controller', {
     schema: {
         /** Base URI for fetching profiles and controller models */
         profilesUri: { type: 'string', default: DEFAULT_INPUT_PROFILE_ASSETS_URI },
@@ -30,6 +20,16 @@ const MotionControllerSystem = AFRAME.registerSystem('motion-controller', strict
         enableHandTracking: { type: 'boolean', default: true },
         /** Whether or not input sources representing hands should be reported or not */
         enableHands: { type: 'boolean', default: true },
+    },
+    __fields: {} as {
+        /* Currently active XR session */
+        xrSession: XRSession|null;
+        /* List of active input sources */
+        inputSources: Array<InputSourceRecord>
+    
+        /* Dedicated slots for left/right hand for convenience */
+        left: InputSourceRecord|null,
+        right: InputSourceRecord|null,
     },
     init: function() {
         this.inputSources = [];
@@ -188,7 +188,7 @@ const MotionControllerSystem = AFRAME.registerSystem('motion-controller', strict
         // FIXME: Perhaps only fetch radii once or upon request(?)
         (xrFrame as any).fillJointRadii(hand.values(), inputSourceRecord.jointState!.radii);
     }
-}));
+});
 
 export interface ButtonEventDetails {
     inputSource: XRInputSource;

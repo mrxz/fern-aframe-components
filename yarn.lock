@@ -268,8 +268,7 @@ __metadata:
     "@types/animejs": "npm:3.1.0"
     "@types/three": "npm:0.147.1"
     "@zip.js/zip.js": "npm:^2.7.20"
-    aframe-types: "npm:0.8.22"
-    aframe-typescript: "npm:0.8.2"
+    aframe-types: "npm:0.9.1"
     concurrently: "npm:^7.1.0"
     rimraf: "npm:^5.0.1"
     rollup: "npm:^2.71.1"
@@ -345,8 +344,7 @@ __metadata:
     "@types/animejs": "npm:3.1.0"
     "@types/three": "npm:0.147.1"
     "@webxr-input-profiles/motion-controllers": "npm:^1.0.0"
-    aframe-types: "npm:0.8.22"
-    aframe-typescript: "npm:0.8.2"
+    aframe-types: "npm:0.9.1"
     concurrently: "npm:^7.1.0"
     esbuild: "npm:^0.18.17"
     rimraf: "npm:^5.0.1"
@@ -365,7 +363,7 @@ __metadata:
     "@compodoc/live-server": "npm:1.2.3"
     "@types/animejs": "npm:3.1.0"
     "@types/three": "npm:0.147.1"
-    aframe-types: "npm:0.8.14"
+    aframe-types: "npm:0.9.1"
     concurrently: "npm:^7.1.0"
     rollup: "npm:^2.71.1"
     rollup-plugin-terser: "npm:^7.0.2"
@@ -380,7 +378,7 @@ __metadata:
     "@compodoc/live-server": "npm:1.2.3"
     "@types/animejs": "npm:3.1.0"
     "@types/three": "npm:0.147.1"
-    aframe-types: "npm:0.8.22"
+    aframe-types: "npm:0.9.1"
     concurrently: "npm:^7.1.0"
     rollup: "npm:^2.71.1"
     rollup-plugin-terser: "npm:^7.0.2"
@@ -656,34 +654,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aframe-types@npm:0.8.14":
-  version: 0.8.14
-  resolution: "aframe-types@npm:0.8.14"
+"aframe-types@npm:0.9.1":
+  version: 0.9.1
+  resolution: "aframe-types@npm:0.9.1"
   peerDependencies:
     "@types/animejs": 3.1.0
-    "@types/three": 0.147.1
-  checksum: 10/a43d5fd9cee436fe5e50b89994bf6fcef32ad41a091cdbc5fdc842825c5421d790108a568f07c32234bef236c6f43f149bffcc07e7ba6833700b3c1cce98559d
-  languageName: node
-  linkType: hard
-
-"aframe-types@npm:0.8.22":
-  version: 0.8.22
-  resolution: "aframe-types@npm:0.8.22"
-  peerDependencies:
-    "@types/animejs": 3.1.0
-    "@types/three": 0.147.1
-  checksum: 10/ecf7cd1f14af89dc84450281e1544a9fbf75222cf810c407fbdf3b0cfd3ada82b65a9c13040f5f9f91d0767c2d309eb4c535b7853257c0158a238d27f14b857e
-  languageName: node
-  linkType: hard
-
-"aframe-typescript@npm:0.8.2":
-  version: 0.8.2
-  resolution: "aframe-typescript@npm:0.8.2"
-  peerDependencies:
-    "@types/animejs": "*"
-    "@types/three": "*"
-    aframe-types: "*"
-  checksum: 10/faf8263cf012a0a276aa567e1117ae6321552a71272c5cc4c25102c5877f8f00c9317a4aa2557be678290db35c9eef80edbc9dad3066dbb43c35c7648f8ba400
+    "@types/three": 0.164.0
+  checksum: 10/c671f56599c34e0f4daa8123a90429d3df3812acfbd6df0350adde1cf7c0901432a49bae718043193df4db3718865cea3b8da287bfd2a19f9375af83d056d4cd
   languageName: node
   linkType: hard
 

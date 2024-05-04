@@ -1,5 +1,4 @@
 import * as AFRAME from 'aframe';
-import { strict } from 'aframe-typescript';
 import * as THREE from 'three';
 import 'effekseer';
 import * as zip from '@zip.js/zip.js';
@@ -25,19 +24,21 @@ const createUnzip = async function(buffer: Uint8Array) {
 /**
  * System for managing the Effekseer context and handling rendering of the effects
  */
-export const EffekseerSystem = AFRAME.registerSystem('effekseer', strict<{
-    getContext: Promise<effekseer.EffekseerContext>,
-    context: effekseer.EffekseerContext,
-    effects: Map<string, effekseer.EffekseerEffect>,
-
-    fileLoader: THREE.FileLoader,
-    sentinel: THREE.Mesh,
-}>().system({
+export const EffekseerSystem = AFRAME.registerSystem('effekseer', {
     schema: {
         /** URL to the effekseer.wasm file */
         wasmPath: { type: "string" },
         /** Frame-rate at which the effects are played back */
         frameRate: { type: "number", default: 60.0 }
+    },
+
+    __fields: {} as {
+        getContext: Promise<effekseer.EffekseerContext>,
+        context: effekseer.EffekseerContext,
+        effects: Map<string, effekseer.EffekseerEffect>,
+    
+        fileLoader: THREE.FileLoader,
+        sentinel: THREE.Mesh,
     },
 
     init: function() {
@@ -130,7 +131,7 @@ export const EffekseerSystem = AFRAME.registerSystem('effekseer', strict<{
         }
         this.context.update(dt/1000.0 * this.data.frameRate);
     }
-}));
+});
 
 declare module "aframe" {
     interface Systems {
