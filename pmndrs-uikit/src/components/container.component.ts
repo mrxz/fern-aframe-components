@@ -4,7 +4,7 @@ import { FLEX_SCHEMA } from '../schema/flex.schema';
 import { deferRootInitialized, swapObject3D } from '../common';
 import { CONTAINER_SCHEMA } from '../schema/container.schema';
 
-const ContainerComponent = AFRAME.registerComponent('uikit-container', {
+export const ContainerComponent = AFRAME.registerComponent('uikit-container', {
     schema: {
         ...CONTAINER_SCHEMA,
         ...FLEX_SCHEMA

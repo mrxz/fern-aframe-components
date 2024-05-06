@@ -2,7 +2,7 @@ import * as AFRAME from 'aframe';
 
 export function deferRootInitialized(el: AFRAME.Entity, action: () => void) {
     let rootEl = el;
-    while(rootEl && !rootEl.hasAttribute('uikit-root')) {
+    while(rootEl && !rootEl.hasAttribute('uikit-root') && rootEl.tagName !== 'UI-ROOT') {
         rootEl = rootEl.parentEl;
     }
     if(!rootEl) {

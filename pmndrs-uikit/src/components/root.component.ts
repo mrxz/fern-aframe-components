@@ -4,7 +4,7 @@ import { FLEX_SCHEMA } from '../schema/flex.schema';
 import { swapObject3D } from '../common';
 import { ROOT_SCHEMA } from '../schema/root.schema';
 
-const RootComponent = AFRAME.registerComponent('uikit-root', {
+export const RootComponent = AFRAME.registerComponent('uikit-root', {
     schema: {
         ...ROOT_SCHEMA,
         ...FLEX_SCHEMA

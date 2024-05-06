@@ -1,2 +1,3 @@
 import 'aframe';
-import './components/';
+import './components';
+import './primitives';
