@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Fern A-Frame Components | Pmndrs uikit</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@4b4c56093ffed6abcfc924d3ef25f8a849ea6fa5/dist/aframe-master.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aframe-environment-component@1.3.4/dist/aframe-environment-component.min.js"></script>
+    <script src="/js/aframe-pmndrs-uikit.umd.min.js"></script>
+    <script></script>
+  </head>
+  <body>
+    <a-scene xr-mode-ui="XRMode: xr">
+      <a-assets>
+      </a-assets>
+
+      <a-entity environment></a-entity>
+
+      <a-entity position="0 1.6 -10">
+        <a-entity id="root" uikit-root="">
+          <a-entity id="left" uikit-container=""></a-entity>
+          <a-entity id="right" uikit-container=""></a-entity>
+        </a-entity>
+      </a-entity>
+
+    </a-scene>
+
+    <!-- GITHUB_CORNER_LEFT -->
+  </body>
+</html>
