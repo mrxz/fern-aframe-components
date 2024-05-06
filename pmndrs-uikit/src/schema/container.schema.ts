@@ -1,0 +1,38 @@
+import { BOOLEAN, NUMBER, COLOR } from "./property-types";
+
+export const CONTAINER_SCHEMA = {
+    zIndexOffset: NUMBER,
+    receiveShadow: BOOLEAN,
+    castShadow: BOOLEAN,
+    backgroundColor: COLOR,
+    backgroundOpacity: NUMBER,
+    //panelMaterialClass	Material class TODO
+    borderOpacity: NUMBER,
+    borderColor: COLOR,
+    borderRadius: NUMBER,
+    borderLeftRadius: NUMBER,
+    borderRightRadius: NUMBER,
+    borderTopRadius: NUMBER,
+    borderBottomRadius: NUMBER,
+    borderTopLeftRadius: NUMBER,
+    borderTopRightRadius: NUMBER,
+    borderBottomRightRadius: NUMBER,
+    borderBottomLeftRadius: NUMBER,
+    border: NUMBER,
+    borderX: NUMBER,
+    borderY: NUMBER,
+    borderBend: NUMBER,
+    //scrollbarPanelMaterialClass	Material class TODO
+    scrollbarBackgroundOpacity: NUMBER,
+    scrollbarBackgroundColor: COLOR,
+    scrollbarWidth: NUMBER,
+    scrollbarBorderRadius: NUMBER,
+    scrollbarBorderLeftRadius: NUMBER,
+    scrollbarBorderRightRadius: NUMBER,
+    scrollbarBorderTopRadius: NUMBER,
+    scrollbarBorderBottomRadius: NUMBER,
+    scrollbarBorderTopLeftRadius: NUMBER,
+    scrollbarBorderTopRightRadius: NUMBER,
+    scrollbarBorderBottomRightRadius: NUMBER,
+    scrollbarBorderBottomLeftRadius: NUMBER,
+} as const;

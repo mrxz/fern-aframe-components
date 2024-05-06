@@ -1,10 +1,12 @@
 import { Container } from '@pmndrs/uikit';
 import * as AFRAME from 'aframe';
-import { FLEX_SCHEMA } from './flex-schema';
-import { deferRootInitialized, swapObject3D } from './common';
+import { FLEX_SCHEMA } from '../schema/flex.schema';
+import { deferRootInitialized, swapObject3D } from '../common';
+import { CONTAINER_SCHEMA } from '../schema/container.schema';
 
 const ContainerComponent = AFRAME.registerComponent('uikit-container', {
     schema: {
+        ...CONTAINER_SCHEMA,
         ...FLEX_SCHEMA
     },
     __fields: {} as {
@@ -13,11 +15,7 @@ const ContainerComponent = AFRAME.registerComponent('uikit-container', {
     init: function() {
         this.container = new Container({
             ...this.data,
-            width: 100,
-            height: 100,
-            backgroundOpacity: 0.5,
             hover: { backgroundOpacity: 1 },
-            backgroundColor: "red"
         });
 
         // Find the respective Root

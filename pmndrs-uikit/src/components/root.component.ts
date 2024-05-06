@@ -1,10 +1,12 @@
 import { Root, reversePainterSortStable } from '@pmndrs/uikit';
 import * as AFRAME from 'aframe';
-import { FLEX_SCHEMA } from './flex-schema';
-import { swapObject3D } from './common';
+import { FLEX_SCHEMA } from '../schema/flex.schema';
+import { swapObject3D } from '../common';
+import { ROOT_SCHEMA } from '../schema/root.schema';
 
 const RootComponent = AFRAME.registerComponent('uikit-root', {
     schema: {
+        ...ROOT_SCHEMA,
         ...FLEX_SCHEMA
     },
     __fields: {} as {
