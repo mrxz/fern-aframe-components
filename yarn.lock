@@ -375,7 +375,7 @@ __metadata:
     "@rollup/plugin-typescript": "npm:^11.1.1"
     "@types/animejs": "npm:3.1.0"
     "@types/three": "npm:0.147.1"
-    aframe-types: "npm:0.9.1"
+    aframe-types: "npm:0.9.2"
     concurrently: "npm:^7.1.0"
     esbuild: "npm:^0.18.17"
     rimraf: "npm:^5.0.1"
@@ -793,6 +793,16 @@ __metadata:
     "@types/animejs": 3.1.0
     "@types/three": 0.164.0
   checksum: 10/c671f56599c34e0f4daa8123a90429d3df3812acfbd6df0350adde1cf7c0901432a49bae718043193df4db3718865cea3b8da287bfd2a19f9375af83d056d4cd
+  languageName: node
+  linkType: hard
+
+"aframe-types@npm:0.9.2":
+  version: 0.9.2
+  resolution: "aframe-types@npm:0.9.2"
+  peerDependencies:
+    "@types/animejs": 3.1.0
+    "@types/three": 0.164.0
+  checksum: 10/95077569f917ad9e0e29eb5ba673fec7eb139e0b198f6bd0504f0f21d860e8d19b7697adcf63c813b19b5788fd398d8070fd5e02866faad3bd2d85e13f5ba724
   languageName: node
   linkType: hard
 

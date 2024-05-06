@@ -19,7 +19,7 @@
       "declaration": false,
       "rootDir": "src",
       "paths": {
-        "aframe": ["../node_modules/aframe-types"]
+        "aframe": ["./node_modules/aframe-types"]
       }
     },
     "include": ["src"],

@@ -13,9 +13,7 @@ const RootComponent = AFRAME.registerComponent('uikit-root', {
     init: function() {
         const sceneEl = this.el.sceneEl;
         this.root = new Root(sceneEl.camera, sceneEl.renderer, undefined, {
-            flexDirection: "row",
-            padding: 100,
-            gap: 100,
+            ...this.data,
         });
         swapObject3D(this.el, this.root);
 

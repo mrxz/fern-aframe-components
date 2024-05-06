@@ -12,7 +12,7 @@ const ContainerComponent = AFRAME.registerComponent('uikit-container', {
     },
     init: function() {
         this.container = new Container({
-            flexGrow: 1,
+            ...this.data,
             width: 100,
             height: 100,
             backgroundOpacity: 0.5,

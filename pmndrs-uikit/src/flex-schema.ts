@@ -1,6 +1,67 @@
-export const NUMBER = {type: 'number'} as const;
-export const NUMBER_OR_PERCENTAGE = {type: 'string'} as const;
-export const NUMBER_OR_PERCENTAGE_OR_AUTO = {type: 'string'} as const;
+import { SinglePropertySchema, TypeFor } from "aframe";
+
+export const NUMBER = {
+    type: 'number',
+    default: undefined,
+    parse: function(input: any) {
+        if(typeof input === 'number') {
+            return input;
+        }
+        if(typeof input !== 'string') {
+            return undefined;
+        }
+        const parsedFloat = Number.parseFloat(input);
+        return Number.isFinite(parsedFloat) ? parsedFloat : undefined;
+    }
+} as const;
+export const NUMBER_OR_PERCENTAGE = {
+    type: 'string',
+    parse: function(input: any) {
+        // Nothing to parse for numbers
+        if(typeof input === 'number') {
+            return input;
+        }
+        // String inputs are either number, percentage (i.e. '{number}%') or 'auto'
+        if(typeof input === 'string') {
+            const isPercentage = input.endsWith('%');
+            const parsedFloat = Number.parseFloat(isPercentage ? input.substring(0, input.length - 2) : input);
+            if(Number.isFinite(parsedFloat)) {
+                return isPercentage ? input as `${number}%` : parsedFloat;
+            }
+        }
+        return undefined;
+    }
+} as const;
+export const NUMBER_OR_PERCENTAGE_OR_AUTO = {
+    type: 'string',
+    parse: function(input: any) {
+        // Nothing to parse for numbers or 'auto' literal
+        if(typeof input === 'number' || input === 'auto') {
+            return input as number|'auto';
+        }
+        // String inputs are either number, percentage (i.e. '{number}%') or 'auto'
+        if(typeof input === 'string') {
+            const isPercentage = input.endsWith('%');
+            const parsedFloat = Number.parseFloat(isPercentage ? input.substring(0, input.length - 2) : input);
+            if(Number.isFinite(parsedFloat)) {
+                return isPercentage ? input as `${number}%` : parsedFloat;
+            }
+        }
+        return undefined;
+    }
+} as const;
+export function oneOf<const T extends string[]>(options: T): {type: 'string', parse: (input: any) => T[number]|undefined, oneOf: T} {
+    return {
+        type: 'string',
+        parse: function(input: any) {
+            if(options.includes(input)) {
+                return input as T[number];
+            }
+            return undefined;
+        },
+        oneOf: options
+    }
+}
 
 export const FLEX_SCHEMA = {
     margin: NUMBER_OR_PERCENTAGE_OR_AUTO,
@@ -19,18 +80,18 @@ export const FLEX_SCHEMA = {
     transformRotateX: NUMBER,
     transformRotateY: NUMBER,
     transformRotateZ: NUMBER,
-    positionType: {type: 'string', oneOf: ["absolute", "relative", "count"]},
+    positionType: oneOf(["absolute", "relative", "static"]),
     inset: NUMBER_OR_PERCENTAGE,
     positionTop: NUMBER_OR_PERCENTAGE,
     positionLeft: NUMBER_OR_PERCENTAGE,
     positionRight: NUMBER_OR_PERCENTAGE,
     positionBottom: NUMBER_OR_PERCENTAGE,
-    alignContent: {type: 'string', oneOf: ["count", "space-around", "space-between", "baseline", "stretch", "flex-end", "center", "flex-start", "auto"]},
-    alignItems: {type: 'string', oneOf: ["count", "space-around", "space-between", "baseline", "stretch", "flex-end", "center", "flex-start", "auto"]},
-    alignSelf: {type: 'string', oneOf: ["count", "space-around", "space-between", "baseline", "stretch", "flex-end", "center", "flex-start", "auto"]},
-    flexDirection: {type: 'string', oneOf: ["count", "row-reverse", "row", "column-reverse", "column"]},
-    flexWrap: {type: 'string', oneOf: ["count", "wrap-reverse", "wrap", "no-wrap"]},
-    justifyContent: {type: 'string', oneOf: ["count", "space-around", "space-between", "flex-end", "center", "flex-start", "space-evenly"]},
+    alignContent: oneOf(["space-around", "space-between", "baseline", "stretch", "flex-end", "center", "flex-start", "auto"]),
+    alignItems: oneOf(["space-around", "space-between", "baseline", "stretch", "flex-end", "center", "flex-start", "auto"]),
+    alignSelf: oneOf(["space-around", "space-between", "baseline", "stretch", "flex-end", "center", "flex-start", "auto"]),
+    flexDirection: oneOf(["row-reverse", "row", "column-reverse", "column"]),
+    flexWrap: oneOf(["wrap-reverse", "wrap", "no-wrap"]),
+    justifyContent: oneOf(["space-around", "space-between", "flex-end", "center", "flex-start", "space-evenly"]),
     flexBasis: NUMBER_OR_PERCENTAGE,
     flexGrow: NUMBER,
     flexShrink: NUMBER,
@@ -48,7 +109,7 @@ export const FLEX_SCHEMA = {
     borderLeft: NUMBER,
     borderRight: NUMBER,
     borderBottom: NUMBER,
-    overflow: {type: 'string', oneOf: ["visible", "scroll", "hidden"]},
+    overflow: oneOf(["visible", "scroll", "hidden"]),
     padding: NUMBER_OR_PERCENTAGE,
     paddingX: NUMBER_OR_PERCENTAGE,
     paddingY: NUMBER_OR_PERCENTAGE,
