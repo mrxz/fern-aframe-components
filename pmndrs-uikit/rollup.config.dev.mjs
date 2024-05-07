@@ -1,7 +1,8 @@
 import esbuild from 'rollup-plugin-esbuild';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import alias from '@rollup/plugin-alias';
-import pkg from './package.json';
+import json from '@rollup/plugin-json';
+import pkg from './package.json' assert { type: 'json' };
 
 export default [
     {
@@ -15,6 +16,7 @@ export default [
                 customResolver: nodeResolve()
             }),
             nodeResolve({ }),
+            json(),
             esbuild(),
         ],
         external: ['aframe', 'three'],

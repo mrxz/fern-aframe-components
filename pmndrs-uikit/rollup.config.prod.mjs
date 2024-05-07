@@ -2,7 +2,7 @@ import terser from '@rollup/plugin-terser';
 import typescript from '@rollup/plugin-typescript';
 import dts from 'rollup-plugin-dts';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
-import pkg from './package.json';
+import pkg from './package.json' assert { type: 'json' };
 
 export default [
     {

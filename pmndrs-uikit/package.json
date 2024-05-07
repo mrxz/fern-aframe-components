@@ -9,8 +9,8 @@
   "author": "Noeri Huisman",
   "license": "MIT",
   "scripts": {
-    "dev": "concurrently \"rollup -c rollup.config.dev.js -w\" \"live-server --port=4000 --no-browser ./example --mount=/js:./dist --mount=/src:./src\"",
-    "build": "rollup -c rollup.config.prod.js"
+    "dev": "concurrently \"rollup -c rollup.config.dev.mjs -w\" \"live-server --port=4000 --no-browser ./example --mount=/js:./dist --mount=/src:./src\"",
+    "build": "rollup -c rollup.config.prod.mjs"
   },
   "keywords": [
     "aframe",
@@ -26,6 +26,7 @@
   "devDependencies": {
     "@compodoc/live-server": "1.2.3",
     "@rollup/plugin-alias": "^5.1.0",
+    "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^15.0.2",
     "@rollup/plugin-terser": "^0.4.3",
     "@rollup/plugin-typescript": "^11.1.1",
@@ -35,7 +36,7 @@
     "concurrently": "^7.1.0",
     "esbuild": "^0.18.17",
     "rimraf": "^5.0.1",
-    "rollup": "^2.71.1",
+    "rollup": "^3.0.0",
     "rollup-plugin-dts": "^5.3.0",
     "rollup-plugin-esbuild": "^5.0.0",
     "super-three": "0.164.0",

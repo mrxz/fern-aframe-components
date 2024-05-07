@@ -3,8 +3,6 @@ import * as AFRAME from 'aframe';
 export const RootInteractionComponent = AFRAME.registerComponent('uikit-root-interaction', {
     schema: {
     },
-    __fields: {} as {
-    },
     init: function() {
         this.el.addEventListener('mouseenter', e => {
             const targetEl = e.target as AFRAME.Entity;

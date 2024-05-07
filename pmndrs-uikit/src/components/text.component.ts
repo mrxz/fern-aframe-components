@@ -1,42 +1,46 @@
-import { Container } from '@pmndrs/uikit';
+import { Text } from '@pmndrs/uikit';
 import * as AFRAME from 'aframe';
 import { FLEX_SCHEMA } from '../schema/flex.schema';
+import { TEXT_SCHEMA } from '../schema/text.schema';
 import { deferInitialization, swapObject3D, uiRaycast } from '../common';
-import { CONTAINER_SCHEMA } from '../schema/container.schema';
 
 const PROPERTIES_SCHEMA = {
-    ...CONTAINER_SCHEMA,
+    ...TEXT_SCHEMA,
     ...FLEX_SCHEMA
 } as const;
 
-export const ContainerComponent = AFRAME.registerComponent('uikit-container', {
+export const TextComponent = AFRAME.registerComponent('uikit-text', {
     schema: PROPERTIES_SCHEMA,
     __fields: {} as {
-        container: Container
+        text: Text
     },
     init: function() {
-        this.container = new Container();
+        this.text = new Text();
         this.el.addEventListener('uikit-properties-update', () => this.updateUIProperties())
 
         // Find the respective Root
         deferInitialization(this.el, () => {
-            swapObject3D(this.el, this.container);
+            swapObject3D(this.el, this.text);
         });
-        this.container.raycast = uiRaycast.bind(this.container);
+        this.text.raycast = uiRaycast.bind(this.text);
     },
     update: function() {
         this.updateUIProperties();
+        this.updateContent();
     },
     updateUIProperties: function() {
-        this.container.setProperties({
+        this.text.setProperties({
             ...this.data,
-            hover: this.el.getAttribute('uikit-container-hover'),
-            active: this.el.getAttribute('uikit-container-active')
+            hover: this.el.getAttribute('uikit-text-hover'),
+            active: this.el.getAttribute('uikit-text-active')
         });
+    },
+    updateContent: function() {
+        this.text.setText(this.el.innerText);
     },
     remove: function() {
         // TODO: Remove event listener
-        this.container.parent?.removeFromParent();
+        this.text.parent?.removeFromParent();
     }
 });
 
@@ -59,13 +63,13 @@ const ConditionalPropertiesComponent = {
     }
 } as const satisfies AFRAME.ComponentDefinition;
 
-const ContainerHoverComponent = AFRAME.registerComponent('uikit-container-hover', ConditionalPropertiesComponent);
-const ContainerActiveComponent = AFRAME.registerComponent('uikit-container-active', ConditionalPropertiesComponent);
+const TextHoverComponent = AFRAME.registerComponent('uikit-text-hover', ConditionalPropertiesComponent);
+const TextActiveComponent = AFRAME.registerComponent('uikit-text-active', ConditionalPropertiesComponent);
 
 declare module "aframe" {
     export interface Components {
-        "uikit-container": InstanceType<typeof ContainerComponent>,
-        "uikit-container-hover": InstanceType<typeof ContainerHoverComponent>,
-        "uikit-container-active": InstanceType<typeof ContainerActiveComponent>
+        "uikit-text": InstanceType<typeof TextComponent>,
+        "uikit-text-hover": InstanceType<typeof TextHoverComponent>,
+        "uikit-text-active": InstanceType<typeof TextActiveComponent>
     }
 }

@@ -1,3 +1,4 @@
 import 'aframe';
-import './components';
-import './primitives';
+import './events';
+import './components/';
+import './primitives/';

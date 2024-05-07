@@ -23,6 +23,17 @@ export const COLOR = {
     }
 } as const;
 
+export const STRING = {
+    type: 'string',
+    default: undefined,
+    parse: function(input: any) {
+        if(typeof input !== 'string') {
+            return undefined;
+        }
+        return input;
+    }
+} as const;
+
 export const NUMBER = {
     type: 'number',
     default: undefined,

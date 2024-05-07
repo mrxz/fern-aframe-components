@@ -27,9 +27,15 @@ export const RootComponent = AFRAME.registerComponent('uikit-root', {
         // FIXME: Move into setup and/or system?
         sceneEl.renderer.localClippingEnabled = true
         sceneEl.renderer.setTransparentSort(reversePainterSortStable);
+
+        // Emit initialized event to initialize entire sub-tree
+        this.el.emit('uikit-initialized', {}, false);
     },
     tick: function(_t, dt) {
         this.root.update(dt/1000.0);
+    },
+    remove: function() {
+        // TODO
     }
 });
 
