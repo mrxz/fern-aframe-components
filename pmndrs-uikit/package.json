@@ -26,6 +26,7 @@
   "devDependencies": {
     "@compodoc/live-server": "1.2.3",
     "@rollup/plugin-alias": "^5.1.0",
+    "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^15.0.2",
     "@rollup/plugin-terser": "^0.4.3",
@@ -45,7 +46,10 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
-    "@pmndrs/uikit": "^0.3.0"
+    "@pmndrs/uikit": "^0.3.0",
+    "@preact/signals": "^1.2.3",
+    "@react-three/uikit-default": "^0.3.0",
+    "preact": "^10.21.0"
   },
   "peerDependencies": {
     "super-three": "*"

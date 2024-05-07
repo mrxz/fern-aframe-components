@@ -72,3 +72,21 @@ export function uiRaycast(this: Container|Root|Text, raycaster: THREE.Raycaster,
     const childrenContainer = (this as any).childrenContainer as THREE.Object3D;
     childrenContainer?.children.forEach(child => child.raycast(raycaster, intersects));
 }
+
+export function handleDefaultPropertiesUpdate(el: AFRAME.Entity, uikit: Container|Root|Text, e: AFRAME.EntityEvents['uikit-default-properties-update']) {
+    // Apply received properties to uikit instance
+    uikit.setDefaultProperties(e.detail.properties);
+
+    // Check if there are default-properties on this entity
+    const additionalDefaultProperties = el.getAttribute('uikit-default-properties');
+    const mergedDefaultProperties = additionalDefaultProperties ? {...e.detail.properties, ...additionalDefaultProperties} : {...e.detail.properties};
+
+    // Propagate
+    for(let i = 0; i < el.children.length; i++) {
+        const child = el.children[i] as AFRAME.Entity;
+        if(child.emit) {
+            // FIXME: Avoid the many copies, instead store/cache intermediate result in `uikit-default-properties` component
+            child.emit('uikit-default-properties-update', {properties: {...mergedDefaultProperties}}, false);
+        }
+    }
+}

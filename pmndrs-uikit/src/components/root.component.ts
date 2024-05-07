@@ -1,7 +1,7 @@
 import { Root, reversePainterSortStable } from '@pmndrs/uikit';
 import * as AFRAME from 'aframe';
 import { FLEX_SCHEMA } from '../schema/flex.schema';
-import { swapObject3D, uiRaycast } from '../common';
+import { handleDefaultPropertiesUpdate, swapObject3D, uiRaycast } from '../common';
 import { ROOT_SCHEMA } from '../schema/root.schema';
 
 export const RootComponent = AFRAME.registerComponent('uikit-root', {
@@ -23,6 +23,8 @@ export const RootComponent = AFRAME.registerComponent('uikit-root', {
         this.el.object3DMap['ui'] = this.root;
         this.root.raycast = uiRaycast.bind(this.root);
         (this.root as any).childrenContainer.raycast = uiRaycast.bind((this.root as any).childrenContainer);
+
+        this.el.addEventListener('uikit-default-properties-update', (e) => handleDefaultPropertiesUpdate(this.el, this.root, e));
 
         // FIXME: Move into setup and/or system?
         sceneEl.renderer.localClippingEnabled = true

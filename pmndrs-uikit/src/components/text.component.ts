@@ -2,7 +2,7 @@ import { Text } from '@pmndrs/uikit';
 import * as AFRAME from 'aframe';
 import { FLEX_SCHEMA } from '../schema/flex.schema';
 import { TEXT_SCHEMA } from '../schema/text.schema';
-import { deferInitialization, swapObject3D, uiRaycast } from '../common';
+import { deferInitialization, handleDefaultPropertiesUpdate, swapObject3D, uiRaycast } from '../common';
 
 const PROPERTIES_SCHEMA = {
     ...TEXT_SCHEMA,
@@ -16,7 +16,8 @@ export const TextComponent = AFRAME.registerComponent('uikit-text', {
     },
     init: function() {
         this.text = new Text();
-        this.el.addEventListener('uikit-properties-update', () => this.updateUIProperties())
+        this.el.addEventListener('uikit-properties-update', () => this.updateUIProperties());
+        this.el.addEventListener('uikit-default-properties-update', (e) => handleDefaultPropertiesUpdate(this.el, this.text, e));
 
         // Find the respective Root
         deferInitialization(this.el, () => {

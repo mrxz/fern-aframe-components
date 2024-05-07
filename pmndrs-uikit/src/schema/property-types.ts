@@ -15,8 +15,8 @@ export const BOOLEAN = {
 export const COLOR = {
     type: 'color',
     default: undefined,
-    parse: function(input: any) {
-        if(typeof input === 'string') {
+    parse: function(input: any): string | THREE.Color | undefined {
+        if(typeof input === 'string' || input?.isColor) {
             return input;
         }
         return undefined;

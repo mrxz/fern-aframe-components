@@ -27,7 +27,7 @@ export function convertComponentToPrimitive<
     mappings['hover'] = `${componentDescription.name}-hover`;
     mappings['active'] = `${componentDescription.name}-active`;
 
-    return AFRAME.registerPrimitive(name, {
+    const primitive = AFRAME.registerPrimitive(name, {
         defaultComponents: {
             [componentDescription.name]: {},
             [componentDescription.name + '-hover']: {},
@@ -35,6 +35,26 @@ export function convertComponentToPrimitive<
         },
         mappings
     } as any);
+
+    // FIXME: A-Frame currently doesn't handle setAttribute on primitives directly, instead it awaits change callback
+    //        For now provide our own implementation that does what we need
+    primitive.prototype.setAttribute = function(attrName: string, arg1: any, arg2: any) {
+        // HACK: Perform kebab-case conversion here... ideally done earlier
+        var componentName = this.mappings[toKebabCase(attrName)];
+        // HACK;
+        if (attrName === 'cursor') {
+            return;
+        }
+
+        if (!attrName || !componentName) {
+            this.__proto__.__proto__.setAttribute.call(this, attrName, arg1, arg2);
+            return;
+        }
+
+        console.log(arguments[0], arguments[1]);
+        AFRAME.utils.entity.setComponentProperty(this, componentName, arg1);
+    }
+    return primitive;
 }
 
 function toKebabCase(x: string): string {

@@ -1,7 +1,7 @@
 import { Container } from '@pmndrs/uikit';
 import * as AFRAME from 'aframe';
 import { FLEX_SCHEMA } from '../schema/flex.schema';
-import { deferInitialization, swapObject3D, uiRaycast } from '../common';
+import { deferInitialization, handleDefaultPropertiesUpdate, swapObject3D, uiRaycast } from '../common';
 import { CONTAINER_SCHEMA } from '../schema/container.schema';
 
 const PROPERTIES_SCHEMA = {
@@ -17,6 +17,7 @@ export const ContainerComponent = AFRAME.registerComponent('uikit-container', {
     init: function() {
         this.container = new Container();
         this.el.addEventListener('uikit-properties-update', () => this.updateUIProperties())
+        this.el.addEventListener('uikit-default-properties-update', (e) => handleDefaultPropertiesUpdate(this.el, this.container, e));
 
         // Find the respective Root
         deferInitialization(this.el, () => {
