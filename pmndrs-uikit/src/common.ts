@@ -1,4 +1,6 @@
+import { Container, Root } from '@pmndrs/uikit';
 import * as AFRAME from 'aframe';
+import * as THREE from 'three';
 
 export function deferRootInitialized(el: AFRAME.Entity, action: () => void) {
     let rootEl = el;
@@ -36,4 +38,12 @@ export function swapObject3D(el: AFRAME.Entity, newObject3D: THREE.Object3D) {
     oldObject3D.updateMatrix();
     oldObject3D.matrix.decompose(newObject3D.position, newObject3D.quaternion, newObject3D.scale);
     newObject3D.updateMatrix();
+
+    newObject3D.el = el;
+    newObject3D.traverse(c => c.el = el);
+}
+
+export function uiRaycast(this: Container|Root, raycaster: THREE.Raycaster, intersects: Array<THREE.Intersection>) {
+    const childrenContainer = (this as any).childrenContainer as THREE.Object3D;
+    childrenContainer?.children.forEach(child => child.raycast(raycaster, intersects));
 }

@@ -8,7 +8,6 @@
     <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@4b4c56093ffed6abcfc924d3ef25f8a849ea6fa5/dist/aframe-master.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/aframe-environment-component@1.3.4/dist/aframe-environment-component.min.js"></script>
     <script src="/js/aframe-pmndrs-uikit.umd.min.js"></script>
-    <script></script>
   </head>
   <body>
     <a-scene xr-mode-ui="XRMode: xr">
@@ -17,9 +16,13 @@
 
       <a-entity environment></a-entity>
 
+      <a-camera>
+        <a-entity cursor="rayOrigin: mouse" raycaster="far: 20; objects: .clickable"></a-entity>
+      </a-camera>
+
       <a-entity position="0 1.6 -10">
-        <ui-root id="root" gap="10" padding="10">
-          <ui-container id="left" width="100" height="100" background-opacity="0.5" background-color="red"></ui-container>
+        <ui-root class="clickable" id="root" gap="10" padding="10" uikit-root-interaction>
+          <ui-container id="left" width="300" height="100" background-opacity="0.5" background-color="red"></ui-container>
           <ui-container id="right" width="100" height="100" background-opacity="0.5" background-color="blue"></ui-container>
         </ui-root>
       </a-entity>
