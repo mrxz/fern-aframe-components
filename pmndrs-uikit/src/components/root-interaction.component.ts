@@ -16,6 +16,17 @@ export const RootInteractionComponent = AFRAME.registerComponent('uikit-root-int
             const uiElement = targetEl.object3D;
             uiElement.dispatchEvent({ type: 'pointerOut', target: uiElement, nativeEvent: { pointerId: 1 } })
         });
+
+        this.el.addEventListener('mousedown', e => {
+            const targetEl = e.target as AFRAME.Entity;
+            const uiElement = targetEl.object3D;
+            uiElement.dispatchEvent({ type: 'pointerDown', target: uiElement, nativeEvent: { pointerId: 1 } })
+        });
+        this.el.addEventListener('mouseup', e => {
+            const targetEl = e.target as AFRAME.Entity;
+            const uiElement = targetEl.object3D;
+            uiElement.dispatchEvent({ type: 'pointerUp', target: uiElement, nativeEvent: { pointerId: 1 } })
+        })
     },
     remove: function() {
         // TODO
