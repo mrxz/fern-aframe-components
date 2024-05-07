@@ -14,7 +14,8 @@ export const RootComponent = AFRAME.registerComponent('uikit-root', {
     },
     init: function() {
         const sceneEl = this.el.sceneEl;
-        this.root = new Root(sceneEl.camera, sceneEl.renderer, undefined, {
+        // NOTE: Provide getter for camera, to handle camera switching and user-provided cameras.
+        this.root = new Root(() => sceneEl.camera, sceneEl.renderer, undefined, {
             ...this.data,
         });
         swapObject3D(this.el, this.root);
