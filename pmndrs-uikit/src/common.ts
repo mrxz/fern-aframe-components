@@ -51,15 +51,12 @@ export function swapObject3D(el: AFRAME.Entity, newObject3D: THREE.Object3D) {
     if(oldObject3D.parent) {
         const childrenArray = oldObject3D.parent.children;
         const index = childrenArray.indexOf(oldObject3D);
-        oldObject3D.parent.add(el.object3D);
-        oldObject3D.removeFromParent();
 
-        // Ensure the index is right
-        if(index !== childrenArray.length - 1) {
-            const temp = childrenArray[index];
-            childrenArray[index] = childrenArray[childrenArray.length - 1]
-            childrenArray[childrenArray.length - 1] = temp;
-        }
+        oldObject3D.parent.add(el.object3D);
+        // Ensure the newObject3D ends up at the exact same index as the old one.
+        childrenArray[index] = childrenArray[childrenArray.length - 1]
+        childrenArray[childrenArray.length - 1] = oldObject3D;
+        oldObject3D.removeFromParent();
     }
 
     oldObject3D.updateMatrix();
