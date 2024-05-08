@@ -22,6 +22,7 @@ export const CONTAINER_SCHEMA = {
     borderX: NUMBER,
     borderY: NUMBER,
     borderBend: NUMBER,
+    borderWidth: NUMBER,
     //scrollbarPanelMaterialClass	Material class TODO
     scrollbarBackgroundOpacity: NUMBER,
     scrollbarBackgroundColor: COLOR,
