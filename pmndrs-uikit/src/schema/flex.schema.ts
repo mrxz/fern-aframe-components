@@ -1,3 +1,4 @@
+import { ContainerProperties } from "@pmndrs/uikit";
 import { NUMBER_OR_PERCENTAGE_OR_AUTO, NUMBER, oneOf, NUMBER_OR_PERCENTAGE } from "./property-types";
 
 export const FLEX_SCHEMA = {
@@ -39,13 +40,6 @@ export const FLEX_SCHEMA = {
     maxWidth: NUMBER_OR_PERCENTAGE,
     maxHeight: NUMBER_OR_PERCENTAGE,
     aspectRatio: NUMBER,
-    border: NUMBER,
-    borderX: NUMBER,
-    borderY: NUMBER,
-    borderTop: NUMBER,
-    borderLeft: NUMBER,
-    borderRight: NUMBER,
-    borderBottom: NUMBER,
     overflow: oneOf(["visible", "scroll", "hidden"]),
     padding: NUMBER_OR_PERCENTAGE,
     paddingX: NUMBER_OR_PERCENTAGE,
@@ -57,4 +51,4 @@ export const FLEX_SCHEMA = {
     gap: NUMBER,
     gapRow: NUMBER,
     gapColumn: NUMBER,
-} as const;
+} as const satisfies Partial<Record<keyof ContainerProperties, any>>;

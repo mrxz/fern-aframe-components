@@ -1,4 +1,4 @@
-import { Root, reversePainterSortStable } from '@pmndrs/uikit';
+import { Root, RootProperties, reversePainterSortStable } from '@pmndrs/uikit';
 import * as AFRAME from 'aframe';
 import { FLEX_SCHEMA } from '../schema/flex.schema';
 import { handleDefaultPropertiesUpdate, swapObject3D, uiRaycast } from '../common';
@@ -8,7 +8,7 @@ export const RootComponent = AFRAME.registerComponent('uikit-root', {
     schema: {
         ...ROOT_SCHEMA,
         ...FLEX_SCHEMA
-    },
+    } satisfies Partial<Record<keyof RootProperties, any>>,
     __fields: {} as {
         root: Root,
     },

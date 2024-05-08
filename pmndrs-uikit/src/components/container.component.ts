@@ -1,4 +1,4 @@
-import { Container } from '@pmndrs/uikit';
+import { Container, ContainerProperties } from '@pmndrs/uikit';
 import * as AFRAME from 'aframe';
 import { FLEX_SCHEMA } from '../schema/flex.schema';
 import { deferInitialization, handleDefaultPropertiesUpdate, swapObject3D, uiRaycast } from '../common';
@@ -7,8 +7,8 @@ import { registerConditionalComponents } from './conditionals';
 
 const PROPERTIES_SCHEMA = {
     ...CONTAINER_SCHEMA,
-    ...FLEX_SCHEMA
-} as const;
+    ...FLEX_SCHEMA,
+} as const satisfies Partial<Record<keyof ContainerProperties, any>>;
 
 export const ContainerComponent = AFRAME.registerComponent('uikit-container', {
     schema: PROPERTIES_SCHEMA,

@@ -1,4 +1,4 @@
-import { Text } from '@pmndrs/uikit';
+import { Text, TextProperties } from '@pmndrs/uikit';
 import * as AFRAME from 'aframe';
 import { FLEX_SCHEMA } from '../schema/flex.schema';
 import { TEXT_SCHEMA } from '../schema/text.schema';
@@ -9,8 +9,8 @@ import { registerConditionalComponents } from './conditionals';
 const PROPERTIES_SCHEMA = {
     ...TEXT_SCHEMA,
     ...CONTAINER_SCHEMA,
-    ...FLEX_SCHEMA
-} as const;
+    ...FLEX_SCHEMA,
+} as const satisfies Partial<Record<keyof TextProperties, any>>;
 
 export const TextComponent = AFRAME.registerComponent('uikit-text', {
     schema: PROPERTIES_SCHEMA,
@@ -37,7 +37,7 @@ export const TextComponent = AFRAME.registerComponent('uikit-text', {
             ...this.data,
             hover: this.el.getAttribute('uikit-text-hover'),
             active: this.el.getAttribute('uikit-text-active')
-        });
+        } satisfies TextProperties);
     },
     updateContent: function() {
         this.text.setText(this.el.innerText);

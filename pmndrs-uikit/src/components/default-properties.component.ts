@@ -1,4 +1,5 @@
 import * as AFRAME from 'aframe';
+import { AllOptionalProperties } from '@pmndrs/uikit';
 import { FLEX_SCHEMA } from '../schema/flex.schema';
 import { CONTAINER_SCHEMA } from '../schema/container.schema';
 import { TEXT_SCHEMA } from '../schema/text.schema';
@@ -12,7 +13,7 @@ export const DefaultPropertiesComponent = AFRAME.registerComponent('uikit-defaul
         ...TEXT_SCHEMA,
         ...IMAGE_SCHEMA,
         ...INPUT_SCHEMA,
-    },
+    } satisfies Partial<Record<keyof AllOptionalProperties, any>>,
     init: function() {
 
     },

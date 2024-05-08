@@ -1,3 +1,4 @@
+import { ContainerProperties } from "@pmndrs/uikit";
 import { BOOLEAN, NUMBER, COLOR } from "./property-types";
 
 export const CONTAINER_SCHEMA = {
@@ -18,14 +19,9 @@ export const CONTAINER_SCHEMA = {
     borderTopRightRadius: NUMBER,
     borderBottomRightRadius: NUMBER,
     borderBottomLeftRadius: NUMBER,
-    border: NUMBER,
-    borderX: NUMBER,
-    borderY: NUMBER,
     borderBend: NUMBER,
     borderWidth: NUMBER,
     //scrollbarPanelMaterialClass	Material class TODO
-    scrollbarBackgroundOpacity: NUMBER,
-    scrollbarBackgroundColor: COLOR,
     scrollbarWidth: NUMBER,
     scrollbarBorderRadius: NUMBER,
     scrollbarBorderLeftRadius: NUMBER,
@@ -36,4 +32,4 @@ export const CONTAINER_SCHEMA = {
     scrollbarBorderTopRightRadius: NUMBER,
     scrollbarBorderBottomRightRadius: NUMBER,
     scrollbarBorderBottomLeftRadius: NUMBER,
-} as const;
+} as const satisfies Partial<Record<keyof ContainerProperties, any>>;

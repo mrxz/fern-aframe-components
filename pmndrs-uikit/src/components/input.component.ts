@@ -1,4 +1,4 @@
-import { Input } from '@pmndrs/uikit';
+import { Input, InputProperties } from '@pmndrs/uikit';
 import * as AFRAME from 'aframe';
 import { FLEX_SCHEMA } from '../schema/flex.schema';
 import { deferInitialization, handleDefaultPropertiesUpdate, swapObject3D, uiRaycast } from '../common';
@@ -12,7 +12,7 @@ const PROPERTIES_SCHEMA = {
     ...TEXT_SCHEMA,
     ...CONTAINER_SCHEMA,
     ...FLEX_SCHEMA
-} as const;
+} as const satisfies Partial<Record<keyof InputProperties, any>>;
 
 export const InputComponent = AFRAME.registerComponent('uikit-input', {
     schema: PROPERTIES_SCHEMA,
