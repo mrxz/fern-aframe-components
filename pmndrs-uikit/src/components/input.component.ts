@@ -1,37 +1,39 @@
-import { Image } from '@pmndrs/uikit';
+import { Input } from '@pmndrs/uikit';
 import * as AFRAME from 'aframe';
 import { FLEX_SCHEMA } from '../schema/flex.schema';
 import { deferInitialization, handleDefaultPropertiesUpdate, swapObject3D, uiRaycast } from '../common';
-import { IMAGE_SCHEMA } from '../schema/image.schema';
+import { INPUT_SCHEMA } from '../schema/input.schema';
 import { CONTAINER_SCHEMA } from '../schema/container.schema';
+import { TEXT_SCHEMA } from '../schema/text.schema';
 
 const PROPERTIES_SCHEMA = {
-    ...IMAGE_SCHEMA,
+    ...INPUT_SCHEMA,
+    ...TEXT_SCHEMA,
     ...CONTAINER_SCHEMA,
     ...FLEX_SCHEMA
 } as const;
 
-export const ImageComponent = AFRAME.registerComponent('uikit-image', {
+export const InputComponent = AFRAME.registerComponent('uikit-input', {
     schema: PROPERTIES_SCHEMA,
     __fields: {} as {
-        image: Image
+        input: Input
     },
     init: function() {
-        this.image = new Image();
+        this.input = new Input();
         this.el.addEventListener('uikit-properties-update', () => this.updateUIProperties());
-        this.el.addEventListener('uikit-default-properties-update', (e) => handleDefaultPropertiesUpdate(this.el, this.image, e));
+        this.el.addEventListener('uikit-default-properties-update', (e) => handleDefaultPropertiesUpdate(this.el, this.input, e));
 
         // Find the respective Root
         deferInitialization(this.el, () => {
-            swapObject3D(this.el, this.image);
+            swapObject3D(this.el, this.input);
         });
-        this.image.raycast = uiRaycast.bind(this.image);
+        this.input.raycast = uiRaycast.bind(this.input);
     },
     update: function() {
         this.updateUIProperties();
     },
     updateUIProperties: function() {
-        this.image.setProperties({
+        this.input.setProperties({
             ...this.data,
             hover: this.el.getAttribute('uikit-text-hover'),
             active: this.el.getAttribute('uikit-text-active')
@@ -39,7 +41,7 @@ export const ImageComponent = AFRAME.registerComponent('uikit-image', {
     },
     remove: function() {
         // TODO: Remove event listener
-        this.image.parent?.removeFromParent();
+        this.input.parent?.removeFromParent();
     }
 });
 
@@ -62,13 +64,13 @@ const ConditionalPropertiesComponent = {
     }
 } as const satisfies AFRAME.ComponentDefinition;
 
-const ImageHoverComponent = AFRAME.registerComponent('uikit-image-hover', ConditionalPropertiesComponent);
-const ImageActiveComponent = AFRAME.registerComponent('uikit-image-active', ConditionalPropertiesComponent);
+const InputHoverComponent = AFRAME.registerComponent('uikit-input-hover', ConditionalPropertiesComponent);
+const InputActiveComponent = AFRAME.registerComponent('uikit-input-active', ConditionalPropertiesComponent);
 
 declare module "aframe" {
     export interface Components {
-        "uikit-image": InstanceType<typeof ImageComponent>,
-        "uikit-image-hover": InstanceType<typeof ImageHoverComponent>,
-        "uikit-image-active": InstanceType<typeof ImageActiveComponent>
+        "uikit-input": InstanceType<typeof InputComponent>,
+        "uikit-input-hover": InstanceType<typeof InputHoverComponent>,
+        "uikit-input-active": InstanceType<typeof InputActiveComponent>
     }
 }

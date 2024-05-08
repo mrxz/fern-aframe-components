@@ -2,12 +2,16 @@ import * as AFRAME from 'aframe';
 import { FLEX_SCHEMA } from '../schema/flex.schema';
 import { CONTAINER_SCHEMA } from '../schema/container.schema';
 import { TEXT_SCHEMA } from '../schema/text.schema';
+import { IMAGE_SCHEMA } from '../schema/image.schema';
+import { INPUT_SCHEMA } from '../schema/input.schema';
 
 export const DefaultPropertiesComponent = AFRAME.registerComponent('uikit-default-properties', {
     schema: {
         ...CONTAINER_SCHEMA,
         ...FLEX_SCHEMA,
-        ...TEXT_SCHEMA
+        ...TEXT_SCHEMA,
+        ...IMAGE_SCHEMA,
+        ...INPUT_SCHEMA,
     },
     init: function() {
 

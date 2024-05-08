@@ -3,9 +3,11 @@ import * as AFRAME from 'aframe';
 import { FLEX_SCHEMA } from '../schema/flex.schema';
 import { TEXT_SCHEMA } from '../schema/text.schema';
 import { deferInitialization, handleDefaultPropertiesUpdate, swapObject3D, uiRaycast } from '../common';
+import { CONTAINER_SCHEMA } from '../schema/container.schema';
 
 const PROPERTIES_SCHEMA = {
     ...TEXT_SCHEMA,
+    ...CONTAINER_SCHEMA,
     ...FLEX_SCHEMA
 } as const;
 

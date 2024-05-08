@@ -1,8 +1,8 @@
-import { Container, Root, Text, Image } from '@pmndrs/uikit';
+import { Container, Root, Text, Image, Input } from '@pmndrs/uikit';
 import * as AFRAME from 'aframe';
 import * as THREE from 'three';
 
-type UikitType = Container | Root | Text | Image;
+type UikitType = Container | Root | Text | Image | Input;
 
 function getUikitComponent(el: AFRAME.Entity) {
     // FIXME: Cleaner iteration or bookkeeping, as at most one is expected on entity
