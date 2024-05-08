@@ -3,6 +3,7 @@ import type { KebabCase } from "type-fest";
 
 // FIXME: Update aframe-types to have proper ComponentDescription type
 type ComponentDescription = {
+    Component: any,
     name: string,
     schema: {[key: string]: AFRAME.SinglePropertySchema<any>}
 }
@@ -12,11 +13,17 @@ type StripPrefix<T extends string, Suffix = T extends `uikit-${infer Name}` ? Na
 export function convertComponentToPrimitive<
     Name extends keyof AFRAME.Components,
     T extends AFRAME.ComponentConstructor<any>,
-    C extends AFRAME.ComponentInstance<any, any, any, any, any> = T extends AFRAME.ComponentConstructor<infer Instance> ? Instance : never>(componentName: Name)
-        : AFRAME.PrimitiveConstructor<{[key in StripPrefix<Name>]: {}}, {[key in Extract<keyof C["schema"], string> as KebabCase<key>]: `${Name}.${key}`}>
+    C extends AFRAME.ComponentInstance<any, any, any, any, any> = T extends AFRAME.ComponentConstructor<infer Instance> ? Instance : never>(componentName: Name, componentConstructor: T)
+        : AFRAME.PrimitiveConstructor<
+            {[key in StripPrefix<Name>]: {}},
+            {[key in Extract<keyof C["schema"], string> as KebabCase<key>]: `${Name}.${key}`} & {hover: `${Name}-hover`, active: `${Name}-active`,}
+        >
 {
     // Lookup component
     const componentDescription = AFRAME.components[componentName] as unknown as ComponentDescription;
+    if(componentDescription.Component !== componentConstructor) {
+        throw Error(`Component '${componentName}' does not match registered component!`)
+    }
     const name = `ui-${componentDescription.name.split('-')[1]}`;
     const hasFocus = `${componentDescription.name}-focus` in AFRAME.components;
 
