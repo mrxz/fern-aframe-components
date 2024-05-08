@@ -34,6 +34,30 @@ export const STRING = {
     }
 } as const;
 
+const urlRegex = /url\((.+)\)/;
+export const TEXTURE = {
+    type: 'map',
+    default: undefined,
+    parse: function(input: any) {
+        if(typeof input === 'object' && input) {
+            if(input.isTexture) {
+                return input as THREE.Texture;
+            }
+            if(input.tagName === 'IMG') {
+                // TODO: Load corresponding texture, for now pass src
+                return (input as HTMLImageElement).src;
+            }
+        }
+        if(typeof input !== 'string') {
+            return undefined;
+        }
+        // Is either the url or wrapped in url()
+        const parsedUrl = input.match(urlRegex);
+        if(parsedUrl) { return parsedUrl[1]; }
+        return input;
+    }
+} as const;
+
 export const NUMBER = {
     type: 'number',
     default: undefined,

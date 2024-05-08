@@ -1,6 +1,8 @@
-import { Container, Root, Text } from '@pmndrs/uikit';
+import { Container, Root, Text, Image } from '@pmndrs/uikit';
 import * as AFRAME from 'aframe';
 import * as THREE from 'three';
+
+type UikitType = Container | Root | Text | Image;
 
 function getUikitComponent(el: AFRAME.Entity) {
     // FIXME: Cleaner iteration or bookkeeping, as at most one is expected on entity
@@ -68,12 +70,12 @@ export function swapObject3D(el: AFRAME.Entity, newObject3D: THREE.Object3D) {
     newObject3D.traverse(c => c.el = el);
 }
 
-export function uiRaycast(this: Container|Root|Text, raycaster: THREE.Raycaster, intersects: Array<THREE.Intersection>) {
+export function uiRaycast(this: UikitType, raycaster: THREE.Raycaster, intersects: Array<THREE.Intersection>) {
     const childrenContainer = (this as any).childrenContainer as THREE.Object3D;
     childrenContainer?.children.forEach(child => child.raycast(raycaster, intersects));
 }
 
-export function handleDefaultPropertiesUpdate(el: AFRAME.Entity, uikit: Container|Root|Text, e: AFRAME.EntityEvents['uikit-default-properties-update']) {
+export function handleDefaultPropertiesUpdate(el: AFRAME.Entity, uikit: UikitType, e: AFRAME.EntityEvents['uikit-default-properties-update']) {
     // Apply received properties to uikit instance
     uikit.setDefaultProperties(e.detail.properties);
 
