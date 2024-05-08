@@ -1,57 +1,93 @@
 import * as AFRAME from 'aframe';
 
-const POINTER_ID = 1;
+type CursorEvent = AFRAME.DetailEvent<{cursorEl: AFRAME.Entity, intersection: THREE.Intersection}>
+type PointerIdHolder = { __pointerId: number }
+let allocated_pointer_ids = 1;
 
 export const RootInteractionComponent = AFRAME.registerComponent('uikit-root-interaction', {
     schema: {},
     __fields: {} as {
-        cursorEl: AFRAME.Entity|undefined,
-        intersectedEl: AFRAME.Entity|undefined,
+        activeCursors: Array<{
+            cursorEl: AFRAME.Entity,
+            intersectedEl: AFRAME.Entity,
+        }>
     },
     init: function() {
-        this.el.addEventListener('mouseenter', e => {
+        this.activeCursors = [];
+
+        function processEvent(e: CursorEvent, eventType: string) {
             const targetEl = e.target as AFRAME.Entity;
             const uiElement = targetEl.object3D;
-            uiElement.dispatchEvent({ type: 'pointerOver', target: uiElement, nativeEvent: { pointerId: POINTER_ID } })
+            const cursorEl = e.detail.cursorEl;
+            const pointerIdHolder = (cursorEl.components.cursor as unknown as PointerIdHolder)
+            if(!pointerIdHolder.__pointerId) {
+                pointerIdHolder.__pointerId = ++allocated_pointer_ids;
+            }
+
+            uiElement.dispatchEvent({ type: eventType, uv: e.detail?.intersection?.uv, target: uiElement, nativeEvent: { pointerId: pointerIdHolder.__pointerId } })
+        }
+
+        const storeCurse = (e: CursorEvent) => {
+            const cursorEl = e.detail.cursorEl;
+            const intersectedEl = e.target;
+
+            const record = this.activeCursors.find(r => r.cursorEl === cursorEl);
+            if(record) {
+                // FIXME: When this happens, the intersectedEl likely missed an event, potentially leaving it in a broken state...
+                record.intersectedEl = intersectedEl;
+            } else {
+                this.activeCursors.push({ cursorEl, intersectedEl })
+            }
+        }
+
+        const clearCursor = (e: CursorEvent) => {
+            const cursorEl = e.detail.cursorEl;
+            const index = this.activeCursors.findIndex(r => r.cursorEl === cursorEl);
+
+            if(index !== -1) {
+                if(index !== this.activeCursors.length - 1) {
+                    this.activeCursors[index] = this.activeCursors[this.activeCursors.length - 1];
+                }
+                this.activeCursors.length--;
+            }
+        }
+
+        this.el.addEventListener('mouseenter', e => {
+            processEvent(e as CursorEvent, 'pointerOver');
         });
         this.el.addEventListener('mouseleave', e => {
-            const targetEl = e.target as AFRAME.Entity;
-            const uiElement = targetEl.object3D;
-            uiElement.dispatchEvent({ type: 'pointerOut', target: uiElement, nativeEvent: { pointerId: POINTER_ID } })
+            processEvent(e as CursorEvent, 'pointerOut');
 
             // Clear any stored state
-            this.cursorEl = this.intersectedEl = undefined;
+            clearCursor(e as CursorEvent);
         });
 
         this.el.addEventListener('mousedown', e => {
-            const targetEl = e.target as AFRAME.Entity;
-            const eventDetails = (e as AFRAME.DetailEvent<{cursorEl: AFRAME.Entity, intersection: THREE.Intersection}>).detail;
-            const uiElement = targetEl.object3D;
-            uiElement.dispatchEvent({ type: 'pointerDown', uv: eventDetails.intersection.uv, target: uiElement, nativeEvent: { pointerId: POINTER_ID } })
+            processEvent(e as CursorEvent, 'pointerDown');
 
             // Store cursor and intersected el for mouse move events
             // NOTE: This is only needed for Input when selecting, so it's activated in mousedown instead of mouseenter
-            this.cursorEl = eventDetails.cursorEl;
-            this.intersectedEl = targetEl;
+            storeCurse(e as CursorEvent);
         });
         this.el.addEventListener('mouseup', e => {
-            const targetEl = e.target as AFRAME.Entity;
-            const uiElement = targetEl.object3D;
-            uiElement.dispatchEvent({ type: 'pointerUp', target: uiElement, nativeEvent: { pointerId: POINTER_ID } })
+            processEvent(e as CursorEvent, 'pointerUp');
 
             // Clear any stored state
-            this.cursorEl = this.intersectedEl = undefined;
-        })
+            clearCursor(e as CursorEvent);
+        });
     },
     tick: function() {
-        if(!this.cursorEl || !this.intersectedEl) { return; }
+        for(let i = 0; i < this.activeCursors.length; i++) {
+            const record = this.activeCursors[i];
 
-        const raycaster = this.cursorEl.components['raycaster']!;
-        // FIXME: Update aframe-types
-        const intersection = (raycaster as any).getIntersection(this.intersectedEl);
+            const raycaster = record.cursorEl.components['raycaster']!;
+            // FIXME: Update aframe-types
+            const intersection = (raycaster as any).getIntersection(record.intersectedEl);
 
-        const uiElement = this.intersectedEl.object3D;
-        uiElement.dispatchEvent({ type: 'pointerMove', uv: intersection.uv, target: uiElement, nativeEvent: { pointerId: POINTER_ID } })
+            const pointerIdHolder = (record.cursorEl.components.cursor as unknown as PointerIdHolder)
+            const uiElement = record.intersectedEl.object3D;
+            uiElement.dispatchEvent({ type: 'pointerMove', uv: intersection.uv, target: uiElement, nativeEvent: { pointerId: pointerIdHolder.__pointerId } })
+        }
     },
     remove: function() {
         // TODO
