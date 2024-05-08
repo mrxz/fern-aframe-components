@@ -368,9 +368,9 @@ __metadata:
   resolution: "@fern-solutions/aframe-pmndrs-uikit@workspace:pmndrs-uikit"
   dependencies:
     "@compodoc/live-server": "npm:1.2.3"
-    "@pmndrs/uikit": "npm:^0.3.0"
+    "@pmndrs/uikit": "npm:^0.3.1"
     "@preact/signals": "npm:^1.2.3"
-    "@react-three/uikit-default": "npm:^0.3.0"
+    "@react-three/uikit-default": "npm:^0.3.1"
     "@rollup/plugin-alias": "npm:^5.1.0"
     "@rollup/plugin-commonjs": "npm:^25.0.7"
     "@rollup/plugin-json": "npm:^6.1.0"
@@ -595,9 +595,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pmndrs/uikit@npm:^0.3.0":
-  version: 0.3.0
-  resolution: "@pmndrs/uikit@npm:0.3.0"
+"@pmndrs/uikit@npm:^0.3.1":
+  version: 0.3.1
+  resolution: "@pmndrs/uikit@npm:0.3.1"
   dependencies:
     "@preact/signals-core": "npm:^1.5.1"
     inline-style-parser: "npm:^0.2.3"
@@ -606,7 +606,7 @@ __metadata:
     yoga-layout: "npm:^3.0.4"
   peerDependencies:
     three: ">=0.160"
-  checksum: 10/802536757d8ef2481f2ece9e5f707a16b71828ddd489b4dc0347cdc79c671d73b32bec6b560678b5b1d1d5ee895d10e0893c93fdb6be4e2cb61223026aeca235
+  checksum: 10/6a312ce2e338640838f232fa5f81ebeb5c3df2ffa06d772a9addd6f042808814a2389299c886a0275aea89352a9d7e1652e5b9375f024ed55477339c406f45ec
   languageName: node
   linkType: hard
 
@@ -628,31 +628,31 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-three/uikit-default@npm:^0.3.0":
-  version: 0.3.0
-  resolution: "@react-three/uikit-default@npm:0.3.0"
+"@react-three/uikit-default@npm:^0.3.1":
+  version: 0.3.1
+  resolution: "@react-three/uikit-default@npm:0.3.1"
   dependencies:
-    "@react-three/uikit": "npm:^0.3.0"
-    "@react-three/uikit-lucide": "npm:^0.3.0"
+    "@react-three/uikit": "npm:^0.3.1"
+    "@react-three/uikit-lucide": "npm:^0.3.1"
     tunnel-rat: "npm:^0.1.2"
-  checksum: 10/d2d38278ba41e68e8a223670a74c0feb21c9ac5f5afc236bca1209bec0200fcb093d060b9232286a2d13d3555db8178a1636cc1e35ec0dfed752278d80537468
+  checksum: 10/f4a7ada219a1867bfb5fc502a4c13e54628f7a4d09aaf15987ba31f1e6f8ff78941cb195bf93651d54798acf1e6117c9b1233bbb2592d0784c3866013e0141b1
   languageName: node
   linkType: hard
 
-"@react-three/uikit-lucide@npm:^0.3.0":
-  version: 0.3.0
-  resolution: "@react-three/uikit-lucide@npm:0.3.0"
+"@react-three/uikit-lucide@npm:^0.3.1":
+  version: 0.3.1
+  resolution: "@react-three/uikit-lucide@npm:0.3.1"
   dependencies:
-    "@react-three/uikit": "npm:^0.3.0"
-  checksum: 10/228c4de34afe946a13aac0d33a9198c8d8ee44c8db3c51d2a163252e31443db096f76eb60ec3b8d7d69b82de1bc56515c5fd6b2db62789c1c7e7ad1938d65bfa
+    "@react-three/uikit": "npm:^0.3.1"
+  checksum: 10/4290096829c36c956f9c00276e6311e82bc5f3c5f6c702918b5391c49c0e849ff02a20aa3abc238d48ba1707b2ae2cdb0381f70797853c025d1df065d9dad818
   languageName: node
   linkType: hard
 
-"@react-three/uikit@npm:^0.3.0":
-  version: 0.3.0
-  resolution: "@react-three/uikit@npm:0.3.0"
+"@react-three/uikit@npm:^0.3.1":
+  version: 0.3.1
+  resolution: "@react-three/uikit@npm:0.3.1"
   dependencies:
-    "@pmndrs/uikit": "npm:^0.3.0"
+    "@pmndrs/uikit": "npm:^0.3.1"
     "@preact/signals-core": "npm:^1.5.1"
     chalk: "npm:^5.3.0"
     commander: "npm:^12.0.0"
@@ -665,7 +665,7 @@ __metadata:
     react: ">=18"
   bin:
     uikit: dist/cli/index.js
-  checksum: 10/7878d5b49d560e0f5ac76737e4695cc3e7c7a30b8ec661a542c64628f4134812a235b406ebd89dcf88902d5656175ff15e15ff991e903fa03989e8a5a2b3d749
+  checksum: 10/3936fe3f00788839b6d9655420c1179e428b71dcd6d4d835790f06efe9bb8af0df4afc1d2e3a6956f000cea5ee3d9eb28d369bef766fbe508fbe60239798ad80
   languageName: node
   linkType: hard
 

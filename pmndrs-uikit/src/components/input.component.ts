@@ -5,6 +5,7 @@ import { deferInitialization, handleDefaultPropertiesUpdate, swapObject3D, uiRay
 import { INPUT_SCHEMA } from '../schema/input.schema';
 import { CONTAINER_SCHEMA } from '../schema/container.schema';
 import { TEXT_SCHEMA } from '../schema/text.schema';
+import { registerConditionalComponents } from './conditionals';
 
 const PROPERTIES_SCHEMA = {
     ...INPUT_SCHEMA,
@@ -45,27 +46,10 @@ export const InputComponent = AFRAME.registerComponent('uikit-input', {
     }
 });
 
-// Generate conditional properties components
-const ConditionalPropertiesComponent = {
-    schema: PROPERTIES_SCHEMA,
-    update: function() {
-        // FIXME: It seems that undefined keys in object can throw off the logic
-        //        As a workaround filter them out by mutating data directly
-        for(const key in this.data) {
-            const data = this.data as any;
-            if(data[key] === undefined) {
-                delete data[key];
-            }
-        }
-        this.el.emit('uikit-properties-update');
-    },
-    remove: function() {
-        this.el.emit('uikit-properties-update');
-    }
-} as const satisfies AFRAME.ComponentDefinition;
-
-const InputHoverComponent = AFRAME.registerComponent('uikit-input-hover', ConditionalPropertiesComponent);
-const InputActiveComponent = AFRAME.registerComponent('uikit-input-active', ConditionalPropertiesComponent);
+const {
+    hover: InputHoverComponent,
+    active: InputActiveComponent
+} = registerConditionalComponents(PROPERTIES_SCHEMA, 'uikit-input');
 
 declare module "aframe" {
     export interface Components {

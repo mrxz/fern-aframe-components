@@ -4,6 +4,7 @@ import { FLEX_SCHEMA } from '../schema/flex.schema';
 import { TEXT_SCHEMA } from '../schema/text.schema';
 import { deferInitialization, handleDefaultPropertiesUpdate, swapObject3D, uiRaycast } from '../common';
 import { CONTAINER_SCHEMA } from '../schema/container.schema';
+import { registerConditionalComponents } from './conditionals';
 
 const PROPERTIES_SCHEMA = {
     ...TEXT_SCHEMA,
@@ -47,27 +48,10 @@ export const TextComponent = AFRAME.registerComponent('uikit-text', {
     }
 });
 
-// Generate conditional properties components
-const ConditionalPropertiesComponent = {
-    schema: PROPERTIES_SCHEMA,
-    update: function() {
-        // FIXME: It seems that undefined keys in object can throw off the logic
-        //        As a workaround filter them out by mutating data directly
-        for(const key in this.data) {
-            const data = this.data as any;
-            if(data[key] === undefined) {
-                delete data[key];
-            }
-        }
-        this.el.emit('uikit-properties-update');
-    },
-    remove: function() {
-        this.el.emit('uikit-properties-update');
-    }
-} as const satisfies AFRAME.ComponentDefinition;
-
-const TextHoverComponent = AFRAME.registerComponent('uikit-text-hover', ConditionalPropertiesComponent);
-const TextActiveComponent = AFRAME.registerComponent('uikit-text-active', ConditionalPropertiesComponent);
+const {
+    hover: TextHoverComponent,
+    active: TextActiveComponent
+} = registerConditionalComponents(PROPERTIES_SCHEMA, 'uikit-text');
 
 declare module "aframe" {
     export interface Components {
