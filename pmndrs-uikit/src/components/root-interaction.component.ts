@@ -1,3 +1,4 @@
+import { Input } from '@pmndrs/uikit';
 import * as AFRAME from 'aframe';
 
 type CursorEvent = AFRAME.DetailEvent<{cursorEl: AFRAME.Entity, intersection: THREE.Intersection}>
@@ -10,10 +11,13 @@ export const RootInteractionComponent = AFRAME.registerComponent('uikit-root-int
         activeCursors: Array<{
             cursorEl: AFRAME.Entity,
             intersectedEl: AFRAME.Entity,
-        }>
+        }>;
+        pendingSystemKeyboard: boolean;
+        uikitSystem: AFRAME.Systems['uikit'];
     },
     init: function() {
         this.activeCursors = [];
+        this.uikitSystem = this.el.sceneEl.systems['uikit'];
 
         function processEvent(e: CursorEvent, eventType: string) {
             const targetEl = e.target as AFRAME.Entity;
@@ -63,6 +67,13 @@ export const RootInteractionComponent = AFRAME.registerComponent('uikit-root-int
         });
 
         this.el.addEventListener('mousedown', e => {
+            const uiElement = (e as CursorEvent).target.object3D;
+            if(this.uikitSystem.shouldUseSystemKeyboard() && uiElement instanceof Input) {
+                // When using the system keyboard, place focus on the element at selectend not selectstart
+                // This avoid the keyboard from being dismissed immediately.
+                this.pendingSystemKeyboard = true;
+                return;
+            }
             processEvent(e as CursorEvent, 'pointerDown');
 
             // Store cursor and intersected el for mouse move events
@@ -70,6 +81,14 @@ export const RootInteractionComponent = AFRAME.registerComponent('uikit-root-int
             storeCurse(e as CursorEvent);
         });
         this.el.addEventListener('mouseup', e => {
+            // System keyboard is only relevant in XR and enabled
+            if(this.uikitSystem.shouldUseSystemKeyboard() && this.pendingSystemKeyboard) {
+                // NOTE: The system keyboard should be triggered on selectend, as otherwise the same event that spawned it
+                //       can immediately dismiss it as well. So handle delayed inpu
+                processEvent(e as CursorEvent, 'pointerDown');
+                this.pendingSystemKeyboard = false;
+            }
+
             processEvent(e as CursorEvent, 'pointerUp');
 
             // Clear any stored state
