@@ -36,8 +36,9 @@ export const InputComponent = AFRAME.registerComponent('uikit-input', {
     updateUIProperties: function() {
         this.input.setProperties({
             ...this.data,
-            hover: this.el.getAttribute('uikit-text-hover'),
-            active: this.el.getAttribute('uikit-text-active')
+            hover: this.el.getAttribute('uikit-input-hover'),
+            active: this.el.getAttribute('uikit-input-active'),
+            focus: this.el.getAttribute('uikit-input-focus'),
         });
     },
     remove: function() {
@@ -48,13 +49,15 @@ export const InputComponent = AFRAME.registerComponent('uikit-input', {
 
 const {
     hover: InputHoverComponent,
-    active: InputActiveComponent
-} = registerConditionalComponents(PROPERTIES_SCHEMA, 'uikit-input');
+    active: InputActiveComponent,
+    focus: InputFocusComponent,
+} = registerConditionalComponents(PROPERTIES_SCHEMA, 'uikit-input', true);
 
 declare module "aframe" {
     export interface Components {
         "uikit-input": InstanceType<typeof InputComponent>,
         "uikit-input-hover": InstanceType<typeof InputHoverComponent>,
-        "uikit-input-active": InstanceType<typeof InputActiveComponent>
+        "uikit-input-active": InstanceType<typeof InputActiveComponent>,
+        "uikit-input-focus": InstanceType<Exclude<typeof InputFocusComponent, undefined>>
     }
 }

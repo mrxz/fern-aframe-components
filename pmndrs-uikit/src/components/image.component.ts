@@ -34,8 +34,8 @@ export const ImageComponent = AFRAME.registerComponent('uikit-image', {
     updateUIProperties: function() {
         this.image.setProperties({
             ...this.data,
-            hover: this.el.getAttribute('uikit-text-hover'),
-            active: this.el.getAttribute('uikit-text-active')
+            hover: this.el.getAttribute('uikit-image-hover'),
+            active: this.el.getAttribute('uikit-image-active')
         });
     },
     remove: function() {

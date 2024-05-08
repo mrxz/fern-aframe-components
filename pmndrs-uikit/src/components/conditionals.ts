@@ -3,9 +3,11 @@ import * as AFRAME from 'aframe';
 type ConditionalComponents<S extends AFRAME.Schema> = {
     hover: AFRAME.ComponentConstructor<AFRAME.ComponentInstance<S, false, false, any, undefined>>,
     active: AFRAME.ComponentConstructor<AFRAME.ComponentInstance<S, false, false, any, undefined>>,
+    // Optional
+    focus?: AFRAME.ComponentConstructor<AFRAME.ComponentInstance<S, false, false, any, undefined>>,
 }
 
-export function registerConditionalComponents<S extends object>(schema: S, name: string): ConditionalComponents<S> {
+export function registerConditionalComponents<S extends object>(schema: S, name: string, includeFocus: boolean = false): ConditionalComponents<S> {
     // Generate conditional properties components
     const ConditionalPropertiesComponent = {
         schema: schema,
@@ -27,6 +29,7 @@ export function registerConditionalComponents<S extends object>(schema: S, name:
 
     return ({
         hover: AFRAME.registerComponent(`${name}-hover`, ConditionalPropertiesComponent),
-        active: AFRAME.registerComponent(`${name}-active`, ConditionalPropertiesComponent)
+        active: AFRAME.registerComponent(`${name}-active`, ConditionalPropertiesComponent),
+        focus: includeFocus ? AFRAME.registerComponent(`${name}-focus`, ConditionalPropertiesComponent) : undefined,
     });
 }

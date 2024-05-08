@@ -18,21 +18,32 @@ export function convertComponentToPrimitive<
     // Lookup component
     const componentDescription = AFRAME.components[componentName] as unknown as ComponentDescription;
     const name = `ui-${componentDescription.name.split('-')[1]}`;
+    const hasFocus = `${componentDescription.name}-focus` in AFRAME.components;
+
+    // Default components
+    const defaultComponents: {[key: string]: {}} = {
+        [componentDescription.name]: {},
+        [componentDescription.name + '-hover']: {},
+        [componentDescription.name + '-active']: {},
+    };
+    if(hasFocus) {
+        defaultComponents[componentDescription.name + '-focus'] = {};
+    }
+
+    // Mappings
     const mappings: {[key: string]: string} = {};
-    // Basic properties
     for(const propName in componentDescription.schema) {
         mappings[toKebabCase(propName)] = `${componentDescription.name}.${propName}`;
     }
     // Conditional properties
     mappings['hover'] = `${componentDescription.name}-hover`;
     mappings['active'] = `${componentDescription.name}-active`;
+    if(hasFocus) {
+        mappings['focus'] = `${componentDescription.name}-focus`
+    }
 
     const primitive = AFRAME.registerPrimitive(name, {
-        defaultComponents: {
-            [componentDescription.name]: {},
-            [componentDescription.name + '-hover']: {},
-            [componentDescription.name + '-active']: {}
-        },
+        defaultComponents: defaultComponents,
         mappings
     } as any);
 
@@ -51,8 +62,12 @@ export function convertComponentToPrimitive<
             return;
         }
 
-        console.log(arguments[0], arguments[1]);
-        AFRAME.utils.entity.setComponentProperty(this, componentName, arg1);
+        const path = componentName.split('.');
+        if(path.length === 1) {
+            this.__proto__.__proto__.setAttribute.call(this, path[0], arg1, arg2);
+        } else {
+            this.__proto__.__proto__.setAttribute.call(this, path[0], path[1], arg1);
+        }
     }
     return primitive;
 }
