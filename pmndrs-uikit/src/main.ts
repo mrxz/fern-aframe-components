@@ -4,4 +4,6 @@ import './components/';
 import './primitives/';
 import './systems/';
 
-import './convert';
+// Consider separating the following it different bundles/projects(?)
+import './convert/';
+import './layers/';
