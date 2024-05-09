@@ -6,7 +6,7 @@ import { TextComponent } from "../components/text.component";
 import { ImageComponent } from "../components/image.component";
 import { InputComponent } from "../components/input.component";
 
-const RootPrimitive = convertComponentToPrimitive('uikit-root', RootComponent);
+const RootPrimitive = convertComponentToPrimitive('uikit-root', RootComponent, ['uikit-root-interaction']);
 const ContainerPrimitive = convertComponentToPrimitive('uikit-container', ContainerComponent);
 const TextPrimitive = convertComponentToPrimitive('uikit-text', TextComponent);
 const ImagePrimitive = convertComponentToPrimitive('uikit-image', ImageComponent);

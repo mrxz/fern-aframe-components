@@ -26,8 +26,8 @@
 
       <a-entity environment></a-entity>
 
-      <a-entity position="0 1.6 -10">
-        <ui-root class="clickable" id="root" gap="10" padding="10" uikit-root-interaction uikit-default-properties="color: white">
+      <a-entity position="0 1.6 -6">
+        <ui-root class="clickable" id="root" gap="10" padding="10" uikit-default-properties="color: white">
           <ui-container id="left" width="300" height="100" background-opacity="0.5" background-color="red" hover="backgroundOpacity: 1.0" active="backgroundColor: green">
             <ui-text>Hello world</ui-text>
           </ui-container>
@@ -38,7 +38,7 @@
         </ui-root>
       </a-entity>
 
-      <a-entity position=" 0 2.0 -5" uikit-from-html="template: #template"></a-entity>
+      <a-entity position="-5 2.0 -4" rotation="0 45 0" uikit-from-html="template: #template"></a-entity>
 
       <a-camera>
         <a-entity cursor="rayOrigin: mouse" raycaster="far: 20; objects: .clickable"></a-entity>

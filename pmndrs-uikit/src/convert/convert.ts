@@ -24,7 +24,7 @@ function generate(
 
     // Generate properties
     const propsText = Object.entries(props)
-        .filter(([, value]) => typeof value != 'undefined')
+        .filter(([name, value]) => typeof value !== 'undefined' && validProperty(name))
         .map(([name, value]) => {
             // Convert name to attribute name (kebab-case)
             const attributeName = toKebabCase(name);
@@ -50,4 +50,9 @@ function generate(
     }
 
     return /*html*/`<${tag} ${propsText}>${children.join('\n')}</${tag}>`;
+}
+
+function validProperty(name: string) {
+    // FIXME: Cursor property isn't supported. It clashes with the cursor component.
+    return name !== 'cursor';
 }

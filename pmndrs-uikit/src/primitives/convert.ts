@@ -14,9 +14,10 @@ type StripPrefix<T extends string, Suffix = T extends `uikit-${infer Name}` ? Na
 export function convertComponentToPrimitive<
     Name extends keyof AFRAME.Components,
     T extends AFRAME.ComponentConstructor<any>,
-    C extends AFRAME.ComponentInstance<any, any, any, any, any> = T extends AFRAME.ComponentConstructor<infer Instance> ? Instance : never>(componentName: Name, componentConstructor: T)
+    C extends AFRAME.ComponentInstance<any, any, any, any, any> = T extends AFRAME.ComponentConstructor<infer Instance> ? Instance : never,
+    ExtraComponents extends keyof AFRAME.Components = never>(componentName: Name, componentConstructor: T, additionalComponents: ExtraComponents[] = [])
         : AFRAME.PrimitiveConstructor<
-            {[key in StripPrefix<Name>]: {}},
+            {[key in StripPrefix<Name>]: {}} & {[key in ExtraComponents]: {}},
             {[key in Extract<keyof C["schema"], string> as KebabCase<key>]: `${Name}.${key}`} & {hover: `${Name}-hover`, active: `${Name}-active`,}
         >
 {
@@ -33,6 +34,7 @@ export function convertComponentToPrimitive<
         [componentDescription.name]: {},
         [componentDescription.name + '-hover']: {},
         [componentDescription.name + '-active']: {},
+        ...Object.fromEntries(additionalComponents.map(name => [name, {}]))
     };
     if(hasFocus) {
         defaultComponents[componentDescription.name + '-focus'] = {};
