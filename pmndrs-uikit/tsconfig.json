@@ -2,10 +2,10 @@
     "compilerOptions": {
       "target": "esnext",
       "useDefineForClassFields": true,
-      "module": "esnext",
+      "module": "ESNext",
       "baseUrl": "./",
       "lib": ["esnext", "dom"],
-      "moduleResolution": "node",
+      "moduleResolution": "Bundler",
       "strict": true,
       "resolveJsonModule": true,
       "isolatedModules": true,

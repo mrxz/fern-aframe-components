@@ -12,16 +12,7 @@ export default [
             alias({
                 entries: [
                     { find: 'three/src/math/MathUtils.js', replacement: 'super-three/src/math/MathUtils.js' },
-                    { find: 'three/examples/jsm/Addons.js', replacement: 'super-three/examples/jsm/Addons.js' },
-                    // Preact
-                    { find: 'react', replacement: 'preact/compat' },
-                    { find: 'react-dom/test-utils', replacement: 'preact/test-utils' },
-                    { find: 'react-dom', replacement: 'preact/compat' },
-                    { find: 'react/jsx-runtime', replacement: 'preact/jsx-runtime' },
-                    //
-                    { find: '@react-three/uikit', customResolver: function() {
-                        return './src/kits/uikit-react-adapter.ts';
-                    }},
+                    { find: 'three/examples/jsm/Addons.js', replacement: 'super-three/examples/jsm/Addons.js' }
                 ],
                 customResolver: nodeResolve()
             }),
@@ -31,7 +22,17 @@ export default [
                 include: [
                     "**/node-html-parser/**/*",
                     "**/inline-style-parser/**/*",
-                    "**/prettier/plugins/**/*"
+                    "**/prettier/plugins/**/*",
+                    // Needed for HTML2Code conversion
+                    "**/css-select/lib/**/*",
+                    "**/domutils/lib/**/*",
+                    "**/domhandler/lib/**/*",
+                    "**/domelementtype/lib/**/*",
+                    "**/dom-serializer/lib/**/*",
+                    "**/entities/lib/**/*",
+                    "**/boolbase/*",
+                    "**/nth-check/lib/**/*",
+                    "**/he/**/*",
                 ]
             }),
             esbuild(),

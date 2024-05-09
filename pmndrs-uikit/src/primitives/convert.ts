@@ -1,4 +1,5 @@
 import * as AFRAME from "aframe";
+import { toKebabCase } from "../utils";
 import type { KebabCase } from "type-fest";
 
 // FIXME: Update aframe-types to have proper ComponentDescription type
@@ -77,8 +78,4 @@ export function convertComponentToPrimitive<
         }
     }
     return primitive;
-}
-
-function toKebabCase(x: string): string {
-    return x.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
 }

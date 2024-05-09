@@ -1,5 +1,5 @@
 import { ContainerProperties } from "@pmndrs/uikit";
-import { BOOLEAN, NUMBER, COLOR } from "./property-types";
+import { BOOLEAN, NUMBER, COLOR, STRING } from "./property-types";
 
 export const CONTAINER_SCHEMA = {
     zIndexOffset: NUMBER,
@@ -21,6 +21,10 @@ export const CONTAINER_SCHEMA = {
     borderBottomLeftRadius: NUMBER,
     borderBend: NUMBER,
     borderWidth: NUMBER,
+    borderLeftWidth: NUMBER,
+    borderRightWidth: NUMBER,
+    borderTopWidth: NUMBER,
+    borderBottomWidth: NUMBER,
     //scrollbarPanelMaterialClass	Material class TODO
     scrollbarWidth: NUMBER,
     scrollbarBorderRadius: NUMBER,
