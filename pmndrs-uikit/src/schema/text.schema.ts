@@ -1,4 +1,5 @@
 import { ContainerProperties, TextProperties } from "@pmndrs/uikit";
+import { HasProperties } from "./utils";
 import { STRING, NUMBER, COLOR, oneOf } from "./property-types";
 
 export const TEXT_SCHEMA = {
@@ -13,4 +14,4 @@ export const TEXT_SCHEMA = {
     fontFamily: STRING,
     // FIXME: Should be NUMBER or oneOf
     fontWeight: oneOf(["bold", "thin", "extra-light", "light", "normal", "medium", "semi-bold", "extra-bold", "black", "extra-black"]),
-} as const satisfies Record<Exclude<keyof TextProperties, keyof ContainerProperties>, any>;
+} as const satisfies HasProperties<TextProperties, ContainerProperties>;

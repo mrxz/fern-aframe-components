@@ -1,4 +1,5 @@
 import { ContainerProperties, RootProperties } from "@pmndrs/uikit";
+import { HasProperties } from "./utils";
 import { BOOLEAN, NUMBER, oneOf } from "./property-types";
 
 export const ROOT_SCHEMA = {
@@ -8,4 +9,4 @@ export const ROOT_SCHEMA = {
     sizeY: NUMBER,
     renderOrder: NUMBER,
     depthTest: BOOLEAN,
-} as const satisfies Record<Exclude<keyof RootProperties, keyof ContainerProperties>, any>;
+} as const satisfies HasProperties<RootProperties, ContainerProperties>;

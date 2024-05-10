@@ -1,5 +1,6 @@
 import { ContainerProperties } from "@pmndrs/uikit";
-import { BOOLEAN, NUMBER, COLOR, STRING } from "./property-types";
+import type { HasProperties } from "./utils";
+import { BOOLEAN, NUMBER, COLOR } from "./property-types";
 
 export const CONTAINER_SCHEMA = {
     zIndexOffset: NUMBER,
@@ -36,4 +37,4 @@ export const CONTAINER_SCHEMA = {
     scrollbarBorderTopRightRadius: NUMBER,
     scrollbarBorderBottomRightRadius: NUMBER,
     scrollbarBorderBottomLeftRadius: NUMBER,
-} as const satisfies Partial<Record<keyof ContainerProperties, any>>;
+} as const satisfies HasProperties<ContainerProperties>;

@@ -2,13 +2,13 @@ import { Container, ContainerProperties } from '@pmndrs/uikit';
 import * as AFRAME from 'aframe';
 import { FLEX_SCHEMA } from '../schema/flex.schema';
 import { deferInitialization, handleDefaultPropertiesUpdate, swapObject3D, uiRaycast } from '../common';
-import { CONTAINER_SCHEMA } from '../schema/container.schema';
+import { CONTAINER_SCHEMA, HasProperties } from '../schema/';
 import { registerConditionalComponents } from './conditionals';
 
 const PROPERTIES_SCHEMA = {
     ...CONTAINER_SCHEMA,
     ...FLEX_SCHEMA,
-} as const satisfies Partial<Record<keyof ContainerProperties, any>>;
+} as const satisfies HasProperties<ContainerProperties>;
 
 export const ContainerComponent = AFRAME.registerComponent('uikit-container', {
     schema: PROPERTIES_SCHEMA,

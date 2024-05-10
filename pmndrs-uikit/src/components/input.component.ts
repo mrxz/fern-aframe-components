@@ -1,18 +1,15 @@
 import { Input, InputProperties } from '@pmndrs/uikit';
 import * as AFRAME from 'aframe';
-import { FLEX_SCHEMA } from '../schema/flex.schema';
 import { deferInitialization, handleDefaultPropertiesUpdate, swapObject3D, uiRaycast } from '../common';
-import { INPUT_SCHEMA } from '../schema/input.schema';
-import { CONTAINER_SCHEMA } from '../schema/container.schema';
-import { TEXT_SCHEMA } from '../schema/text.schema';
 import { registerConditionalComponents } from './conditionals';
+import { INPUT_SCHEMA, TEXT_SCHEMA, CONTAINER_SCHEMA, FLEX_SCHEMA, HasProperties } from '../schema';
 
 const PROPERTIES_SCHEMA = {
     ...INPUT_SCHEMA,
     ...TEXT_SCHEMA,
     ...CONTAINER_SCHEMA,
     ...FLEX_SCHEMA
-} as const satisfies Partial<Record<keyof InputProperties, any>>;
+} as const satisfies HasProperties<InputProperties>;
 
 export const InputComponent = AFRAME.registerComponent('uikit-input', {
     schema: PROPERTIES_SCHEMA,

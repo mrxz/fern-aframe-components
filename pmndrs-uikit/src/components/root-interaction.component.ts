@@ -84,7 +84,7 @@ export const RootInteractionComponent = AFRAME.registerComponent('uikit-root-int
             // System keyboard is only relevant in XR and enabled
             if(this.uikitSystem.shouldUseSystemKeyboard() && this.pendingSystemKeyboard) {
                 // NOTE: The system keyboard should be triggered on selectend, as otherwise the same event that spawned it
-                //       can immediately dismiss it as well. So handle delayed inpu
+                //       can immediately dismiss it as well. So handle delayed input
                 processEvent(e as CursorEvent, 'pointerDown');
                 this.pendingSystemKeyboard = false;
             }

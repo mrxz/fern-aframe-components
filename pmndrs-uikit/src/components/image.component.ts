@@ -1,16 +1,14 @@
 import { Image, ImageProperties } from '@pmndrs/uikit';
 import * as AFRAME from 'aframe';
-import { FLEX_SCHEMA } from '../schema/flex.schema';
 import { deferInitialization, handleDefaultPropertiesUpdate, swapObject3D, uiRaycast } from '../common';
-import { IMAGE_SCHEMA } from '../schema/image.schema';
-import { CONTAINER_SCHEMA } from '../schema/container.schema';
 import { registerConditionalComponents } from './conditionals';
+import { IMAGE_SCHEMA, CONTAINER_SCHEMA, FLEX_SCHEMA, HasProperties } from '../schema';
 
 const PROPERTIES_SCHEMA = {
     ...IMAGE_SCHEMA,
     ...CONTAINER_SCHEMA,
     ...FLEX_SCHEMA
-} as const satisfies Partial<Record<keyof ImageProperties, any>>;
+} as const satisfies HasProperties<ImageProperties>;
 
 export const ImageComponent = AFRAME.registerComponent('uikit-image', {
     schema: PROPERTIES_SCHEMA,

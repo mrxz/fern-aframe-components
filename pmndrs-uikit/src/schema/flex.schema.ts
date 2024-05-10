@@ -1,4 +1,5 @@
 import { ContainerProperties } from "@pmndrs/uikit";
+import { HasProperties } from "./utils";
 import { NUMBER_OR_PERCENTAGE_OR_AUTO, NUMBER, oneOf, NUMBER_OR_PERCENTAGE } from "./property-types";
 
 export const FLEX_SCHEMA = {
@@ -51,4 +52,4 @@ export const FLEX_SCHEMA = {
     gap: NUMBER,
     gapRow: NUMBER,
     gapColumn: NUMBER,
-} as const satisfies Partial<Record<keyof ContainerProperties, any>>;
+} as const satisfies HasProperties<ContainerProperties>;

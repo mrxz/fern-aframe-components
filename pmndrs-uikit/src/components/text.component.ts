@@ -1,16 +1,14 @@
 import { Text, TextProperties } from '@pmndrs/uikit';
 import * as AFRAME from 'aframe';
-import { FLEX_SCHEMA } from '../schema/flex.schema';
-import { TEXT_SCHEMA } from '../schema/text.schema';
 import { deferInitialization, handleDefaultPropertiesUpdate, swapObject3D, uiRaycast } from '../common';
-import { CONTAINER_SCHEMA } from '../schema/container.schema';
 import { registerConditionalComponents } from './conditionals';
+import { TEXT_SCHEMA, CONTAINER_SCHEMA, FLEX_SCHEMA, HasProperties } from '../schema';
 
 const PROPERTIES_SCHEMA = {
     ...TEXT_SCHEMA,
     ...CONTAINER_SCHEMA,
     ...FLEX_SCHEMA,
-} as const satisfies Partial<Record<keyof TextProperties, any>>;
+} as const satisfies HasProperties<TextProperties>;
 
 export const TextComponent = AFRAME.registerComponent('uikit-text', {
     schema: PROPERTIES_SCHEMA,
