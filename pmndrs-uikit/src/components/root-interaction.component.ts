@@ -1,5 +1,6 @@
 import { Input } from '@pmndrs/uikit';
 import * as AFRAME from 'aframe';
+import type * as THREE from 'three';
 
 type CursorEvent = AFRAME.DetailEvent<{cursorEl: AFRAME.Entity, intersection: THREE.Intersection}>
 type PointerIdHolder = { __pointerId: number }
@@ -28,7 +29,7 @@ export const RootInteractionComponent = AFRAME.registerComponent('uikit-root-int
                 pointerIdHolder.__pointerId = ++allocated_pointer_ids;
             }
 
-            uiElement.dispatchEvent({ type: eventType, uv: e.detail?.intersection?.uv, target: uiElement, nativeEvent: { pointerId: pointerIdHolder.__pointerId } })
+            uiElement.dispatchEvent({ type: eventType as any, uv: e.detail?.intersection?.uv, target: uiElement, nativeEvent: { pointerId: pointerIdHolder.__pointerId } })
         }
 
         const storeCurse = (e: CursorEvent) => {
@@ -105,7 +106,7 @@ export const RootInteractionComponent = AFRAME.registerComponent('uikit-root-int
 
             const pointerIdHolder = (record.cursorEl.components.cursor as unknown as PointerIdHolder)
             const uiElement = record.intersectedEl.object3D;
-            uiElement.dispatchEvent({ type: 'pointerMove', uv: intersection.uv, target: uiElement, nativeEvent: { pointerId: pointerIdHolder.__pointerId } })
+            uiElement.dispatchEvent({ type: 'pointerMove' as any, uv: intersection.uv, target: uiElement, nativeEvent: { pointerId: pointerIdHolder.__pointerId } })
         }
     },
     remove: function() {

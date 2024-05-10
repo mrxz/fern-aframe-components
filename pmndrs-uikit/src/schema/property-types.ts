@@ -1,3 +1,5 @@
+import type * as THREE from "three";
+
 export const BOOLEAN = {
     type: 'boolean',
     default: undefined,
