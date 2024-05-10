@@ -105,10 +105,6 @@ export const QuadLayerComponent = AFRAME.registerComponent('quad-layer', {
     tick: function() {
         if(!this.quadLayer) { return; }
 
-        if(!this.renderTarget) {
-            this.setupRenderTarget();
-        }
-
         // Update and match position and orientation of punch-out mesh and quadLayer.
         this.el.object3D.getWorldPosition(this.planeMesh.position);
         this.el.object3D.getWorldQuaternion(this.planeMesh.quaternion);
@@ -120,12 +116,19 @@ export const QuadLayerComponent = AFRAME.registerComponent('quad-layer', {
         if(this.quadLayer.needsRedraw || this.data.dynamic) {
             const renderer = this.el.sceneEl.renderer;
 
+            if(!this.renderTarget) {
+                this.setupRenderTarget();
+            } else {
+                const glBinding = renderer.xr.getBinding();
+                const glSubImage = glBinding.getSubImage(this.quadLayer!, this.el.sceneEl.frame!);
+                (renderer as any).setRenderTargetTextures(this.renderTarget, glSubImage.colorTexture, undefined);
+            }
+
             // Update camera
             this.el.object3D.getWorldPosition(this.camera.position);
             this.el.object3D.getWorldDirection(tempV3);
             this.camera.position.add(tempV3);
-            this.el.object3D.getWorldPosition(tempV3);
-            this.camera.lookAt(tempV3);
+            this.camera.setRotationFromQuaternion(this.el.object3D.getWorldQuaternion(new THREE.Quaternion()));
 
             const currentRenderTarget = renderer.getRenderTarget();
             renderer.xr.enabled = false;
