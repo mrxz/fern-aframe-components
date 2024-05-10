@@ -1,12 +1,7 @@
-import { Input } from '@pmndrs/uikit';
 import * as AFRAME from 'aframe';
-import type * as THREE from 'three';
+import { CursorEvent, PointerIdHolder, processEvent } from './interaction.component';
 
-type CursorEvent = AFRAME.DetailEvent<{cursorEl: AFRAME.Entity, intersection: THREE.Intersection}>
-type PointerIdHolder = { __pointerId: number }
-let allocated_pointer_ids = 1;
-
-export const RootInteractionComponent = AFRAME.registerComponent('uikit-root-interaction', {
+export const InputInteractionComponent = AFRAME.registerComponent('uikit-input-interaction', {
     schema: {},
     __fields: {} as {
         activeCursors: Array<{
@@ -19,18 +14,6 @@ export const RootInteractionComponent = AFRAME.registerComponent('uikit-root-int
     init: function() {
         this.activeCursors = [];
         this.uikitSystem = this.el.sceneEl.systems['uikit'];
-
-        function processEvent(e: CursorEvent, eventType: string) {
-            const targetEl = e.target as AFRAME.Entity;
-            const uiElement = targetEl.object3D;
-            const cursorEl = e.detail.cursorEl;
-            const pointerIdHolder = (cursorEl.components.cursor as unknown as PointerIdHolder)
-            if(!pointerIdHolder.__pointerId) {
-                pointerIdHolder.__pointerId = ++allocated_pointer_ids;
-            }
-
-            uiElement.dispatchEvent({ type: eventType as any, uv: e.detail?.intersection?.uv, target: uiElement, nativeEvent: { pointerId: pointerIdHolder.__pointerId } })
-        }
 
         const storeCurse = (e: CursorEvent) => {
             const cursorEl = e.detail.cursorEl;
@@ -57,25 +40,22 @@ export const RootInteractionComponent = AFRAME.registerComponent('uikit-root-int
             }
         }
 
-        this.el.addEventListener('mouseenter', e => {
-            processEvent(e as CursorEvent, 'pointerOver');
-        });
+        this.el.addEventListener('mouseenter', e => processEvent(e as CursorEvent, this.el, 'pointerOver'));
         this.el.addEventListener('mouseleave', e => {
-            processEvent(e as CursorEvent, 'pointerOut');
+            processEvent(e as CursorEvent, this.el, 'pointerOut');
 
             // Clear any stored state
             clearCursor(e as CursorEvent);
         });
 
         this.el.addEventListener('mousedown', e => {
-            const uiElement = (e as CursorEvent).target.object3D;
-            if(this.uikitSystem.shouldUseSystemKeyboard() && uiElement instanceof Input) {
+            if(this.uikitSystem.shouldUseSystemKeyboard()) {
                 // When using the system keyboard, place focus on the element at selectend not selectstart
                 // This avoid the keyboard from being dismissed immediately.
                 this.pendingSystemKeyboard = true;
                 return;
             }
-            processEvent(e as CursorEvent, 'pointerDown');
+            processEvent(e as CursorEvent, this.el, 'pointerDown');
 
             // Store cursor and intersected el for mouse move events
             // NOTE: This is only needed for Input when selecting, so it's activated in mousedown instead of mouseenter
@@ -86,11 +66,11 @@ export const RootInteractionComponent = AFRAME.registerComponent('uikit-root-int
             if(this.uikitSystem.shouldUseSystemKeyboard() && this.pendingSystemKeyboard) {
                 // NOTE: The system keyboard should be triggered on selectend, as otherwise the same event that spawned it
                 //       can immediately dismiss it as well. So handle delayed input
-                processEvent(e as CursorEvent, 'pointerDown');
+                processEvent(e as CursorEvent, this.el, 'pointerDown');
                 this.pendingSystemKeyboard = false;
             }
 
-            processEvent(e as CursorEvent, 'pointerUp');
+            processEvent(e as CursorEvent, this.el, 'pointerUp');
 
             // Clear any stored state
             clearCursor(e as CursorEvent);
@@ -116,6 +96,6 @@ export const RootInteractionComponent = AFRAME.registerComponent('uikit-root-int
 
 declare module "aframe" {
     export interface Components {
-        "uikit-root-interaction": InstanceType<typeof RootInteractionComponent>
+        "uikit-input-interaction": InstanceType<typeof InputInteractionComponent>
     }
 }

@@ -6,4 +6,4 @@ import './text.component';
 import './image.component';
 import './input.component';
 
-import './root-interaction.component';
+import './interaction/';
