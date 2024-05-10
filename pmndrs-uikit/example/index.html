@@ -51,15 +51,15 @@
       </a-camera>
 
 
-      <a-entity rotation="-45 0 0" position="0 0.07 -0.15" quad-layer="width: 0.25; height: 0.2; dynamic: true">
-        <ui-root class="clickable" size-x="0.25" size-y="0.2" pixel-size="0.001">
-          <ui-container width="100%" height="100%" background-color="white" align-items="space-around">
-            <ui-container width="100px" height="100%" background-color="rebeccapurple" hover="backgroundColor: blueviolet"></ui-container>
-            <ui-text>Hello world</ui-text>
-          </ui-container>
-        </ui-root>
-      </a-entity>
       <a-entity laser-controls="hand: left" raycaster="objects: .clickable">
+        <a-entity rotation="-45 0 0" position="0 0.07 -0.15" quad-layer="width: 0.25; height: 0.2; dynamic: true">
+          <ui-root class="clickable" size-x="0.25" size-y="0.2" pixel-size="0.001">
+            <ui-container width="100%" height="100%" background-color="white" align-items="space-around">
+              <ui-container width="100px" height="100%" background-color="rebeccapurple" hover="backgroundColor: blueviolet"></ui-container>
+              <ui-text>Hello world</ui-text>
+            </ui-container>
+          </ui-root>
+        </a-entity>
       </a-entity>
       <a-entity laser-controls="hand: right" raycaster="objects: .clickable"></a-entity>
 

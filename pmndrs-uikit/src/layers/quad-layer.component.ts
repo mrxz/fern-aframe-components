@@ -89,7 +89,10 @@ export const QuadLayerComponent = AFRAME.registerComponent('quad-layer', {
         this.renderTarget = new THREE.WebGLRenderTarget(this.data.resolutionWidth, this.data.resolutionHeight, {
             //@ts-ignore DepthTexture constructor does take a 10th argument
             depthTexture: new THREE.DepthTexture(this.data.resolutionWidth, this.data.resolutionHeight, THREE.UnsignedIntType, undefined, undefined, undefined, undefined, undefined, undefined, THREE.DepthFormat),
+            colorSpace: THREE.SRGBColorSpace
         });
+        (this.renderTarget as any).isXRRenderTarget = true;
+
         this.framebuffer = gl.createFramebuffer();
         (renderer as any).setRenderTargetFramebuffer(this.renderTarget, this.framebuffer);
         renderer.setRenderTarget(this.renderTarget);

@@ -376,7 +376,7 @@ __metadata:
     "@rollup/plugin-terser": "npm:^0.4.3"
     "@rollup/plugin-typescript": "npm:^11.1.1"
     "@types/animejs": "npm:3.1.0"
-    "@types/three": "npm:0.147.1"
+    "@types/three": "npm:0.164.0"
     aframe-types: "npm:0.9.2"
     concurrently: "npm:^7.1.0"
     esbuild: "npm:^0.18.17"
@@ -754,6 +754,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tweenjs/tween.js@npm:~23.1.1":
+  version: 23.1.2
+  resolution: "@tweenjs/tween.js@npm:23.1.2"
+  checksum: 10/ca7f62b1059917ebddf1e7e9d7361b87e945bfc21b3c840dd34b1ebfe7d90d87d0dd10ebfa88e2233fe4887cf260b9e1a45134573b599c905af45853b39ae0b8
+  languageName: node
+  linkType: hard
+
 "@types/animejs@npm:3.1.0":
   version: 3.1.0
   resolution: "@types/animejs@npm:3.1.0"
@@ -789,12 +796,32 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/stats.js@npm:*":
+  version: 0.17.3
+  resolution: "@types/stats.js@npm:0.17.3"
+  checksum: 10/4f84a012f630532877f62959b6335d3fa081ccaac15ce3f1f916741db265bda22b9c927d7efc9cc3389ffd60919a370673cb0b4e7221d580c571031e94b689fd
+  languageName: node
+  linkType: hard
+
 "@types/three@npm:0.147.1":
   version: 0.147.1
   resolution: "@types/three@npm:0.147.1"
   dependencies:
     "@types/webxr": "npm:*"
   checksum: 10/1185ab5305db39bf3fd759d4782509582e31f7d68e5f2b21cfdd12be64b14fab75fb9a00afaa21a542a1535cd5368cdf6b4ef85274ca9a5cf84af74c18f7c4c2
+  languageName: node
+  linkType: hard
+
+"@types/three@npm:0.164.0":
+  version: 0.164.0
+  resolution: "@types/three@npm:0.164.0"
+  dependencies:
+    "@tweenjs/tween.js": "npm:~23.1.1"
+    "@types/stats.js": "npm:*"
+    "@types/webxr": "npm:*"
+    fflate: "npm:~0.8.2"
+    meshoptimizer: "npm:~0.18.1"
+  checksum: 10/e5bdca5db603c594a5a5ae8ab2eaa38f95e091964a109ed4cbc00cfc95e00f3d7e356c6d676db4c2fbb9d98c266b3097eab2c5b4099a72e80bc9e455f5fec8d3
   languageName: node
   linkType: hard
 
@@ -1740,6 +1767,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"fflate@npm:~0.8.2":
+  version: 0.8.2
+  resolution: "fflate@npm:0.8.2"
+  checksum: 10/2bd26ba6d235d428de793c6a0cd1aaa96a06269ebd4e21b46c8fd1bd136abc631acf27e188d47c3936db090bf3e1ede11d15ce9eae9bffdc4bfe1b9dc66ca9cb
+  languageName: node
+  linkType: hard
+
 "fill-range@npm:^7.0.1":
   version: 7.0.1
   resolution: "fill-range@npm:7.0.1"
@@ -2461,6 +2495,13 @@ __metadata:
   version: 1.4.1
   resolution: "merge2@npm:1.4.1"
   checksum: 10/7268db63ed5169466540b6fb947aec313200bcf6d40c5ab722c22e242f651994619bcd85601602972d3c85bd2cc45a358a4c61937e9f11a061919a1da569b0c2
+  languageName: node
+  linkType: hard
+
+"meshoptimizer@npm:~0.18.1":
+  version: 0.18.1
+  resolution: "meshoptimizer@npm:0.18.1"
+  checksum: 10/5cfef6918562b8363a51e92b6eafe81a684fe7b9e31de1c19a6e2068ca8edab745b3e8ef2f0190ecbcc2065134b5dc1de97e4514eb2157914762356c07f93b9f
   languageName: node
   linkType: hard
 
