@@ -25,12 +25,12 @@ const MotionControllerModelComponent = AFRAME.registerComponent('motion-controll
         buttonPressColor: { type: 'color', default: '#2DF' }
     },
     __fields: {} as {
-        motionControllerSystem: AFRAME.Systems['motion-controller'],
-        inputSourceRecord: InputSourceRecord|null,
-        motionController: MotionController|null,
-        componentMeshes: Map<string, Array<{mesh: THREE.Mesh, originalColor: THREE.Color}>>,
+        readonly motionControllerSystem: AFRAME.Systems['motion-controller'],
+        readonly inputSourceRecord: InputSourceRecord|null,
+        readonly motionController: MotionController|null,
+        readonly componentMeshes: Map<string, Array<{mesh: THREE.Mesh, originalColor: THREE.Color}>>,
         // Only relevant for hand tracking models
-        handJoints: Array<THREE.Object3D|undefined>
+        readonly handJoints: Array<THREE.Object3D|undefined>
     },
     init: function() {
         this.motionControllerSystem = this.el.sceneEl.systems['motion-controller'];

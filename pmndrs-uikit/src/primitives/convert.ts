@@ -22,10 +22,12 @@ export function convertComponentToPrimitive<
         >
 {
     // Lookup component
-    const componentDescription = AFRAME.components[componentName] as unknown as ComponentDescription;
-    if(componentDescription.Component !== componentConstructor) {
+    let componentDescription = AFRAME.components[componentName] as unknown as ComponentDescription;
+    // @ts-ignore A5 compatibility
+    if(componentDescription.Component !== componentConstructor && componentDescription !== componentConstructor) {
         throw Error(`Component '${componentName}' does not match registered component!`)
     }
+    if(!('Component' in componentDescription)) { componentDescription = (<any>componentDescription).prototype as ComponentDescription; }
     const name = `ui-${componentDescription.name.split('-')[1]}`;
     const hasFocus = `${componentDescription.name}-focus` in AFRAME.components;
 

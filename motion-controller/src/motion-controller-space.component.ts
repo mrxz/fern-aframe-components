@@ -6,8 +6,8 @@ const MotionControllerSpaceComponent = AFRAME.registerComponent('motion-controll
         space: { type: 'string', oneOf: ['gripSpace', 'targetRaySpace'], default: 'targetRaySpace' },
     },
     __fields: {} as {
-        motionControllerSystem: AFRAME.Systems['motion-controller'],
-        inputSource: XRInputSource|undefined,
+        readonly motionControllerSystem: AFRAME.Systems['motion-controller'],
+        readonly inputSource: XRInputSource|undefined,
     },
     init: function() {
         this.motionControllerSystem = this.el.sceneEl.systems['motion-controller'];

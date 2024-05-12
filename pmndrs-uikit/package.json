@@ -33,7 +33,7 @@
     "@rollup/plugin-typescript": "^11.1.1",
     "@types/animejs": "3.1.0",
     "@types/three": "0.164.0",
-    "aframe-types": "0.9.3",
+    "aframe-types": "0.9.4",
     "concurrently": "^7.1.0",
     "esbuild": "^0.18.17",
     "rimraf": "^5.0.1",

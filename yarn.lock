@@ -273,9 +273,9 @@ __metadata:
     "@rollup/plugin-terser": "npm:^0.4.3"
     "@rollup/plugin-typescript": "npm:^11.1.1"
     "@types/animejs": "npm:3.1.0"
-    "@types/three": "npm:0.147.1"
+    "@types/three": "npm:0.164.0"
     "@zip.js/zip.js": "npm:^2.7.20"
-    aframe-types: "npm:0.9.1"
+    aframe-types: "npm:0.9.4"
     concurrently: "npm:^7.1.0"
     rimraf: "npm:^5.0.1"
     rollup: "npm:^2.71.1"
@@ -349,9 +349,9 @@ __metadata:
     "@rollup/plugin-terser": "npm:^0.4.3"
     "@rollup/plugin-typescript": "npm:^11.1.1"
     "@types/animejs": "npm:3.1.0"
-    "@types/three": "npm:0.147.1"
+    "@types/three": "npm:0.164.0"
     "@webxr-input-profiles/motion-controllers": "npm:^1.0.0"
-    aframe-types: "npm:0.9.1"
+    aframe-types: "npm:0.9.4"
     concurrently: "npm:^7.1.0"
     esbuild: "npm:^0.18.17"
     rimraf: "npm:^5.0.1"
@@ -359,7 +359,7 @@ __metadata:
     rollup-plugin-dts: "npm:^5.3.0"
     rollup-plugin-esbuild: "npm:^5.0.0"
     typedoc: "npm:^0.24.7"
-    typescript: "npm:^5.0.4"
+    typescript: "npm:^5.4.0"
   languageName: unknown
   linkType: soft
 
@@ -376,7 +376,7 @@ __metadata:
     "@rollup/plugin-typescript": "npm:^11.1.1"
     "@types/animejs": "npm:3.1.0"
     "@types/three": "npm:0.164.0"
-    aframe-types: "npm:0.9.3"
+    aframe-types: "npm:0.9.4"
     concurrently: "npm:^7.1.0"
     esbuild: "npm:^0.18.17"
     rimraf: "npm:^5.0.1"
@@ -398,8 +398,8 @@ __metadata:
   dependencies:
     "@compodoc/live-server": "npm:1.2.3"
     "@types/animejs": "npm:3.1.0"
-    "@types/three": "npm:0.147.1"
-    aframe-types: "npm:0.9.1"
+    "@types/three": "npm:0.164.0"
+    aframe-types: "npm:0.9.4"
     concurrently: "npm:^7.1.0"
     rollup: "npm:^2.71.1"
     rollup-plugin-terser: "npm:^7.0.2"
@@ -413,8 +413,8 @@ __metadata:
   dependencies:
     "@compodoc/live-server": "npm:1.2.3"
     "@types/animejs": "npm:3.1.0"
-    "@types/three": "npm:0.147.1"
-    aframe-types: "npm:0.9.1"
+    "@types/three": "npm:0.164.0"
+    aframe-types: "npm:0.9.4"
     concurrently: "npm:^7.1.0"
     rollup: "npm:^2.71.1"
     rollup-plugin-terser: "npm:^7.0.2"
@@ -772,15 +772,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/three@npm:0.147.1":
-  version: 0.147.1
-  resolution: "@types/three@npm:0.147.1"
-  dependencies:
-    "@types/webxr": "npm:*"
-  checksum: 10/1185ab5305db39bf3fd759d4782509582e31f7d68e5f2b21cfdd12be64b14fab75fb9a00afaa21a542a1535cd5368cdf6b4ef85274ca9a5cf84af74c18f7c4c2
-  languageName: node
-  linkType: hard
-
 "@types/three@npm:0.164.0":
   version: 0.164.0
   resolution: "@types/three@npm:0.164.0"
@@ -841,23 +832,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aframe-types@npm:0.9.1":
-  version: 0.9.1
-  resolution: "aframe-types@npm:0.9.1"
+"aframe-types@npm:0.9.4":
+  version: 0.9.4
+  resolution: "aframe-types@npm:0.9.4"
   peerDependencies:
     "@types/animejs": 3.1.0
     "@types/three": 0.164.0
-  checksum: 10/c671f56599c34e0f4daa8123a90429d3df3812acfbd6df0350adde1cf7c0901432a49bae718043193df4db3718865cea3b8da287bfd2a19f9375af83d056d4cd
-  languageName: node
-  linkType: hard
-
-"aframe-types@npm:0.9.3":
-  version: 0.9.3
-  resolution: "aframe-types@npm:0.9.3"
-  peerDependencies:
-    "@types/animejs": 3.1.0
-    "@types/three": 0.164.0
-  checksum: 10/99c6ae424b45106ebfbfd2a756ef2caaf807896b7117a8cc7848b2a3d4c6254293b4193a1ac51c49f7bfed6a07321b4b49861f194ff61d145cc3854d837f1dea
+  checksum: 10/f30be4d6cf6b03eaebea76d0e184aaf313996db5244589f5ecc305dacd1506f693c6b0664596dca2e90bc47a469fafd064a7aa435625ad7908a7f06119e53372
   languageName: node
   linkType: hard
 

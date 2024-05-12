@@ -23,9 +23,9 @@ const MotionControllerSystem = AFRAME.registerSystem('motion-controller', {
     },
     __fields: {} as {
         /* Currently active XR session */
-        xrSession: XRSession|null;
+        readonly xrSession: XRSession|null;
         /* List of active input sources */
-        inputSources: Array<InputSourceRecord>
+        readonly inputSources: Array<InputSourceRecord>
     
         /* Dedicated slots for left/right hand for convenience */
         left: InputSourceRecord|null,
