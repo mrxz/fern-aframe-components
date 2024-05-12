@@ -1,7 +1,6 @@
 import esbuild from 'rollup-plugin-esbuild';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import alias from '@rollup/plugin-alias';
-import json from '@rollup/plugin-json';
 import commonjs from '@rollup/plugin-commonjs';
 import pkg from './package.json' assert { type: 'json' };
 
@@ -17,7 +16,6 @@ export default [
                 customResolver: nodeResolve()
             }),
             nodeResolve({ }),
-            json(),
             commonjs({
                 include: [
                     "**/node-html-parser/**/*",
@@ -50,5 +48,5 @@ export default [
                 }
             }
         ],
-    }
+    },
 ]

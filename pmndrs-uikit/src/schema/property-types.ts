@@ -1,6 +1,18 @@
 import type * as THREE from "three";
 
-export const BOOLEAN = {
+type UikitProp<Name extends string, T> = { type: Name, default: undefined, parse: (input: any) => T|undefined};
+
+export type UikitBooleanSchema = UikitProp<'boolean', boolean>;
+export type UikitColorSchema = UikitProp<'color', string|THREE.Color>;
+export type UikitStringSchema = UikitProp<'string', string>;
+export type UikitTextureSchema = UikitProp<'map', string|THREE.Texture>;
+export type UikitNumberSchema = UikitProp<'number', number>;
+export type UikitNumberOrPercentageSchema = UikitProp<'string', number|`${number}%`>;
+export type UikitNumberOrPercentageOrAutoSchema = UikitProp<'string', number|`${number}%`|'auto'>;
+export type UikitOneOfSchema<Options extends string[]> = UikitProp<'string', Options[number]> & {oneOf: Options};
+
+
+export const BOOLEAN: UikitBooleanSchema = {
     type: 'boolean',
     default: undefined,
     parse: function(input: any) {
@@ -12,9 +24,9 @@ export const BOOLEAN = {
         }
         return input === 'true';
     }
-} as const;
+};
 
-export const COLOR = {
+export const COLOR: UikitColorSchema = {
     type: 'color',
     default: undefined,
     parse: function(input: any): string | THREE.Color | undefined {
@@ -23,9 +35,9 @@ export const COLOR = {
         }
         return undefined;
     }
-} as const;
+};
 
-export const STRING = {
+export const STRING: UikitStringSchema = {
     type: 'string',
     default: undefined,
     parse: function(input: any) {
@@ -34,10 +46,10 @@ export const STRING = {
         }
         return input;
     }
-} as const;
+};
 
 const urlRegex = /url\((.+)\)/;
-export const TEXTURE = {
+export const TEXTURE: UikitTextureSchema = {
     type: 'map',
     default: undefined,
     parse: function(input: any) {
@@ -58,9 +70,9 @@ export const TEXTURE = {
         if(parsedUrl) { return parsedUrl[1]; }
         return input;
     }
-} as const;
+};
 
-export const NUMBER = {
+export const NUMBER: UikitNumberSchema = {
     type: 'number',
     default: undefined,
     parse: function(input: any) {
@@ -73,10 +85,11 @@ export const NUMBER = {
         const parsedFloat = Number.parseFloat(input);
         return Number.isFinite(parsedFloat) ? parsedFloat : undefined;
     }
-} as const;
+};
 
-export const NUMBER_OR_PERCENTAGE = {
+export const NUMBER_OR_PERCENTAGE: UikitNumberOrPercentageSchema = {
     type: 'string',
+    default: undefined,
     parse: function(input: any) {
         // Nothing to parse for numbers
         if(typeof input === 'number') {
@@ -92,10 +105,11 @@ export const NUMBER_OR_PERCENTAGE = {
         }
         return undefined;
     }
-} as const;
+};
 
-export const NUMBER_OR_PERCENTAGE_OR_AUTO = {
+export const NUMBER_OR_PERCENTAGE_OR_AUTO: UikitNumberOrPercentageOrAutoSchema = {
     type: 'string',
+    default: undefined,
     parse: function(input: any) {
         // Nothing to parse for numbers or 'auto' literal
         if(typeof input === 'number' || input === 'auto') {
@@ -113,9 +127,10 @@ export const NUMBER_OR_PERCENTAGE_OR_AUTO = {
     }
 } as const;
 
-export function oneOf<const T extends string[]>(options: T): {type: 'string', parse: (input: any) => T[number]|undefined, oneOf: T} {
+export function oneOf<const T extends string[]>(options: T): UikitOneOfSchema<T> {
     return {
         type: 'string',
+        default: undefined,
         parse: function(input: any) {
             if(options.includes(input)) {
                 return input as T[number];
