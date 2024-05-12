@@ -2,6 +2,7 @@ import * as AFRAME from "aframe";
 
 const LayersSystem = AFRAME.registerSystem('layers', {
     schema: {
+        /** Whether or not to use layers, must be set at initialization */
         enabled: { default: true }
     },
     __fields: {} as {
@@ -18,11 +19,13 @@ const LayersSystem = AFRAME.registerSystem('layers', {
         this.layers = [];
 
         // Ensure layers feature is requested.
-        const webxrData = this.sceneEl.getAttribute('webxr');
-        const requiredFeaturesArray = webxrData.requiredFeatures;
-        if (requiredFeaturesArray.indexOf('layers') === -1) {
-          requiredFeaturesArray.push('layers');
-          this.sceneEl.setAttribute('webxr', webxrData);
+        if(this.data.enabled) {
+            const webxrData = this.sceneEl.getAttribute('webxr');
+            const requiredFeaturesArray = webxrData.requiredFeatures;
+            if (requiredFeaturesArray.indexOf('layers') === -1) {
+                requiredFeaturesArray.push('layers');
+                this.sceneEl.setAttribute('webxr', webxrData);
+            }
         }
 
         this.sceneEl.addEventListener('enter-vr', () => this.onEnterVR());
