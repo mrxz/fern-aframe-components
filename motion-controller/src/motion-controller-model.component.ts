@@ -1,5 +1,6 @@
 import * as AFRAME from 'aframe';
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { MotionController, VisualResponse } from '@webxr-input-profiles/motion-controllers';
 import { hologramMaterialFromStandardMaterial, occluderMaterialFromStandardMaterial, phongMaterialFromStandardMaterial } from './utils';
 import { HAND_JOINT_NAMES } from './hand-joint-names';
@@ -36,7 +37,7 @@ const MotionControllerModelComponent = AFRAME.registerComponent('motion-controll
         this.motionControllerSystem = this.el.sceneEl.systems['motion-controller'];
         this.componentMeshes = new Map();
         this.handJoints = new Array(25);
-        const gltfLoader = new AFRAME.THREE.GLTFLoader();
+        const gltfLoader = new GLTFLoader();
         this.el.sceneEl.addEventListener('motion-controller-change', _event => {
             const inputSourceRecord = this.motionControllerSystem[this.data.hand];
             this.inputSourceRecord = inputSourceRecord;

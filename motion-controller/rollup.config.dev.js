@@ -18,7 +18,8 @@ export default [
                 format: 'umd',
                 globals: {
                     aframe: 'AFRAME',
-                    three: 'THREE'
+                    three: 'THREE',
+                    'three/examples/jsm/loaders/GLTFLoader.js': 'THREE',
                 }
             }
         ],
