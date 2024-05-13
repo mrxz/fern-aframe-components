@@ -37,7 +37,11 @@ const MotionControllerSystem = AFRAME.registerSystem('motion-controller', {
         this.right = null;
 
         if(this.data.enableHands && this.data.enableHandTracking) {
-            this.sceneEl.setAttribute('webxr', {optionalFeatures: ['hand-tracking']});
+            const webxrData = this.sceneEl.getAttribute('webxr');
+            if (webxrData.optionalFeatures.indexOf('hand-tracking') === -1) {
+                webxrData.optionalFeatures.push('hand-tracking');
+                this.sceneEl.setAttribute('webxr', webxrData);
+            }
         }
 
         const onInputSourcesChange = (event: XRInputSourceChangeEvent) => {
