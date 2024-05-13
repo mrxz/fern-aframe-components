@@ -11,7 +11,6 @@ export type UikitNumberOrPercentageSchema = UikitProp<'string', number|`${number
 export type UikitNumberOrPercentageOrAutoSchema = UikitProp<'string', number|`${number}%`|'auto'>;
 export type UikitOneOfSchema<Options extends string[]> = UikitProp<'string', Options[number]> & {oneOf: Options};
 
-
 export const BOOLEAN: UikitBooleanSchema = {
     type: 'boolean',
     default: undefined,

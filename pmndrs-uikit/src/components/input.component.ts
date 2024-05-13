@@ -48,7 +48,7 @@ const {
     hover: InputHoverComponent,
     active: InputActiveComponent,
     focus: InputFocusComponent,
-} = registerConditionalComponents(PROPERTIES_SCHEMA, 'uikit-input', true);
+} = registerConditionalComponents(PROPERTIES_SCHEMA, 'uikit-input', { includeFocus: true });
 
 declare module "aframe" {
     export interface Components {

@@ -38,7 +38,15 @@ export const TextComponent = AFRAME.registerComponent('uikit-text', {
         } satisfies TextProperties);
     },
     updateContent: function() {
-        this.text.setText(this.el.innerText);
+        for (let i = 0; i < this.el.childNodes.length; i++) {
+            const childNode = this.el.childNodes[i];
+            if (childNode.nodeType === Node.TEXT_NODE) {
+                this.text.setText((childNode.nodeValue ?? '').trim());
+                return;
+            }
+        }
+
+        this.text.setText('');
     },
     remove: function() {
         // TODO: Remove event listener

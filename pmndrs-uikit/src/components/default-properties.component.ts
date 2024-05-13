@@ -2,14 +2,16 @@ import * as AFRAME from 'aframe';
 import { AllOptionalProperties } from '@pmndrs/uikit';
 import { CONTAINER_SCHEMA, FLEX_SCHEMA, TEXT_SCHEMA, IMAGE_SCHEMA, INPUT_SCHEMA, HasProperties } from '../schema';
 
+const PROPERTIES_SCHEMA = {
+    ...CONTAINER_SCHEMA,
+    ...FLEX_SCHEMA,
+    ...TEXT_SCHEMA,
+    ...IMAGE_SCHEMA,
+    ...INPUT_SCHEMA,
+} satisfies HasProperties<AllOptionalProperties>;
+
 export const DefaultPropertiesComponent = AFRAME.registerComponent('uikit-default-properties', {
-    schema: {
-        ...CONTAINER_SCHEMA,
-        ...FLEX_SCHEMA,
-        ...TEXT_SCHEMA,
-        ...IMAGE_SCHEMA,
-        ...INPUT_SCHEMA,
-    } satisfies HasProperties<AllOptionalProperties>,
+    schema: PROPERTIES_SCHEMA,
     init: function() {
 
     },
@@ -30,6 +32,6 @@ export const DefaultPropertiesComponent = AFRAME.registerComponent('uikit-defaul
 
 declare module "aframe" {
     export interface Components {
-        "uikit-default-properties": InstanceType<typeof DefaultPropertiesComponent>,
+        "uikit-default-properties": InstanceType<typeof DefaultPropertiesComponent>
     }
 }
