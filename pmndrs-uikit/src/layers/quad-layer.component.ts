@@ -1,17 +1,6 @@
 import * as AFRAME from 'aframe';
 import * as THREE from 'three';
-
-const HOLE_PUNCH_MATERIAL = new THREE.MeshBasicMaterial({
-    color: new THREE.Color('black'),
-    blending: THREE.CustomBlending,
-    blendEquation: THREE.AddEquation,
-    blendSrc: THREE.ZeroFactor,
-    blendDst: THREE.ZeroFactor,
-    blendEquationAlpha: THREE.AddEquation,
-    blendSrcAlpha: THREE.OneFactor,
-    blendDstAlpha: THREE.ZeroFactor,
-    opacity: 0,
-});
+import { HOLE_PUNCH_MATERIAL } from './hole-punch-material';
 
 const tempV3 = new THREE.Vector3();
 
@@ -38,7 +27,7 @@ export const QuadLayerComponent = AFRAME.registerComponent('quad-layer', {
     },
     init: function() {
         this.layersSystem = this.el.sceneEl.systems['layers'];
-        this.layersSystem.registerLayerElement(this.el);
+        this.layersSystem.registerLayerElement(this.el, 'quad-layer');
 
         this.quadLayer = null;
 
@@ -57,8 +46,20 @@ export const QuadLayerComponent = AFRAME.registerComponent('quad-layer', {
         this.camera.far = 1000;
         this.camera.updateProjectionMatrix();
     },
-    activate: function(layer: XRQuadLayer) {
-        this.quadLayer = layer;
+    createLayer: function(xrWebGlBinding: XRWebGLBinding) {
+        return xrWebGlBinding.createQuadLayer({
+            space: this.el.sceneEl.renderer.xr.getReferenceSpace()!,
+            viewPixelWidth: this.data.resolutionWidth,
+            viewPixelHeight: this.data.resolutionHeight,
+            width: this.data.width / 2.0,
+            height: this.data.height / 2.0,
+            //@ts-ignore Current @types/webxr version doesn't include this
+            quality: this.data.quality,
+            layout: "mono",
+        });
+    },
+    activate: function(layer: XRCompositionLayer|null) {
+        this.quadLayer = layer as XRQuadLayer;
 
         // Setup hole-pun
         this.planeMesh.scale.set(this.data.width, this.data.height, 1.0);

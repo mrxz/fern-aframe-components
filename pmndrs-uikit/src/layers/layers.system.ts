@@ -11,7 +11,8 @@ const LayersSystem = AFRAME.registerSystem('layers', {
         /** List of registered elements that should act as layers */
         layers: Array<{
             el: AFRAME.Entity,
-            layer?: XRQuadLayer
+            layer?: XRCompositionLayer,
+            type: 'quad-layer'|'quad-layer-image'
         }>
     },
     init: function() {
@@ -21,9 +22,9 @@ const LayersSystem = AFRAME.registerSystem('layers', {
         // Ensure layers feature is requested.
         if(this.data.enabled) {
             const webxrData = this.sceneEl.getAttribute('webxr');
-            const requiredFeaturesArray = webxrData.requiredFeatures;
-            if (requiredFeaturesArray.indexOf('layers') === -1) {
-                requiredFeaturesArray.push('layers');
+            const optionalFeaturesArray = webxrData.optionalFeatures;
+            if (optionalFeaturesArray.indexOf('layers') === -1) {
+                optionalFeaturesArray.push('layers');
                 this.sceneEl.setAttribute('webxr', webxrData);
             }
         }
@@ -31,14 +32,33 @@ const LayersSystem = AFRAME.registerSystem('layers', {
         this.sceneEl.addEventListener('enter-vr', () => this.onEnterVR());
         this.sceneEl.addEventListener('exit-vr', () => this.onExitVR());
     },
-    registerLayerElement: function(el: AFRAME.Entity) {
+    registerLayerElement: function(el: AFRAME.Entity, type: 'quad-layer'|'quad-layer-image') {
         const index = this.layers.findIndex(record => record.el === el);
         if(index !== -1) {
             console.warn('Element already registered as layer element!');
             return;
         }
 
-        this.layers.push({el});
+        this.layers.push({el, type});
+    },
+    replaceLayer: function(el: AFRAME.Entity, layer: XRCompositionLayer) {
+        if (!this.active) {
+            throw new Error('WebXR Layer can not be replaced as layer system is inactive!');
+        }
+
+        const record = this.layers.find(record => record.el === el)!;
+        if(record.layer) {
+            record.layer?.destroy();
+        }
+        record.layer = layer;
+
+        const xrSession = this.sceneEl.xrSession!;
+        xrSession.updateRenderState({
+            layers: [
+                ...this.layers.map(r => r.layer!).filter(x => x),
+                this.sceneEl.renderer.xr.getBaseLayer()!,
+            ]
+        })
     },
     unregisterLayerElement: function(el: AFRAME.Entity) {
         const index = this.layers.findIndex(record => record.el === el);
@@ -58,26 +78,16 @@ const LayersSystem = AFRAME.registerSystem('layers', {
             for(let i = 0; i < this.layers.length; i++) {
                 const record = this.layers[i];
 
-                const layerPlaneComponent = record.el.components["quad-layer"]!;
-                const layerProperties = layerPlaneComponent.data;
-                record.layer = xrWebGlBinding.createQuadLayer({
-                    space: this.sceneEl.renderer.xr.getReferenceSpace()!,
-                    viewPixelWidth: layerProperties.resolutionWidth,
-                    viewPixelHeight: layerProperties.resolutionHeight,
-                    width: layerProperties.width / 2.0,
-                    height: layerProperties.height / 2.0,
-                    //@ts-ignore Current @types/webxr version doesn't include this
-                    quality: layerProperties.quality,
-                    layout: "mono",
-                });
-                layerPlaneComponent.activate(record.layer);
+                const layerComponent = record.el.components[record.type]!;
+                record.layer = layerComponent.createLayer(xrWebGlBinding);
+                layerComponent.activate(record.layer);
             }
 
             // Update layers array
             const xrSession = this.sceneEl.xrSession!;
             xrSession.updateRenderState({
                 layers: [
-                    ...this.layers.map(r => r.layer!),
+                    ...this.layers.map(r => r.layer!).filter(x => x),
                     this.sceneEl.renderer.xr.getBaseLayer()!,
                 ]
             })
@@ -92,7 +102,7 @@ const LayersSystem = AFRAME.registerSystem('layers', {
         for(let i = 0; i < this.layers.length; i++) {
             const record = this.layers[i];
 
-            record.el.components['quad-layer']!.deactivate();
+            record.el.components[record.type]!.deactivate();
             record.layer?.destroy();
             record.layer = undefined;
         }
