@@ -13,12 +13,16 @@ const PROPERTIES_SCHEMA = {
 export const TextComponent = AFRAME.registerComponent('uikit-text', {
     schema: PROPERTIES_SCHEMA,
     __fields: {} as {
-        text: Text
+        text: Text;
+        readonly mutationObserver: MutationObserver;
     },
     init: function() {
         this.text = new Text();
         this.el.addEventListener('uikit-properties-update', () => this.updateUIProperties());
         this.el.addEventListener('uikit-default-properties-update', (e) => handleDefaultPropertiesUpdate(this.el, this.text, e));
+
+        this.mutationObserver = new MutationObserver(() => this.updateContent());
+        this.mutationObserver.observe(this.el, { childList: true });
 
         // Find the respective Root
         deferInitialization(this.el, () => {
@@ -51,6 +55,7 @@ export const TextComponent = AFRAME.registerComponent('uikit-text', {
     remove: function() {
         // TODO: Remove event listener
         this.text.parent?.removeFromParent();
+        this.mutationObserver.disconnect();
     }
 });
 
