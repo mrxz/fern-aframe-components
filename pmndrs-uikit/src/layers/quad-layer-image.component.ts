@@ -38,9 +38,10 @@ export const QuadLayerImageComponent = AFRAME.registerComponent('quad-layer-imag
     update: function(oldData) {
         // Adjust size of fallback mesh
         this.fallbackMesh.scale.set(this.data.width, this.data.height, 1);
+        this.planeMesh.scale.set(this.data.width, this.data.height, 1);
         if(this.quadLayer) {
-            this.quadLayer.width = this.data.width;
-            this.quadLayer.height = this.data.height;
+            this.quadLayer.width = this.data.width/2.0;
+            this.quadLayer.height = this.data.height/2.0;
         }
 
         if (this.data.src !== oldData.src) {
@@ -72,6 +73,9 @@ export const QuadLayerImageComponent = AFRAME.registerComponent('quad-layer-imag
                         this.quadLayer = this.createLayer(this.el.sceneEl.renderer.xr.getBinding());
                         this.layersSystem.replaceLayer(this.el, this.quadLayer!);
                     }
+
+                    // Emit event
+                    this.el.emit('materialtextureloaded', { src: loadingSrc, texture });
                 });
             }
         }

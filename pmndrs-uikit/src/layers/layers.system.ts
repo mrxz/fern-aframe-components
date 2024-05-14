@@ -11,7 +11,7 @@ const LayersSystem = AFRAME.registerSystem('layers', {
         /** List of registered elements that should act as layers */
         layers: Array<{
             el: AFRAME.Entity,
-            layer?: XRCompositionLayer,
+            layer: XRCompositionLayer|null,
             type: 'quad-layer'|'quad-layer-image'
         }>
     },
@@ -39,7 +39,7 @@ const LayersSystem = AFRAME.registerSystem('layers', {
             return;
         }
 
-        this.layers.push({el, type});
+        this.layers.push({el, layer: null, type});
     },
     replaceLayer: function(el: AFRAME.Entity, layer: XRCompositionLayer) {
         if (!this.active) {
@@ -104,7 +104,7 @@ const LayersSystem = AFRAME.registerSystem('layers', {
 
             record.el.components[record.type]!.deactivate();
             record.layer?.destroy();
-            record.layer = undefined;
+            record.layer = null;
         }
         this.active = false;
     }
