@@ -17,7 +17,7 @@ type EnhancedVisualResponse = VisualResponse & {
     maxNode?: THREE.Object3D
 };
 
-const MotionControllerModelComponent = AFRAME.registerComponent('motion-controller-model', {
+export const MotionControllerModelComponent = AFRAME.registerComponent('motion-controller-model', {
     schema: {
         hand: { type: 'string', oneOf: ['left', 'right'], default: 'left' },
         overrideMaterial: { type: 'string', oneOf: ['none', 'phong', 'occluder'], default: 'phong'},

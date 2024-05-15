@@ -1,6 +1,6 @@
 import * as AFRAME from 'aframe';
 
-const MotionControllerSpaceComponent = AFRAME.registerComponent('motion-controller-space', {
+export const MotionControllerSpaceComponent = AFRAME.registerComponent('motion-controller-space', {
     schema: {
         hand: { type: 'string', oneOf: ['left', 'right'], default: 'left' },
         space: { type: 'string', oneOf: ['gripSpace', 'targetRaySpace'], default: 'targetRaySpace' },

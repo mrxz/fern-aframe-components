@@ -12,7 +12,7 @@ export interface InputSourceRecord {
     jointState?: {poses: Float32Array, radii: Float32Array},
 };
 
-const MotionControllerSystem = AFRAME.registerSystem('motion-controller', {
+export const MotionControllerSystem = AFRAME.registerSystem('motion-controller', {
     schema: {
         /** Base URI for fetching profiles and controller models */
         profilesUri: { type: 'string', default: DEFAULT_INPUT_PROFILE_ASSETS_URI },
