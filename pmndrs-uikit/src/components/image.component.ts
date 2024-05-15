@@ -42,7 +42,7 @@ export const ImageComponent = AFRAME.registerComponent('uikit-image', {
     }
 });
 
-const {
+export const {
     hover: ImageHoverComponent,
     active: ImageActiveComponent
 } = registerConditionalComponents(PROPERTIES_SCHEMA, 'uikit-image');

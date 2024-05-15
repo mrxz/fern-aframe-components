@@ -1,6 +1,6 @@
 import * as AFRAME from "aframe";
 
-const LayersSystem = AFRAME.registerSystem('layers', {
+export const LayersSystem = AFRAME.registerSystem('layers', {
     schema: {
         /** Whether or not to use layers, must be set at initialization */
         enabled: { default: true }

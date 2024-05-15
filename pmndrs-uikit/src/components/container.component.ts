@@ -42,7 +42,7 @@ export const ContainerComponent = AFRAME.registerComponent('uikit-container', {
     }
 });
 
-const {
+export const {
     hover: ContainerHoverComponent,
     active: ContainerActiveComponent
 } = registerConditionalComponents(PROPERTIES_SCHEMA, 'uikit-container');

@@ -59,7 +59,7 @@ export const TextComponent = AFRAME.registerComponent('uikit-text', {
     }
 });
 
-const {
+export const {
     hover: TextHoverComponent,
     active: TextActiveComponent
 } = registerConditionalComponents(PROPERTIES_SCHEMA, 'uikit-text');

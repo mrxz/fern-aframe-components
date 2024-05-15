@@ -44,7 +44,7 @@ export const InputComponent = AFRAME.registerComponent('uikit-input', {
     }
 });
 
-const {
+export const {
     hover: InputHoverComponent,
     active: InputActiveComponent,
     focus: InputFocusComponent,
