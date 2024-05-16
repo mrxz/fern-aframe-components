@@ -15,7 +15,19 @@ export const MotionControllerSpaceComponent = AFRAME.registerComponent('motion-c
         this.el.sceneEl.addEventListener('motion-controller-change', _event => {
             const inputSourceRecord = this.motionControllerSystem[this.data.hand];
             this.inputSource = inputSourceRecord?.xrInputSource;
+            // Re-evaluate visibility
+            this.el.object3D.visible = this.isVisible();
         });
+        // Invisible by default
+        this.el.object3D.visible = false;
+        this.el.sceneEl.addEventListener('motion-controller-visibility-change', _event => {
+            // Re-evaluate visibility
+            this.el.object3D.visible = this.isVisible();
+        });
+    },
+    isVisible: function() {
+        // Only visible if there is an XRSession, InputSource and the visibility state is 'visible'
+        return !!this.inputSource && (this.el.sceneEl.xrSession?.visibilityState === 'visible' ?? false);
     },
     tick: function() {
         const xrFrame = this.el.sceneEl.frame;

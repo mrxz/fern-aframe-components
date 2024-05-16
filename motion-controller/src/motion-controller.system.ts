@@ -44,6 +44,7 @@ export const MotionControllerSystem = AFRAME.registerSystem('motion-controller',
             }
         }
 
+        // Handle addition and removal of input sources
         const onInputSourcesChange = (event: XRInputSourceChangeEvent) => {
             event.removed.forEach(xrInputSource => {
                 const index = this.inputSources.findIndex(inputSourceRecord => inputSourceRecord.xrInputSource === xrInputSource);
@@ -95,15 +96,22 @@ export const MotionControllerSystem = AFRAME.registerSystem('motion-controller',
             this.sceneEl.emit('motion-controller-change' as keyof AFRAME.EntityEvents);
         }
 
+        // Handle visibility changes, which could indicate
+        const onVisiblityChange = (e: XRSessionEvent) => {
+            this.sceneEl.emit('motion-controller-visibility-change', { visibilityState: e.session.visibilityState })
+        };
+
         this.el.sceneEl.addEventListener('enter-vr', _ => {
             this.xrSession = this.el.sceneEl.xrSession!;
             if(this.xrSession) {
                 this.xrSession.addEventListener('inputsourceschange', onInputSourcesChange);
+                this.xrSession.addEventListener('visibilitychange', onVisiblityChange);
             }
         });
         this.el.sceneEl.addEventListener('exit-vr', _ => {
             if(this.xrSession) {
                 this.xrSession.removeEventListener('inputsourceschange', onInputSourcesChange);
+                this.xrSession.removeEventListener('visibilitychange', onVisiblityChange);
                 this.xrSession = null;
                 // Remove any input sources, as the session has ended
                 this.inputSources.splice(0, this.inputSources.length);
@@ -209,6 +217,8 @@ declare module "aframe" {
     }
     export interface SceneEvents {
         "motion-controller-change": SceneEvent<{}>
+        "motion-controller-visibility-change": SceneEvent<{ visibilityState: XRVisibilityState }>
+
         "touchstart": SceneEvent<ButtonEventDetails>
         "touchend": SceneEvent<ButtonEventDetails>
         "buttondown": SceneEvent<ButtonEventDetails>
