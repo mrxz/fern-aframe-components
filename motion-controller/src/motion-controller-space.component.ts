@@ -5,6 +5,7 @@ export const MotionControllerSpaceComponent = AFRAME.registerComponent('motion-c
         hand: { type: 'string', oneOf: ['left', 'right'], default: 'left' },
         space: { type: 'string', oneOf: ['gripSpace', 'targetRaySpace'], default: 'targetRaySpace' },
     },
+    after: ['system:motion-controller'],
     __fields: {} as {
         readonly motionControllerSystem: AFRAME.Systems['motion-controller'],
         readonly inputSource: XRInputSource|undefined,

@@ -25,6 +25,7 @@ export const MotionControllerModelComponent = AFRAME.registerComponent('motion-c
         buttonTouchColor: { type: 'color', default: '#8AB' },
         buttonPressColor: { type: 'color', default: '#2DF' }
     },
+    after: ['system:motion-controller'],
     __fields: {} as {
         readonly motionControllerSystem: AFRAME.Systems['motion-controller'],
         readonly inputSourceRecord: InputSourceRecord|null,

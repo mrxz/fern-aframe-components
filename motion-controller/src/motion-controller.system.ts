@@ -117,6 +117,7 @@ export const MotionControllerSystem = AFRAME.registerSystem('motion-controller',
         // Update all motion controllers. This ensures that any code
         // polling the state gets up to date information, even when not visualized
         // FIXME: System tick happens after component ticks, meaning update is always 1 frame late :-/
+        //        Only an issue with A-Frame, in A5 the components indicate to run _after_ this system.
         this.inputSources.forEach(inputSourceRecord => {
             if(!inputSourceRecord.motionController) {
                 return;
