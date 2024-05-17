@@ -17,6 +17,32 @@ const RAY_MATERIAL = new THREE.ShaderMaterial({
 
         void main() {
             gl_FragColor = vec4(color, 1.0 + vHeight);
+            // TODO: Tonemapping
+        }
+    `,
+    uniforms: {
+        color: { value: new THREE.Color() }
+    },
+    transparent: true,
+});
+
+const MARKER_GEOMETRY = new THREE.PlaneGeometry(0.2, 0.2);
+const MARKER_MATERIAL = new THREE.ShaderMaterial({
+    vertexShader: /*glsl*/`
+        varying vec2 vUv;
+        void main() {
+            vUv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+        }
+    `,
+    fragmentShader: /*glsl*/`
+        varying vec2 vUv;
+        uniform vec3 color;
+
+        void main() {
+            float dist = abs(distance(vUv, vec2(0.5)) - 0.3);
+            gl_FragColor = vec4(color, smoothstep(0.9, 1.0, 1.0 - dist));
+            // TODO: Tonemapping
         }
     `,
     uniforms: {
@@ -25,6 +51,8 @@ const RAY_MATERIAL = new THREE.ShaderMaterial({
     transparent: true,
 })
 
+const tempV3 = new THREE.Vector3();
+
 /**
  * Component for visualizing an interaction ray emitting from a pointing device and/or hand.
  * The ray is intended to be
@@ -32,6 +60,7 @@ const RAY_MATERIAL = new THREE.ShaderMaterial({
 export const InteractionRayComponent = AFRAME.registerComponent('interaction-ray', {
     schema: {
         color: { type: 'color', default: 'white' },
+        interactableColor: { type: 'color', default: 'blue' },
         /** Whether or not to hide the interaction ray when not currently targetting anything */
         hideOnMiss: { default: true },
         /** Selector to use to check if a target element constitutes a hit. */
@@ -43,7 +72,7 @@ export const InteractionRayComponent = AFRAME.registerComponent('interaction-ray
     },
     __fields: {} as {
         readonly ray: THREE.Mesh<THREE.BoxGeometry, THREE.ShaderMaterial>
-        readonly marker: THREE.Mesh<THREE.SphereGeometry, THREE.Material>
+        readonly marker: THREE.Mesh<THREE.PlaneGeometry, THREE.ShaderMaterial>
 
         /** The entity that is currently being targetted */
         currentEl: AFRAME.Entity|null;
@@ -52,8 +81,8 @@ export const InteractionRayComponent = AFRAME.registerComponent('interaction-ray
         this.ray = new THREE.Mesh(RAY_GEOMETRY, RAY_MATERIAL.clone());
         this.el.setObject3D('ray', this.ray);
 
-        this.marker = new THREE.Mesh(new THREE.SphereGeometry(0.1, 8, 8), new THREE.MeshBasicMaterial({ color: 'white' }));
-        this.el.setObject3D('marker', this.marker);
+        this.marker = new THREE.Mesh(MARKER_GEOMETRY, MARKER_MATERIAL);
+        this.el.sceneEl.object3D.add(this.marker);
 
         // Initialize without any hit (and invisible)
         this.currentEl = null;
@@ -77,12 +106,15 @@ export const InteractionRayComponent = AFRAME.registerComponent('interaction-ray
 
             // Check if entity is interactable
             if(!this.data.interactableSelector || el.matches(this.data.interactableSelector)) {
-                // TODO: Update color
+                this.ray.material.uniforms.color.value.set(this.data.interactableColor);
 
                 // Check if haptics are needed
                 if(this.data.hapticsOnInteractable) {
                     // TODO: Haptics
                 }
+            } else {
+                this.ray.material.uniforms.color.value.set(this.data.color);
+                this.marker.material.uniforms.color.value.set(this.data.color);
             }
         };
 
@@ -111,13 +143,29 @@ export const InteractionRayComponent = AFRAME.registerComponent('interaction-ray
         const raycaster = this.el.components['raycaster']!;
         // FIXME: Update aframe-types
         const intersection: THREE.Intersection = (raycaster as any).getIntersection(this.currentEl);
+        const elWorldPos = this.el.object3D.getWorldPosition(tempV3);
+        const distance = intersection.point.distanceTo(elWorldPos);
 
+        // Limit length
+        const rayLength = Math.min(distance, 1.0);
+        this.ray.scale.set(1.0, 1.0, rayLength);
+
+        // Place marker
         this.marker.position.copy(intersection.point);
-        this.marker.parent!.worldToLocal(this.marker.position);
+
+        // Orientate marker
+        if(intersection.normal) {
+            this.marker.position.addScaledVector(intersection.normal, 0.001);
+            this.marker.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), intersection.normal)
+        }
+
+        // Scale marker based on distance
+        const scale = THREE.MathUtils.clamp(distance/10.0, 0.1, 1.0);
+        this.marker.scale.set(scale, scale, scale);
     },
     remove: function() {
         this.el.removeObject3D('ray');
-        this.el.removeObject3D('marker');
+        this.marker.removeFromParent();
         // TODO: Remove event listeners
     },
 });
