@@ -33,7 +33,6 @@
     "rimraf": "^5.0.1",
     "rollup": "^2.71.1",
     "rollup-plugin-dts": "^5.3.0",
-    "typedoc": "^0.24.7",
     "typescript": "^5.0.4"
   },
   "dependencies": {

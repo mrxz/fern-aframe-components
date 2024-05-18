@@ -42,7 +42,6 @@
     "rollup-plugin-esbuild": "^5.0.0",
     "super-three": "0.164.0",
     "type-fest": "^4.18.2",
-    "typedoc": "^0.24.7",
     "typescript": "^5.4.0"
   },
   "dependencies": {

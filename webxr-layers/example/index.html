@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Fern A-Frame Components | WebXR Layers</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@4b4c56093ffed6abcfc924d3ef25f8a849ea6fa5/dist/aframe-master.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aframe-environment-component@1.3.4/dist/aframe-environment-component.min.js"></script>
+    <script src="/js/aframe-webxr-layers.umd.min.js"></script>
+  </head>
+  <body>
+    <a-scene xr-mode-ui="XRMode: xr">
+      <a-assets>
+      </a-assets>
+
+      <a-entity environment></a-entity>
+
+      <a-plane position="0 1.6 -6" shader="flat" width="5" height="3" color="#22AA80" quad-layer="width: 5; height: 3; quality: text-optimized">
+        <a-text anchor="center" width="4" value="This text should appear sharper than normal as it's being rendered to a Quad layer."></a-text>
+      </a-plane>
+
+    </a-scene>
+
+    <!-- GITHUB_CORNER_LEFT -->
+  </body>
+</html>
