@@ -6,4 +6,3 @@ import './systems/';
 
 // Consider separating the following it different bundles/projects(?)
 import './convert/';
-import './layers/';
