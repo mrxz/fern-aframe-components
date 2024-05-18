@@ -200,6 +200,21 @@ export const MotionControllerSystem = AFRAME.registerSystem('motion-controller',
         (xrFrame as any).fillPoses(hand.values(), inputSourceRecord.xrInputSource.gripSpace, inputSourceRecord.jointState!.poses);
         // FIXME: Perhaps only fetch radii once or upon request(?)
         (xrFrame as any).fillJointRadii(hand.values(), inputSourceRecord.jointState!.radii);
+    },
+    hapticsPulse(left: boolean, right: boolean, duration: number, intensity: number) {
+        // TODO: Handle overlapping pulses/effects
+        if(left && this.left) {
+            const gamepad = this.left.xrInputSource.gamepad as Gamepad & {hapticActuators: Array<any>};
+            if(gamepad && gamepad.hapticActuators) {
+                gamepad.hapticActuators[0].pulse(intensity, duration)
+            }
+        }
+        if(right && this.right) {
+            const gamepad = this.right.xrInputSource.gamepad as Gamepad & {hapticActuators: Array<any>};
+            if(gamepad && gamepad.hapticActuators) {
+                gamepad.hapticActuators[0].pulse(intensity, duration)
+            }
+        }
     }
 });
 

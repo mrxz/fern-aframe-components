@@ -68,7 +68,9 @@ export const InteractionRayComponent = AFRAME.registerComponent('interaction-ray
         /** Selector to use to check if a target element constitutes an interactable. */
         interactableSelector: { type: 'string', default: '' },
         /** Whether or not to use haptics to signal hovering over an interactable. */
-        hapticsOnInteractable: { default: true }
+        hapticsOnInteractable: { default: true },
+        /** Only used for haptics to direct to one or both hands */
+        hand: { default: 'both', oneOf: ['left', 'right', 'both'] },
     },
     __fields: {} as {
         readonly ray: THREE.Mesh<THREE.BoxGeometry, THREE.ShaderMaterial>
@@ -110,7 +112,11 @@ export const InteractionRayComponent = AFRAME.registerComponent('interaction-ray
 
                 // Check if haptics are needed
                 if(this.data.hapticsOnInteractable) {
-                    // TODO: Haptics
+                    // FIXME: Externalize haptics to all finer configuration
+                    //        and decouple interaction-ray from motion-controller system
+                    const pulseLeft = this.data.hand !== 'right';
+                    const pulseRight = this.data.hand !== 'left';
+                    this.el.sceneEl.systems['motion-controller'].hapticsPulse(pulseLeft, pulseRight, 50, 0.2);
                 }
             } else {
                 this.ray.material.uniforms.color.value.set(this.data.color);
