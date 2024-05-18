@@ -27,7 +27,9 @@ export const MotionControllerSpaceComponent = AFRAME.registerComponent('motion-c
     },
     isVisible: function() {
         // Only visible if there is an XRSession, InputSource and the visibility state is 'visible'
-        return !!this.inputSource && (this.el.sceneEl.xrSession?.visibilityState === 'visible' ?? false);
+        // NOTE: Emulator uses a polyfill without visibilityState. So in case it's undefined, fallback to visible.
+        const visibilityState = this.el.sceneEl.xrSession?.visibilityState ?? 'visible';
+        return !!this.inputSource && !!this.el.sceneEl.xrSession && visibilityState === 'visible';
     },
     tick: function() {
         const xrFrame = this.el.sceneEl.frame;
