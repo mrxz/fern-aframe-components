@@ -134,7 +134,7 @@ export const InteractionRayComponent = AFRAME.registerComponent('interaction-ray
 
             onHit(detail.intersectedEl);
         });
-        this.el.addEventListener('mouseleave', e => {
+        this.el.addEventListener('mouseleave', _ => {
             onMiss();
         });
     },

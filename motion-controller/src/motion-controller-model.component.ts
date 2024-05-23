@@ -32,7 +32,7 @@ export const MotionControllerModelComponent = AFRAME.registerComponent('motion-c
         readonly motionController: MotionController|null,
         readonly componentMeshes: Map<string, Array<{mesh: THREE.Mesh, originalColor: THREE.Color}>>,
         // Only relevant for hand tracking models
-        readonly handJoints: Array<THREE.Object3D|undefined>
+        handJoints: Array<THREE.Object3D|undefined>
     },
     init: function() {
         this.motionControllerSystem = this.el.sceneEl.systems['motion-controller'];
