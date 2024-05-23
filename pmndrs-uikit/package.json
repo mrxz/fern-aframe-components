@@ -45,7 +45,7 @@
     "typescript": "^5.4.0"
   },
   "dependencies": {
-    "@pmndrs/uikit": "^0.3.1"
+    "@pmndrs/uikit": "0.3.3"
   },
   "peerDependencies": {
     "super-three": "*"
