@@ -1,0 +1,40 @@
+{
+  "name": "@fern-solutions/aframe-gpu-pathtracer",
+  "version": "1.0.0",
+  "description": "A-Frame component for rendering using three-gpu-pathtracer",
+  "module": "dist/aframe-gpu-pathtracer.esm.min.js",
+  "browser": "dist/aframe-gpu-pathtracer.umd.min.js",
+  "main": "dist/aframe-gpu-pathtracer.esm.min.js",
+  "types": "dist/aframe-gpu-pathtracer.d.ts",
+  "author": "Noeri Huisman",
+  "license": "MIT",
+  "scripts": {
+    "dev": "concurrently \"rollup -c rollup.config.dev.js -w\" \"live-server --port=4000 --no-browser ./example --mount=/libs:../node_modules --mount=/js:./dist --mount=/src:./src\"",
+    "build": "rollup -c rollup.config.prod.js"
+  },
+  "keywords": [
+    "aframe",
+    "typescript",
+    "webxr"
+  ],
+  "files": [
+    "dist",
+    "!dist/typings"
+  ],
+  "devDependencies": {
+    "@compodoc/live-server": "1.2.3",
+    "@rollup/plugin-node-resolve": "^15.0.2",
+    "@rollup/plugin-terser": "^0.4.3",
+    "@rollup/plugin-typescript": "^11.1.1",
+    "@types/animejs": "3.1.0",
+    "@types/three": "0.164.0",
+    "aframe-types": "0.9.5",
+    "concurrently": "^7.1.0",
+    "rimraf": "^5.0.1",
+    "rollup": "^2.71.1",
+    "rollup-plugin-dts": "^5.3.0",
+    "three-gpu-pathtracer": "^0.0.22",
+    "three-mesh-bvh": "^0.7.4",
+    "typescript": "^5.0.4"
+  }
+}

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Fern A-Frame Components | three-gpu-pathtracer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <script src="/libs/three-mesh-bvh/build/index.umd.cjs"></script>
+    <script src="/libs/three-gpu-pathtracer/build/index.umd.cjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dat.gui/build/dat.gui.min.js"></script>
+    <script src="/js/aframe-gpu-pathtracer.umd.min.js"></script>
+    <script>
+      AFRAME.registerComponent('envmap', {
+        schema: {
+          src: { type: 'asset' }
+        },
+        sceneOnly: true,
+        init: function() {
+          this.rgbeLoader = new THREE.RGBELoader();
+        },
+        update: function() {
+          if(this.data.src) {
+            const src = this.data.src;
+
+            console.log(src);
+            this.rgbeLoader.load(src, texture => {
+              if(this.data.src !== src) { return; }
+
+              texture.mapping = THREE.EquirectangularReflectionMapping;
+              this.el.object3D.environment = texture;
+              this.el.object3D.background = texture;
+
+              // FIXME: Find a generic way to detect this change
+              this.el.systems['gpu-pathtracer'].updateScene();
+            });
+          } else {
+            this.el.object3D.environment = null;
+          }
+        }
+      })
+    </script>
+  </head>
+  <body>
+    <a-scene background="color: black" renderer="toneMapping: ACESFilmic" envmap="src: #envmap">
+      <a-assets>
+        <a-asset-item id="envmap" src="./rosendal_park_sunset_puresky_1k.hdr" response-type="arraybuffer"></a-asset-item>
+      </a-assets>
+
+      <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
+      <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
+      <a-cylinder
+        position="1 0.75 -3"
+        radius="0.5"
+        height="1.5"
+        color="#FFC65D"
+      ></a-cylinder>
+      <a-plane
+        position="0 0 -4"
+        rotation="-90 0 0"
+        width="4"
+        height="4"
+        color="#7BC8A4"
+        metalness="1.0"
+      ></a-plane>
+    </a-scene>
+
+    <!-- GITHUB_CORNER_LEFT -->
+  </body>
+</html>

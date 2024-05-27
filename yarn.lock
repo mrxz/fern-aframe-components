@@ -281,6 +281,27 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@fern-solutions/aframe-gpu-pathtracer@workspace:gpu-pathtracer":
+  version: 0.0.0-use.local
+  resolution: "@fern-solutions/aframe-gpu-pathtracer@workspace:gpu-pathtracer"
+  dependencies:
+    "@compodoc/live-server": "npm:1.2.3"
+    "@rollup/plugin-node-resolve": "npm:^15.0.2"
+    "@rollup/plugin-terser": "npm:^0.4.3"
+    "@rollup/plugin-typescript": "npm:^11.1.1"
+    "@types/animejs": "npm:3.1.0"
+    "@types/three": "npm:0.164.0"
+    aframe-types: "npm:0.9.5"
+    concurrently: "npm:^7.1.0"
+    rimraf: "npm:^5.0.1"
+    rollup: "npm:^2.71.1"
+    rollup-plugin-dts: "npm:^5.3.0"
+    three-gpu-pathtracer: "npm:^0.0.22"
+    three-mesh-bvh: "npm:^0.7.4"
+    typescript: "npm:^5.0.4"
+  languageName: unknown
+  linkType: soft
+
 "@fern-solutions/aframe-highlight@workspace:highlight":
   version: 0.0.0-use.local
   resolution: "@fern-solutions/aframe-highlight@workspace:highlight"
@@ -3327,6 +3348,26 @@ __metadata:
   dependencies:
     any-promise: "npm:^1.0.0"
   checksum: 10/486e1283a867440a904e36741ff1a177faa827cf94d69506f7e3ae4187b9afdf9ec368b3d8da225c192bfe2eb943f3f0080594156bf39f21b57cd1411e2e7f6d
+  languageName: node
+  linkType: hard
+
+"three-gpu-pathtracer@npm:^0.0.22":
+  version: 0.0.22
+  resolution: "three-gpu-pathtracer@npm:0.0.22"
+  peerDependencies:
+    three: ">=0.151.0"
+    three-mesh-bvh: ">=0.7.4"
+    xatlas-web: ^0.1.0
+  checksum: 10/046e77e819b32516f834ac0de93beb8164fcd7a5bdafa11a17c52097b9745588ba7572b1b0c6be5083c5ddd4a3d21469fa01b1bbb845feeb43ccb17804000fe3
+  languageName: node
+  linkType: hard
+
+"three-mesh-bvh@npm:^0.7.4":
+  version: 0.7.4
+  resolution: "three-mesh-bvh@npm:0.7.4"
+  peerDependencies:
+    three: ">= 0.151.0"
+  checksum: 10/50ab30b29298d7768562cc1edf82b050a877a33f2c843abacda77ed38537267a889c959e1a661ba94ff05415a84090878e2ea1b05db11e2ec6caab495fa5ca71
   languageName: node
   linkType: hard
 
