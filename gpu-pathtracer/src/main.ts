@@ -6,4 +6,7 @@ import { FullScreenQuad } from 'three/examples/jsm/postprocessing/Pass.js';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
 (<any>THREE).RGBELoader = RGBELoader;
 
+import * as Xatlas from 'xatlas';
+(<any>window).Xatlas = Xatlas;
+
 import './gpu-pathtracer.system';

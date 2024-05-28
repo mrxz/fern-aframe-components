@@ -9,7 +9,7 @@ export default [
             nodeResolve(),
             typescript({ sourceMap: true }),
         ],
-        external: ['aframe', 'three', 'three-gpu-pathtracer'],
+        external: ['aframe', 'three', 'three-gpu-pathtracer', 'xatlas'],
         output: [
             {
                 name: 'aframe-gpu-pathtracer',
@@ -20,7 +20,8 @@ export default [
                     aframe: 'AFRAME',
                     three: 'THREE',
                     'three-gpu-pathtracer': 'ThreePathTracer',
-                    'Pass_js': 'THREE'
+                    'Pass_js': 'THREE',
+                    'xatlas': 'Module',
                 }
             }
         ],

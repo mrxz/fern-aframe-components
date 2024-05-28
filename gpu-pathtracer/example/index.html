@@ -9,6 +9,7 @@
     <script src="/libs/three-mesh-bvh/build/index.umd.cjs"></script>
     <script src="/libs/three-gpu-pathtracer/build/index.umd.cjs"></script>
     <script src="https://cdn.jsdelivr.net/npm/dat.gui/build/dat.gui.min.js"></script>
+    <script src="/libs/xatlas-web/dist/xatlas-web.js"></script>
     <script src="/js/aframe-gpu-pathtracer.umd.min.js"></script>
     <script>
       AFRAME.registerComponent('envmap', {
@@ -23,7 +24,6 @@
           if(this.data.src) {
             const src = this.data.src;
 
-            console.log(src);
             this.rgbeLoader.load(src, texture => {
               if(this.data.src !== src) { return; }
 
@@ -37,6 +37,12 @@
           } else {
             this.el.object3D.environment = null;
           }
+        }
+      });
+
+      document.addEventListener('keydown', e => {
+        if(e.key === 'q') {
+          AFRAME.scenes[0].systems['gpu-pathtracer'].bake();
         }
       })
     </script>
