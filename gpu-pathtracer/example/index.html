@@ -48,7 +48,7 @@
     </script>
   </head>
   <body>
-    <a-scene background="color: black" renderer="toneMapping: ACESFilmic" envmap="src: #envmap">
+    <a-scene background="color: black" renderer="toneMapping: ACESFilmic; exposure: 0.2" envmap="src: #envmap">
       <a-assets>
         <a-asset-item id="envmap" src="./rosendal_park_sunset_puresky_1k.hdr" response-type="arraybuffer"></a-asset-item>
       </a-assets>
@@ -67,7 +67,6 @@
         width="4"
         height="4"
         color="#7BC8A4"
-        metalness="1.0"
       ></a-plane>
     </a-scene>
 

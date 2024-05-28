@@ -4,6 +4,8 @@ import type { WebGLRenderer } from 'three';
 import { WebGLPathTracer } from 'three-gpu-pathtracer';
 import { AmbientOcclusionMaterial } from 'three-gpu-pathtracer/src/materials/surface/AmbientOcclusionMaterial.js';
 import { UVUnwrapper } from './uvunwrapper';
+import { FullScreenQuad } from 'three/examples/jsm/postprocessing/Pass.js';
+import { DilationMaterial } from './dilation.shader';
 
 const renderStub: WebGLRenderer['render'] = () => {};
 
@@ -28,6 +30,10 @@ export const GpuPathtracerSystem = AFRAME.registerSystem('gpu-pathtracer', {
         readonly materials: Array<THREE.ShaderMaterial>;
         readonly meshesToGo: Array<{ mesh: THREE.Mesh, originalMaterial: THREE.Material }>;
         readonly aoRenderTarget: THREE.WebGLRenderTarget;
+        readonly aoRenderTarget2: THREE.WebGLRenderTarget;
+        readonly totalAoSamples: number;
+        readonly fsQuad: FullScreenQuad;
+        readonly dilationMaterial: DilationMaterial;
 
         baking: boolean;
     },
@@ -39,6 +45,10 @@ export const GpuPathtracerSystem = AFRAME.registerSystem('gpu-pathtracer', {
         this.materials = [];
         this.meshesToGo = [];
         this.aoRenderTarget = new THREE.WebGLRenderTarget(1024, 1024);
+        this.aoRenderTarget2 = new THREE.WebGLRenderTarget(1024, 1024);
+        this.totalAoSamples = 0;
+        this.fsQuad = new FullScreenQuad(new THREE.MeshBasicMaterial({transparent: true}));
+        this.dilationMaterial = new DilationMaterial();
         if(this.sceneEl.camera) {
             this.updateScene();
         } else {
@@ -72,24 +82,12 @@ export const GpuPathtracerSystem = AFRAME.registerSystem('gpu-pathtracer', {
         }
         await this.uvUnwrapperReady.promise;
 
-        // Prepare material to render baked
-        /*
-        const material: THREE.ShaderMaterial = this.pathTracer._pathTracer._fsQuad.material.clone(); // FIXME:
-        material.onBeforeCompile = () => {
-            console.log(material.vertexShader, material.fragmentShader);
-        }
-        material.needsUpdate = true;
-        */
-        //this.pathTracer._pathTracer.material = new AmbientOcclusionMaterial();
-
         // Prepare AO material
         const material = new AmbientOcclusionMaterial({
             bvh: this.pathTracer._pathTracer.material.bvh,
         }) as THREE.ShaderMaterial; // FIXME:
-        material.aoMap = new THREE.Texture(), // Dummy texture to activate second uv-channel
-        material.aoMap.channel = 2;
+        material.defines['USE_UV2'] = true;
         material.side = THREE.DoubleSide;
-        console.log(material.aoMap);
         material.onBeforeCompile = (shader) => {
             shader.vertexShader = shader.vertexShader
                 //.replace('varying vec3 vPos;', 'varying vec3 vPos;\nvarying vec2 vUv2;')
@@ -113,7 +111,7 @@ export const GpuPathtracerSystem = AFRAME.registerSystem('gpu-pathtracer', {
                 mesh.material = material;
                 this.meshesToGo.push({ mesh, originalMaterial });
             }
-        })
+        });
     },
 
     tick: function() {
@@ -128,15 +126,43 @@ export const GpuPathtracerSystem = AFRAME.registerSystem('gpu-pathtracer', {
                 (m as any).seed ++;
             });
             const renderer = this.sceneEl.renderer;
+            renderer.render = this.originalRenderFunction;
             renderer.setRenderTarget(this.aoRenderTarget);
-            this.originalRenderFunction.call(this.sceneEl.renderer, this.meshesToGo[0].mesh, this.sceneEl.camera);
-            const entry = this.meshesToGo.shift()!;
-            entry.mesh.material = entry.originalMaterial;
-            entry.mesh.material.aoMap = this.aoRenderTarget.texture;
-            entry.mesh.material.aoMap.channel = 2;
-            entry.mesh.material.needsUpdate = true;
-            this.aoRenderTarget = new THREE.WebGLRenderTarget(1024, 1024);
+            renderer.render(this.meshesToGo[0].mesh, this.sceneEl.camera);
+
+            // Accumulate AO on aoRenderTarget2
+            renderer.setRenderTarget(this.aoRenderTarget2);
+            renderer.autoClear = false;
+            this.fsQuad.material.map = this.aoRenderTarget.texture;
+            this.fsQuad.material.opacity = 1 / this.totalAoSamples;
+            this.fsQuad.render(renderer);
+            renderer.autoClear = true;
+
+            this.totalAoSamples++; // FIXME: Samples per frame
+            if(this.totalAoSamples > 10) { // FIXME: Allow
+                // Dilate
+                const originalFsQuadMaterial = this.fsQuad.material;
+                this.fsQuad.material = this.dilationMaterial;
+                this.dilationMaterial.uniforms.map.value = this.aoRenderTarget2.texture
+                this.dilationMaterial.uniforms.map.needsUpdate = true;
+                renderer.setRenderTarget(this.aoRenderTarget);
+                this.fsQuad.render(renderer);
+                this.fsQuad.material = originalFsQuadMaterial;
+
+                // Restore mesh material
+                const entry = this.meshesToGo.shift()!;
+                entry.mesh.material = entry.originalMaterial;
+                entry.mesh.material.aoMap = this.aoRenderTarget.texture;
+                entry.mesh.material.aoMap.channel = 2;
+                entry.mesh.material.needsUpdate = true;
+
+                // Rotate
+                this.aoRenderTarget = this.aoRenderTarget2;
+                this.aoRenderTarget2 = new THREE.WebGLRenderTarget(1024, 1024);
+                this.totalAoSamples = 0;
+            }
             renderer.setRenderTarget(null);
+            renderer.render = renderStub;
             //this.originalRenderFunction.call(this.sceneEl.renderer, this.sceneEl.object3D, this.sceneEl.camera);
         } else {
             // Restore original render function
