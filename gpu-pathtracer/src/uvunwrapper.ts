@@ -40,6 +40,11 @@ export class UVUnwrapper {
 
 		const xatlas = this._module;
 		const originalVertexCount = geometry.attributes.position.count;
+		if(!geometry.index) {
+			// Convert to indexed mesh?
+			console.warn('Only indexed geometries are supported for now!');
+			return;
+		}
 		const originalIndexCount = geometry.index!.count;
 
 		xatlas.createAtlas();
@@ -51,11 +56,8 @@ export class UVUnwrapper {
 		xatlas.HEAPF32.set( geometry.attributes.uv.array, meshInfo.uvOffset / Float32Array.BYTES_PER_ELEMENT );
 
 		const statusCode = xatlas.addMesh();
-        console.log(xatlas, statusCode);
-		if ( statusCode !== AddMeshSuccess ) { // FIXME
-
-			throw new Error( `UVUnwrapper: Error adding mesh. Status code ${ statusCode }` );
-
+		if(statusCode !== AddMeshSuccess) { // FIXME
+			throw new Error(`UVUnwrapper: Error adding mesh. Status code ${ statusCode }`);
 		}
 
 		xatlas.generateAtlas();
