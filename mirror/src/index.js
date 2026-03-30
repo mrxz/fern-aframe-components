@@ -107,6 +107,7 @@ const baseComponent = {
 
 		// Temporary camera objects to hold the state before reflecting
 		this.tempCamera = new THREE.PerspectiveCamera();
+		this.tempCamera.matrixWorldAutoUpdate = false;
 		this.tempCameras = [new THREE.PerspectiveCamera(), new THREE.PerspectiveCamera()];
 
 		// Setup clipping plane
