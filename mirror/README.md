@@ -27,6 +27,9 @@ The `a-mirror` primitive can be added to your scene as follows:
 
 Additionally layers can be specified to show or hide objects in the mirror view. For example, you might want to render the avatar of the user only in the mirror and not the main camera view.
 
+> [!NOTE]
+> The stencil buffer is no longer enabled by default since A-Frame 1.6.0. You can enabled it using the [stencil property](https://aframe.io/docs/1.7.0/components/renderer.html#properties_stencil) of the renderer component (`<a-scene renderer="stencil: true">`)
+
 ## Properties
 | Name | Type | Default |Description |
 | ---- | ---- | ------- |----------- |
