@@ -41,7 +41,7 @@ The `effekseer` component supports the following properties:
 | Name | Type | Default |Description |
 | ---- | ---- | ------- |----------- |
 | `src` | asset | | URL or path to the `.efk` or `.efkpkg` (requires zip.js) |
-| `autoplay` | boolean | true | Automatically start playing the effect once loaded |
+| `autoPlay` | boolean | true | Automatically start playing the effect once loaded |
 | `loop` | boolean | false | Restart the effect as soon as it ends |
 | `dynamic` | boolean | false | Update the world transform of the effect every tick. Allows the effect to move, rotate and scale along with the entity. Only enabled if you need this behaviour, otherwise leave it disabled for performance reasons |
 
